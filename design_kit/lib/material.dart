@@ -10,3 +10,4 @@ export 'src/material/avatar_circle.dart';
 export 'src/material/otp_input.dart';
 export 'src/material/bottom_navigation_bar.dart';
 export 'src/material/active_navigation_bar_icon.dart';
+export 'src/material/app_bar.dart';

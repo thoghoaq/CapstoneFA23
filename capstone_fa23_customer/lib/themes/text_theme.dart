@@ -15,8 +15,14 @@ const textTheme = TextTheme(
       fontFamily: DFontFamily.sfUIText,
       color: DColors.defaultText,
     ),
+    headlineSmall: TextStyle(
+      fontSize: 18,
+      fontWeight: FontWeight.w700,
+      fontFamily: DFontFamily.sfUIText,
+      color: DColors.defaultText,
+    ),
     displayLarge: TextStyle(
-      fontSize: 72,
+      fontSize: 16,
       fontWeight: FontWeight.bold,
     ),
     displayMedium: TextStyle(

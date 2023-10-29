@@ -2,6 +2,7 @@ import 'package:capstone_fa23_customer/partials/profile_list_tile.dart';
 import 'package:design_kit/material.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -72,7 +73,9 @@ class ProfilePage extends StatelessWidget {
                       Icons.navigate_next,
                       color: DColors.gray3,
                     ),
-                    onTap: () {},
+                    onTap: () {
+                      context.push('/profile/updateProfile');
+                    },
                   ),
                   ProfileListTile(
                     title: Text("Vô hiệu hóa / Xóa tài khoản",
