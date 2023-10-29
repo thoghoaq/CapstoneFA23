@@ -1,3 +1,4 @@
+import 'package:capstone_fa23_customer/pages/change_password_page.dart';
 import 'package:capstone_fa23_customer/pages/home_page.dart';
 import 'package:capstone_fa23_customer/pages/login_page.dart';
 import 'package:capstone_fa23_customer/pages/logo_page.dart';
@@ -36,6 +37,11 @@ final router = GoRouter(
                     name: "updateProfile",
                     path: "update",
                     builder: (context, state) => UpdateProfilePage(),
+                  ),
+                  GoRoute(
+                    name: "changePassword",
+                    path: "changePassword",
+                    builder: (context, state) => const ChangePasswordPage(),
                   ),
                 ],
               )
