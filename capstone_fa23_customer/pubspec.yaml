@@ -1,0 +1,30 @@
+name: capstone_fa23_customer
+description: Customer App
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.1.5 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+  design_kit:
+    path: ../design_kit/
+  responsive_framework: ^1.1.1
+  go_router: ^12.0.0
+  flutter_svg: ^2.0.8
+  wolt_modal_sheet: ^0.1.4
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/images/logos/
+    - assets/images/contexts/
+    - assets/images/icons/
