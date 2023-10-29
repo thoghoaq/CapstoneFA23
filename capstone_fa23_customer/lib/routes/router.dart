@@ -3,6 +3,7 @@ import 'package:capstone_fa23_customer/pages/login_page.dart';
 import 'package:capstone_fa23_customer/pages/logo_page.dart';
 import 'package:capstone_fa23_customer/pages/main_page.dart';
 import 'package:capstone_fa23_customer/pages/profile_page.dart';
+import 'package:capstone_fa23_customer/pages/update_profile_page.dart';
 import 'package:go_router/go_router.dart';
 
 final router = GoRouter(
@@ -30,6 +31,13 @@ final router = GoRouter(
           name: "profile",
           path: "/profile",
           builder: (context, state) => const ProfilePage(),
+          routes: [
+            GoRoute(
+              name: "updateProfile",
+              path: "updateProfile",
+              builder: (context, state) => UpdateProfilePage(),
+            ),
+          ],
         )
       ],
     )
