@@ -24,7 +24,7 @@ class DTextBox extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: 336,
-      height: 90,
+      height: label != null ? 90 : 60,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

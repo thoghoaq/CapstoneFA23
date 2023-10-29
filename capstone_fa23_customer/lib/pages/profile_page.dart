@@ -74,7 +74,7 @@ class ProfilePage extends StatelessWidget {
                       color: DColors.gray3,
                     ),
                     onTap: () {
-                      context.push('/profile/updateProfile');
+                      context.push('/profile/update');
                     },
                   ),
                   ProfileListTile(
@@ -97,7 +97,9 @@ class ProfilePage extends StatelessWidget {
                       Icons.navigate_next,
                       color: DColors.gray3,
                     ),
-                    onTap: () {},
+                    onTap: () {
+                      context.push("/profile/changePassword");
+                    },
                   ),
                   ProfileListTile(
                     title: Text("Đăng xuất",
