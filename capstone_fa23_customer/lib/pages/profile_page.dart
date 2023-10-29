@@ -74,7 +74,7 @@ class ProfilePage extends StatelessWidget {
                       color: DColors.gray3,
                     ),
                     onTap: () {
-                      context.push('/profile/updateProfile');
+                      context.push('/profile/update');
                     },
                   ),
                   ProfileListTile(
