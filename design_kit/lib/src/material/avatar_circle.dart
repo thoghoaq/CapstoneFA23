@@ -19,7 +19,12 @@ class DAvatarCircle extends StatelessWidget {
         shape: BoxShape.circle,
         color: Theme.of(context).colorScheme.secondary,
       ),
-      child: image,
+      child: ClipOval(
+        child: FittedBox(
+          fit: BoxFit.cover,
+          child: image,
+        ),
+      ),
     );
   }
 }
