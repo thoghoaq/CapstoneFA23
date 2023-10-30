@@ -21,23 +21,28 @@ class ProfileListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: showBottomDivider
-              ? const BorderSide(color: DColors.gray6)
-              : BorderSide.none,
-          top: showTopDivider
-              ? const BorderSide(color: DColors.gray6)
-              : BorderSide.none,
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: showBottomDivider
+                  ? const BorderSide(color: DColors.gray6)
+                  : BorderSide.none,
+              top: showTopDivider
+                  ? const BorderSide(color: DColors.gray6)
+                  : BorderSide.none,
+            ),
+          ),
+          child: ListTile(
+            contentPadding: EdgeInsets.zero,
+            leading: leading,
+            title: title,
+            trailing: trailing,
+          ),
         ),
-      ),
-      child: ListTile(
-        contentPadding: EdgeInsets.zero,
-        leading: leading,
-        title: title,
-        trailing: trailing,
-        onTap: onTap,
       ),
     );
   }

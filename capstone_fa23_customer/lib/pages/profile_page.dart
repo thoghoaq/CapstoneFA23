@@ -54,16 +54,19 @@ class ProfilePage extends StatelessWidget {
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.symmetric(vertical: 20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(
                     width: double.infinity,
                   ),
-                  Text(
-                    "Tài khoản",
-                    style: Theme.of(context).textTheme.labelLarge,
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20),
+                    child: Text(
+                      "Tài khoản",
+                      style: Theme.of(context).textTheme.labelLarge,
+                    ),
                   ),
                   ProfileListTile(
                     title: Text("Hồ sơ",
