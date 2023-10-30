@@ -1,4 +1,6 @@
 import 'package:capstone_fa23_customer/domain/enums/shipping_progress.dart';
+import 'package:capstone_fa23_customer/domain/enums/transaction_status.dart';
+import 'package:capstone_fa23_customer/modals/order_details.dart';
 import 'package:capstone_fa23_customer/partials/contact_list_title.dart';
 import 'package:capstone_fa23_customer/partials/progress_line.dart';
 import 'package:design_kit/material.dart';
@@ -15,6 +17,7 @@ class TrackingOrderPage extends StatelessWidget {
         "title": "JCO Jwalk Mall",
         "subtitle": "Được giao bởi Gofood",
         "description": "20/03/2020",
+        "status": TransactionStatus.ongoing,
       };
 
   @override
@@ -152,7 +155,17 @@ class TrackingOrderPage extends StatelessWidget {
         ),
         DOutlinedButton.small(
           text: "Xem chi tiết",
-          onPressed: () {},
+          onPressed: () {
+            showModalBottomSheet(
+              context: context,
+              builder: (context) {
+                return OrderDetailsModal(
+                  order: _order,
+                );
+              },
+              isScrollControlled: true,
+            );
+          },
         ),
         const SizedBox(height: 32),
       ]),
