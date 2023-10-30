@@ -6,7 +6,8 @@ enum ShippingProgress {
   onGoing("Shipper đang tới địa điểm của bạn", "5-10 Phút",
       "assets/images/contexts/shipping_progress_2.png", 0.7),
   shipped("Đơn hàng đã được giao thành công", "Đã giao hàng",
-      "assets/images/contexts/shipping_progress_3.png", 1);
+      "assets/images/contexts/shipping_progress_3.png", 1),
+  feedback("", "", "", 1);
 
   final String message;
   final String description;

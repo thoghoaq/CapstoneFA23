@@ -3,12 +3,13 @@ import 'package:capstone_fa23_customer/partials/contact_list_title.dart';
 import 'package:capstone_fa23_customer/partials/progress_line.dart';
 import 'package:design_kit/material.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class TrackingOrderPage extends StatelessWidget {
   const TrackingOrderPage({super.key});
 
   String get _orderName => "Đơn hàng 182718";
-  ShippingProgress get _status => ShippingProgress.goingToPickup;
+  ShippingProgress get _status => ShippingProgress.onGoing;
   get _order => {
         "icon": "assets/images/contexts/brand_1.png",
         "title": "JCO Jwalk Mall",
@@ -42,22 +43,55 @@ class TrackingOrderPage extends StatelessWidget {
           title: "Armayoga (Tài xế)",
           subtitle: "BMW 2020 DB",
         ),
-        Expanded(
-          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-            SizedBox(width: 231, child: Image.asset(_status.image)),
-            const SizedBox(height: 16),
-            Text(
-              _status.message,
-              style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                    color: Theme.of(context).colorScheme.secondary,
-                  ),
+        if (_status == ShippingProgress.feedback)
+          Expanded(
+            child:
+                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+              DAvatarCircle(
+                  image: Image.asset("assets/images/contexts/avatar_2.png"),
+                  radius: 115),
+              const SizedBox(height: 16),
+              Text(
+                "Để lại đánh giá của bạn về shipper",
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+              const SizedBox(height: 16),
+              RatingBar.builder(
+                initialRating: 5,
+                minRating: 0,
+                direction: Axis.horizontal,
+                allowHalfRating: false,
+                itemCount: 5,
+                itemBuilder: (context, _) => const Icon(
+                  Icons.star,
+                  color: DColors.yellow,
+                ),
+                glow: false,
+                unratedColor: DColors.gray4,
+                onRatingUpdate: (rating) {},
+              ),
+            ]),
+          )
+        else
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(width: 231, child: Image.asset(_status.image)),
+                const SizedBox(height: 16),
+                Text(
+                  _status.message,
+                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                ),
+                Text(
+                  _status.description,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ],
             ),
-            Text(
-              _status.description,
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
-          ]),
-        ),
+          ),
         ProgressLine(
           percent: _status.percent,
         ),
