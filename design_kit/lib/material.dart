@@ -12,3 +12,4 @@ export 'src/material/bottom_navigation_bar.dart';
 export 'src/material/active_navigation_bar_icon.dart';
 export 'src/material/app_bar.dart';
 export 'src/material/icon_circle.dart';
+export 'src/material/upload_image.dart';

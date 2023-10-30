@@ -1,4 +1,3 @@
-import 'package:design_kit/material.dart';
 import 'package:flutter/material.dart';
 
 class DActiveNavigationBarIcon extends StatelessWidget {
@@ -16,7 +15,7 @@ class DActiveNavigationBarIcon extends StatelessWidget {
           height: 36,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(100),
-            color: DColors.softGreen,
+            color: Theme.of(context).colorScheme.onBackground,
           ),
           child: Column(
             children: [
