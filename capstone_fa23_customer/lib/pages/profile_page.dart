@@ -107,7 +107,9 @@ class ProfilePage extends StatelessWidget {
                               color: DColors.red,
                             )),
                     leading: SvgPicture.asset("assets/images/icons/exit.svg"),
-                    onTap: () {},
+                    onTap: () {
+                      context.go('/login');
+                    },
                     showBottomDivider: false,
                   ),
                 ],

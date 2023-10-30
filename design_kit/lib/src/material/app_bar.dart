@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 class DAppBar extends StatefulWidget implements PreferredSizeWidget {
   final String title;
-  const DAppBar({Key? key, required this.title}) : super(key: key);
+  final List<Widget>? actions;
+  const DAppBar({Key? key, required this.title, this.actions})
+      : super(key: key);
 
   @override
   State<DAppBar> createState() => _DAppBarState();
@@ -21,6 +23,7 @@ class _DAppBarState extends State<DAppBar> {
       ),
       centerTitle: true,
       backgroundColor: Theme.of(context).colorScheme.background,
+      actions: widget.actions,
     );
   }
 }

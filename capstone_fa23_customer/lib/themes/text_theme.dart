@@ -35,6 +35,12 @@ const textTheme = TextTheme(
       color: DColors.gray4,
       fontFamily: DFontFamily.sfUIText,
     ),
+    displaySmall: TextStyle(
+      fontSize: 13,
+      color: DColors.defaultText,
+      fontFamily: DFontFamily.sfUIText,
+      fontWeight: FontWeight.normal,
+    ),
     bodyMedium: TextStyle(
       fontSize: 14,
       color: DColors.gray2,
@@ -47,6 +53,24 @@ const textTheme = TextTheme(
     ),
     labelLarge: TextStyle(
       fontSize: 14,
+      color: DColors.gray2,
+      fontFamily: DFontFamily.sfUIText,
+      fontWeight: FontWeight.w500,
+    ),
+    labelSmall: TextStyle(
+      fontSize: 11,
+      color: DColors.defaultText,
+      fontFamily: DFontFamily.sfUIText,
+      fontWeight: FontWeight.w400,
+    ),
+    bodyLarge: TextStyle(
+      fontSize: 14,
+      color: DColors.defaultText,
+      fontFamily: DFontFamily.sfUIText,
+      fontWeight: FontWeight.w600,
+    ),
+    bodySmall: TextStyle(
+      fontSize: 12,
       color: DColors.gray2,
       fontFamily: DFontFamily.sfUIText,
       fontWeight: FontWeight.w500,
