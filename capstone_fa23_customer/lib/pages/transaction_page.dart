@@ -2,6 +2,7 @@ import 'package:capstone_fa23_customer/domain/enums/transaction_status.dart';
 import 'package:capstone_fa23_customer/partials/transaction_list_tile.dart';
 import 'package:design_kit/material.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class TransactionPage extends StatelessWidget {
   TransactionPage({super.key});
@@ -87,6 +88,9 @@ class TransactionPage extends StatelessWidget {
             description: transactions[index]["description"],
             status: transactions[index]["status"],
             showBottomDivider: true,
+            onTap: () {
+              context.push('/transaction/trackingOrder');
+            },
           );
         },
         itemCount: transactions.length,

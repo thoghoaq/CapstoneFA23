@@ -37,7 +37,7 @@ class TransactionListTile extends StatelessWidget {
                 : BorderSide.none,
           ),
         ),
-        child: GestureDetector(
+        child: InkWell(
           onTap: onTap,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),

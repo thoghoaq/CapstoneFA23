@@ -4,6 +4,7 @@ import 'package:capstone_fa23_customer/pages/login_page.dart';
 import 'package:capstone_fa23_customer/pages/logo_page.dart';
 import 'package:capstone_fa23_customer/pages/main_page.dart';
 import 'package:capstone_fa23_customer/pages/profile_page.dart';
+import 'package:capstone_fa23_customer/pages/tracking_order.dart';
 import 'package:capstone_fa23_customer/pages/transaction_page.dart';
 import 'package:capstone_fa23_customer/pages/update_profile_page.dart';
 import 'package:go_router/go_router.dart';
@@ -33,6 +34,13 @@ final router = GoRouter(
                 name: "transaction",
                 path: "transaction",
                 builder: (context, state) => TransactionPage(),
+                routes: [
+                  GoRoute(
+                    name: "trackingOrder",
+                    path: "trackingOrder",
+                    builder: (context, state) => const TrackingOrderPage(),
+                  ),
+                ],
               ),
               GoRoute(
                 name: "profile",

@@ -62,4 +62,16 @@ const textTheme = TextTheme(
       color: DColors.defaultText,
       fontFamily: DFontFamily.sfUIText,
       fontWeight: FontWeight.w400,
+    ),
+    bodyLarge: TextStyle(
+      fontSize: 14,
+      color: DColors.defaultText,
+      fontFamily: DFontFamily.sfUIText,
+      fontWeight: FontWeight.w600,
+    ),
+    bodySmall: TextStyle(
+      fontSize: 12,
+      color: DColors.gray2,
+      fontFamily: DFontFamily.sfUIText,
+      fontWeight: FontWeight.w500,
     ));
