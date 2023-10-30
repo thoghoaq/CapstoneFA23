@@ -58,8 +58,12 @@ class _MainPageState extends State<MainPage> {
               case 0:
                 context.go('/home');
                 break;
+              case 1:
+                context.go('/transaction');
+                break;
               case 3:
                 context.go('/profile');
+                break;
               default:
             }
           });

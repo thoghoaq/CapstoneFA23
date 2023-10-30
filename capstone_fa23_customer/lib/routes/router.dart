@@ -4,6 +4,7 @@ import 'package:capstone_fa23_customer/pages/login_page.dart';
 import 'package:capstone_fa23_customer/pages/logo_page.dart';
 import 'package:capstone_fa23_customer/pages/main_page.dart';
 import 'package:capstone_fa23_customer/pages/profile_page.dart';
+import 'package:capstone_fa23_customer/pages/transaction_page.dart';
 import 'package:capstone_fa23_customer/pages/update_profile_page.dart';
 import 'package:go_router/go_router.dart';
 
@@ -29,6 +30,11 @@ final router = GoRouter(
                 builder: (context, state) => const HomePage(),
               ),
               GoRoute(
+                name: "transaction",
+                path: "transaction",
+                builder: (context, state) => TransactionPage(),
+              ),
+              GoRoute(
                 name: "profile",
                 path: "profile",
                 builder: (context, state) => const ProfilePage(),
@@ -44,7 +50,7 @@ final router = GoRouter(
                     builder: (context, state) => const ChangePasswordPage(),
                   ),
                 ],
-              )
+              ),
             ],
           )
         ]),
