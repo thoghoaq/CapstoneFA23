@@ -1,5 +1,6 @@
 import 'package:design_kit/material.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginUsernamePasswordModal extends StatefulWidget {
   const LoginUsernamePasswordModal({Key? key}) : super(key: key);
@@ -84,7 +85,11 @@ class _LoginPhoneNumberModalState extends State<LoginUsernamePasswordModal> {
                   obscureText: !_isShowPassword,
                 ),
                 const SizedBox(height: 32),
-                DPrimaryButton.bigwide(text: "Tiếp tục", onPressed: () {}),
+                DPrimaryButton.bigwide(
+                    text: "Tiếp tục",
+                    onPressed: () {
+                      context.go('/home');
+                    }),
               ],
             ),
           )

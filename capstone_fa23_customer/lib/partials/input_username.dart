@@ -1,5 +1,6 @@
 import 'package:design_kit/material.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class InputUsername extends StatelessWidget {
   const InputUsername({
@@ -34,7 +35,11 @@ class InputUsername extends StatelessWidget {
             controller: _inputUsernameController,
           ),
           const SizedBox(height: 32),
-          DPrimaryButton.bigwide(text: "Tiếp tục", onPressed: () {}),
+          DPrimaryButton.bigwide(
+              text: "Tiếp tục",
+              onPressed: () {
+                context.go('/home');
+              }),
         ],
       ),
     );

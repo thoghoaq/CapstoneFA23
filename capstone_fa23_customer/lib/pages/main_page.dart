@@ -42,7 +42,7 @@ class _MainPageState extends State<MainPage> {
     ),
   ];
 
-  int _currentIndex = 3;
+  int _currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -60,6 +60,9 @@ class _MainPageState extends State<MainPage> {
                 break;
               case 1:
                 context.go('/transaction');
+                break;
+              case 2:
+                context.go('/chat');
                 break;
               case 3:
                 context.go('/profile');

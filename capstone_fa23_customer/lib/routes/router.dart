@@ -10,7 +10,7 @@ import 'package:capstone_fa23_customer/pages/update_profile_page.dart';
 import 'package:go_router/go_router.dart';
 
 final router = GoRouter(
-  initialLocation: '/home',
+  initialLocation: '/',
   routes: [
     GoRoute(
         name: 'logoScreen',
