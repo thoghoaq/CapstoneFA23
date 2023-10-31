@@ -101,7 +101,7 @@ class ProfilePage extends StatelessWidget {
                       color: DColors.gray3,
                     ),
                     onTap: () {
-                      context.push("/profile/changePassword");
+                      context.push("/profile/change-password");
                     },
                   ),
                   ProfileListTile(

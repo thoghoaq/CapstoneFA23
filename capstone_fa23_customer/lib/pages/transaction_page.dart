@@ -89,7 +89,7 @@ class TransactionPage extends StatelessWidget {
             status: transactions[index]["status"],
             showBottomDivider: true,
             onTap: () {
-              context.push('/transaction/trackingOrder');
+              context.push('/transaction/tracking-order');
             },
           );
         },

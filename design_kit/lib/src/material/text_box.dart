@@ -8,6 +8,7 @@ class DTextBox extends StatelessWidget {
   final Widget? suffixIcon;
   final bool? obscureText;
   final String? label;
+  final int? maxLines;
   final TextEditingController controller;
 
   const DTextBox({
@@ -18,6 +19,7 @@ class DTextBox extends StatelessWidget {
     this.suffixIcon,
     this.obscureText,
     this.label,
+    this.maxLines,
   }) : super(key: key);
 
   @override
@@ -39,6 +41,7 @@ class DTextBox extends StatelessWidget {
           TextField(
             controller: controller,
             obscureText: obscureText ?? false,
+            maxLines: maxLines ?? 1,
             decoration: InputDecoration(
               hintText: hintText,
               hintStyle: Theme.of(context).textTheme.bodyMedium,

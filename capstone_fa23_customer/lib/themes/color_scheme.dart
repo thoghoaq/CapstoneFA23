@@ -10,4 +10,5 @@ final colorScheme = ColorScheme.fromSeed(
   outlineVariant: DColors.gray5,
   surface: DColors.gray6,
   tertiary: DColors.gray2,
+  onBackground: DColors.softGreen,
 );

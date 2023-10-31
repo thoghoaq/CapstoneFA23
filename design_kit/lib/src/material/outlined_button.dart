@@ -125,7 +125,7 @@ class DOutlinedButton extends StatelessWidget {
       child: OutlinedButton(
           onPressed: onPressed,
           style: OutlinedButton.styleFrom(
-            backgroundColor: Theme.of(context).colorScheme.background,
+            backgroundColor: Colors.transparent,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(4.0),
                 side: BorderSide(
