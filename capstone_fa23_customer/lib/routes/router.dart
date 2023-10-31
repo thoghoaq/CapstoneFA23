@@ -37,7 +37,7 @@ final router = GoRouter(
                 routes: [
                   GoRoute(
                     name: "trackingOrder",
-                    path: "trackingOrder",
+                    path: "tracking-order",
                     builder: (context, state) => const TrackingOrderPage(),
                   ),
                 ],
@@ -54,7 +54,7 @@ final router = GoRouter(
                   ),
                   GoRoute(
                     name: "changePassword",
-                    path: "changePassword",
+                    path: "change-password",
                     builder: (context, state) => const ChangePasswordPage(),
                   ),
                 ],

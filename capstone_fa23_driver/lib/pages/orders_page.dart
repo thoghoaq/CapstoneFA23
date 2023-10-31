@@ -3,6 +3,7 @@ import 'package:capstone_fa23_driver/partials/order_list_tile.dart';
 import 'package:capstone_fa23_driver/partials/transaction_list_tile.dart';
 import 'package:design_kit/material.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class OrdersPage extends StatelessWidget {
   OrdersPage({super.key});
@@ -104,14 +105,6 @@ class OrdersPage extends StatelessWidget {
     },
   ];
 
-  TabBar get _tabBar => TabBar(
-        tabs: [
-          Tab(icon: Icon(Icons.flight)),
-          Tab(icon: Icon(Icons.directions_transit)),
-          Tab(icon: Icon(Icons.directions_car)),
-        ],
-      );
-
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -192,6 +185,9 @@ class _Ongoing extends StatelessWidget {
                   padding: const EdgeInsets.only(bottom: 16),
                   child: OrderListTile(
                     order: orders[index],
+                    onTap: () {
+                      context.push("/orders/map-view");
+                    },
                   ),
                 );
               },

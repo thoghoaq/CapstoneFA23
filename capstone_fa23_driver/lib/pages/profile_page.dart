@@ -94,7 +94,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     color: DColors.defaultText,
                   ),
                   onTap: () {
-                    context.push("/profile/changePassword");
+                    context.push("/profile/change-password");
                   },
                   showBottomDivider: false,
                 ),

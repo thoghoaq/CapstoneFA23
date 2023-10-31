@@ -59,7 +59,7 @@ class _MainPageState extends State<MainPage> {
                 context.go('/home');
                 break;
               case 1:
-                context.go('/transaction');
+                context.go('/orders');
                 break;
               case 2:
                 context.go('/chat');
