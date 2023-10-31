@@ -1,4 +1,6 @@
 import 'package:capstone_fa23_driver/domain/enums/transaction_status.dart';
+import 'package:capstone_fa23_driver/modals/ship_cancel_dialog.dart';
+import 'package:capstone_fa23_driver/modals/ship_success_dialog.dart';
 import 'package:capstone_fa23_driver/partials/address_list_tile.dart';
 import 'package:capstone_fa23_driver/partials/contact_list_title.dart';
 import 'package:capstone_fa23_driver/partials/transaction_list_tile.dart';
@@ -43,6 +45,18 @@ class _MapViewPageState extends State<MapViewPage> {
       };
 
   double _displayBottomSheetSize = 0.2;
+
+  void cancel() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) => const ShipCancelDialog());
+  }
+
+  void complete() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) => const ShipSuccessDialog());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -96,10 +110,14 @@ class _MapViewPageState extends State<MapViewPage> {
                             if (_displayBottomSheetSize == 1)
                               _RoutingWithContact(
                                 order: _order,
+                                complete: complete,
+                                cancel: cancel,
                               ),
                             if (_displayBottomSheetSize == 0.5)
                               _Routing(
                                 order: _order,
+                                complete: complete,
+                                cancel: cancel,
                               ),
                             if (_displayBottomSheetSize == 0.2)
                               _ReceiverContact(receiver: _receiver),
@@ -120,9 +138,13 @@ class _RoutingWithContact extends StatelessWidget {
   const _RoutingWithContact({
     Key? key,
     required this.order,
+    required this.cancel,
+    required this.complete,
   }) : super(key: key);
 
   final dynamic order;
+  final VoidCallback cancel;
+  final VoidCallback complete;
 
   @override
   Widget build(BuildContext context) {
@@ -224,11 +246,15 @@ class _RoutingWithContact extends StatelessWidget {
                 children: [
                   DPrimaryButton.small(
                     text: "Hoàn thành",
-                    onPressed: () {},
+                    onPressed: () {
+                      complete();
+                    },
                   ),
                   DOutlinedButton.small(
                     text: "Hủy",
-                    onPressed: () {},
+                    onPressed: () {
+                      cancel();
+                    },
                   )
                 ],
               ),
@@ -244,9 +270,13 @@ class _Routing extends StatelessWidget {
   const _Routing({
     Key? key,
     required this.order,
+    required this.complete,
+    required this.cancel,
   }) : super(key: key);
 
   final dynamic order;
+  final VoidCallback complete;
+  final VoidCallback cancel;
 
   @override
   Widget build(BuildContext context) {
@@ -306,11 +336,15 @@ class _Routing extends StatelessWidget {
             children: [
               DPrimaryButton.small(
                 text: "Hoàn thành",
-                onPressed: () {},
+                onPressed: () {
+                  complete();
+                },
               ),
               DOutlinedButton.small(
                 text: "Hủy",
-                onPressed: () {},
+                onPressed: () {
+                  cancel();
+                },
               )
             ],
           )
