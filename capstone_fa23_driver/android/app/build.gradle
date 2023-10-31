@@ -45,7 +45,7 @@ android {
         applicationId "com.example.capstone_fa23_driver"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdkVersion flutter.minSdkVersion
+        minSdkVersion 21
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
@@ -64,4 +64,9 @@ flutter {
     source '../..'
 }
 
-dependencies {}
+dependencies {
+    implementation "com.mapbox.mapboxsdk:mapbox-android-core:5.0.0" 
+    implementation('com.mapbox.mapboxsdk:mapbox-android-core:5.0.0') {
+         exclude group: 'com.mapbox.common', module: 'common'
+    }
+}

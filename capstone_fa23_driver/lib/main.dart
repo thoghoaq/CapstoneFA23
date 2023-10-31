@@ -2,10 +2,12 @@ import 'package:capstone_fa23_driver/routes/router.dart';
 import 'package:capstone_fa23_driver/themes/color_scheme.dart';
 import 'package:capstone_fa23_driver/themes/text_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:responsive_framework/breakpoint.dart';
 import 'package:responsive_framework/responsive_breakpoints.dart';
 
-void main() {
+void main() async {
+  await dotenv.load();
   runApp(const MyApp());
 }
 

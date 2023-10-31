@@ -154,7 +154,11 @@ class OrdersPage extends StatelessWidget {
           ),
         ),
         body: TabBarView(children: [
-          _Ongoing(orders: orders),
+          RefreshIndicator(
+              onRefresh: () async {
+                await Future.delayed(const Duration(seconds: 2));
+              },
+              child: _Ongoing(orders: orders)),
           _History(transactions: transactions),
         ]),
       ),
