@@ -1,6 +1,6 @@
-import 'package:capstone_fa23_customer/modals/login_phone_number.dart';
-import 'package:capstone_fa23_customer/modals/login_username_password.dart';
-import 'package:capstone_fa23_customer/modals/register_username_password.dart';
+import 'package:capstone_fa23_customer/partials/modals/login_phone_number.dart';
+import 'package:capstone_fa23_customer/partials/modals/login_username_password.dart';
+import 'package:capstone_fa23_customer/partials/modals/register_username_password.dart';
 import 'package:design_kit/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';

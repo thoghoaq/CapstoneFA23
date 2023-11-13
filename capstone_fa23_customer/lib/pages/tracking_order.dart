@@ -1,6 +1,6 @@
-import 'package:capstone_fa23_customer/domain/enums/shipping_progress.dart';
-import 'package:capstone_fa23_customer/domain/enums/transaction_status.dart';
-import 'package:capstone_fa23_customer/modals/order_details.dart';
+import 'package:capstone_fa23_customer/core/enums/shipping_progress.dart';
+import 'package:capstone_fa23_customer/core/enums/transaction_status.dart';
+import 'package:capstone_fa23_customer/partials/modals/order_details.dart';
 import 'package:capstone_fa23_customer/partials/contact_list_title.dart';
 import 'package:capstone_fa23_customer/partials/progress_line.dart';
 import 'package:design_kit/material.dart';

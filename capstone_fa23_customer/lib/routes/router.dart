@@ -50,7 +50,7 @@ final router = GoRouter(
                   GoRoute(
                     name: "updateProfile",
                     path: "update",
-                    builder: (context, state) => UpdateProfilePage(),
+                    builder: (context, state) => const UpdateProfilePage(),
                   ),
                   GoRoute(
                     name: "changePassword",

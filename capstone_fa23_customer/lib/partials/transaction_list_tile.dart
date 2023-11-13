@@ -1,4 +1,4 @@
-import 'package:capstone_fa23_customer/domain/enums/transaction_status.dart';
+import 'package:capstone_fa23_customer/core/enums/transaction_status.dart';
 import 'package:design_kit/material.dart';
 import 'package:flutter/material.dart';
 
