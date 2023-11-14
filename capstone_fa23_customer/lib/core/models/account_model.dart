@@ -1,4 +1,4 @@
-class Account {
+class Profile {
   final String name;
   final DateTime birthDay;
   final String province;
@@ -7,7 +7,7 @@ class Account {
   final String address;
   final String phoneContact;
 
-  Account({
+  Profile({
     required this.name,
     required this.birthDay,
     required this.province,
@@ -17,8 +17,8 @@ class Account {
     required this.phoneContact,
   });
 
-  factory Account.fromJson(Map<String, dynamic> json) {
-    return Account(
+  factory Profile.fromJson(Map<String, dynamic> json) {
+    return Profile(
       name: json['name'],
       birthDay: DateTime.parse(json['birthDay']),
       province: json['province'],
@@ -29,8 +29,8 @@ class Account {
     );
   }
 
-  factory Account.mock() {
-    return Account(
+  factory Profile.mock() {
+    return Profile(
       name: "Nguyễn Văn A",
       birthDay: DateTime(1999, 1, 1),
       province: "Hà Nội",

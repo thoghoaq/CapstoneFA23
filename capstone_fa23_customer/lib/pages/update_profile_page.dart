@@ -93,14 +93,14 @@ class UpdateProfilePage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 10),
-                Text(provider.account.name,
+                Text(provider.profile.name,
                     style: Theme.of(context).textTheme.headlineMedium),
                 const SizedBox(height: 30),
                 DTextBox(
                   label: "Username",
                   hintText: "Vui lòng nhập username",
                   controller: TextEditingController(
-                    text: provider.account.name,
+                    text: provider.profile.name,
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -108,7 +108,7 @@ class UpdateProfilePage extends StatelessWidget {
                   label: "Số điện thoại",
                   hintText: "Vui lòng nhập số điện thoại",
                   controller: TextEditingController(
-                    text: provider.account.phoneContact,
+                    text: provider.profile.phoneContact,
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -116,7 +116,7 @@ class UpdateProfilePage extends StatelessWidget {
                   label: "Địa chỉ",
                   hintText: "Vui lòng nhập địa chỉ",
                   controller: TextEditingController(
-                    text: provider.account.address,
+                    text: provider.profile.address,
                   ),
                 ),
                 const SizedBox(height: 35),

@@ -1,13 +1,13 @@
 import 'package:capstone_fa23_customer/partials/profile_list_tile.dart';
+import 'package:capstone_fa23_customer/providers/account_provider.dart';
 import 'package:design_kit/material.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
-
-  String get _name => "Priscilla Watson";
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +48,16 @@ class ProfilePage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 10),
-          Text(_name, style: Theme.of(context).textTheme.headlineMedium),
+          Consumer<AccountProvider>(
+            builder: (context, provider, child) {
+              if (provider.isLoading) {
+                provider.fetchAccountInformation();
+                return const Center(child: CircularProgressIndicator());
+              }
+              return Text(provider.profile.name,
+                  style: Theme.of(context).textTheme.headlineMedium);
+            },
+          ),
           const SizedBox(
             height: 20,
           ),
