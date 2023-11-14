@@ -119,8 +119,11 @@ class ProfilePage extends StatelessWidget {
                               color: DColors.red,
                             )),
                     leading: SvgPicture.asset("assets/images/icons/exit.svg"),
-                    onTap: () {
-                      context.go('/login');
+                    onTap: () async {
+                      await context.read<AccountProvider>().logout();
+                      if (context.mounted) {
+                        context.go('/login');
+                      }
                     },
                     showBottomDivider: false,
                   ),

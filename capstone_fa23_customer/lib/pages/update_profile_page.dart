@@ -100,7 +100,7 @@ class UpdateProfilePage extends StatelessWidget {
                   label: "Username",
                   hintText: "Vui lòng nhập username",
                   controller: TextEditingController(
-                    text: provider.profile.name,
+                    text: provider.username,
                   ),
                 ),
                 const SizedBox(height: 20),
