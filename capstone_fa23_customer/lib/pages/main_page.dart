@@ -16,24 +16,24 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   final List<BottomNavigationBarItem> _items = [
-    BottomNavigationBarItem(
-      icon: SvgPicture.asset('assets/images/icons/home.svg'),
-      label: 'Home',
-      activeIcon: DActiveNavigationBarIcon(
-          icon: SvgPicture.asset('assets/images/icons/home.svg')),
-    ),
+    // BottomNavigationBarItem(
+    //   icon: SvgPicture.asset('assets/images/icons/home.svg'),
+    //   label: 'Home',
+    //   activeIcon: DActiveNavigationBarIcon(
+    //       icon: SvgPicture.asset('assets/images/icons/home.svg')),
+    // ),
     BottomNavigationBarItem(
       icon: SvgPicture.asset('assets/images/icons/bag.svg'),
       label: 'Transaction',
       activeIcon: DActiveNavigationBarIcon(
           icon: SvgPicture.asset('assets/images/icons/bag.svg')),
     ),
-    BottomNavigationBarItem(
-      icon: SvgPicture.asset('assets/images/icons/message.svg'),
-      label: 'Chat',
-      activeIcon: DActiveNavigationBarIcon(
-          icon: SvgPicture.asset('assets/images/icons/message.svg')),
-    ),
+    // BottomNavigationBarItem(
+    //   icon: SvgPicture.asset('assets/images/icons/message.svg'),
+    //   label: 'Chat',
+    //   activeIcon: DActiveNavigationBarIcon(
+    //       icon: SvgPicture.asset('assets/images/icons/message.svg')),
+    // ),
     BottomNavigationBarItem(
       icon: SvgPicture.asset('assets/images/icons/profile.svg'),
       label: 'Profile',
@@ -59,12 +59,6 @@ class _MainPageState extends State<MainPage> {
                 context.go('/home');
                 break;
               case 1:
-                context.go('/transaction');
-                break;
-              case 2:
-                context.go('/chat');
-                break;
-              case 3:
                 context.go('/profile');
                 break;
               default:

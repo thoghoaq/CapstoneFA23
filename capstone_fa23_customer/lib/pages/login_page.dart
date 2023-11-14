@@ -1,12 +1,9 @@
 import 'package:capstone_fa23_customer/partials/modals/login_phone_number.dart';
 import 'package:capstone_fa23_customer/partials/modals/login_username_password.dart';
 import 'package:capstone_fa23_customer/partials/modals/register_username_password.dart';
-import 'package:capstone_fa23_customer/providers/account_provider.dart';
 import 'package:design_kit/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 
 class LoginScreenPage extends StatefulWidget {
   const LoginScreenPage({Key? key}) : super(key: key);
@@ -18,16 +15,7 @@ class LoginScreenPage extends StatefulWidget {
 class _LoginScreenPageState extends State<LoginScreenPage> {
   @override
   void initState() {
-    _isLogged();
     super.initState();
-  }
-
-  _isLogged() async {
-    if (await context.read<AccountProvider>().checkLoggedIn()) {
-      if (mounted) {
-        GoRouter.of(context).go('/home');
-      }
-    }
   }
 
   @override
