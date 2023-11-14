@@ -17,7 +17,7 @@ class TrackingOrderPage extends StatelessWidget {
         "title": "JCO Jwalk Mall",
         "subtitle": "Được giao bởi Gofood",
         "description": "20/03/2020",
-        "status": TransactionStatus.ongoing,
+        "status": TransactionStatus.created,
       };
 
   @override

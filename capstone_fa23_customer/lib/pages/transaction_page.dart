@@ -1,77 +1,13 @@
-import 'package:capstone_fa23_customer/core/enums/transaction_status.dart';
+import 'package:capstone_fa23_customer/helpers/datetime_helper.dart';
 import 'package:capstone_fa23_customer/partials/transaction_list_tile.dart';
+import 'package:capstone_fa23_customer/providers/orders_provider.dart';
 import 'package:design_kit/material.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class TransactionPage extends StatelessWidget {
-  TransactionPage({super.key});
-
-  final List transactions = [
-    {
-      "icon": "assets/images/contexts/brand_1.png",
-      "title": "JCO Jwalk Mall",
-      "subtitle": "Được giao bởi Gofood",
-      "description": "20/03/2020",
-      "status": TransactionStatus.ongoing,
-    },
-    {
-      "icon": "assets/images/contexts/brand_2.png",
-      "title": "KFC Ambarukmo Plaza",
-      "subtitle": "Được giao bởi Gofood",
-      "description": "20/03/2020",
-      "status": TransactionStatus.received,
-    },
-    {
-      "icon": "assets/images/contexts/brand_3.png",
-      "title": "Burger King Malioboro Mall",
-      "subtitle": "Được giao bởi Gofood",
-      "description": "20/03/2020",
-      "status": TransactionStatus.canceled,
-    },
-    {
-      "icon": "assets/images/contexts/brand_4.png",
-      "title": "Starbuck Ambarukmo Plaza",
-      "subtitle": "Được giao bởi Gofood",
-      "description": "20/03/2020",
-      "status": TransactionStatus.received,
-    },
-    {
-      "icon": "assets/images/contexts/brand_5.png",
-      "title": "Warung Penyetan Mcdonalds",
-      "subtitle": "Được giao bởi Gofood",
-      "description": "20/03/2020",
-      "status": TransactionStatus.received,
-    },
-    {
-      "icon": "assets/images/contexts/brand_2.png",
-      "title": "KFC Ambarukmo Plaza",
-      "subtitle": "Được giao bởi Gofood",
-      "description": "20/03/2020",
-      "status": TransactionStatus.received,
-    },
-    {
-      "icon": "assets/images/contexts/brand_3.png",
-      "title": "Burger King Malioboro Mall",
-      "subtitle": "Được giao bởi Gofood",
-      "description": "20/03/2020",
-      "status": TransactionStatus.canceled,
-    },
-    {
-      "icon": "assets/images/contexts/brand_4.png",
-      "title": "Starbuck Ambarukmo Plaza",
-      "subtitle": "Được giao bởi Gofood",
-      "description": "20/03/2020",
-      "status": TransactionStatus.received,
-    },
-    {
-      "icon": "assets/images/contexts/brand_5.png",
-      "title": "Warung Penyetan Mcdonalds",
-      "subtitle": "Được giao bởi Gofood",
-      "description": "20/03/2020",
-      "status": TransactionStatus.received,
-    },
-  ];
+  const TransactionPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -79,21 +15,34 @@ class TransactionPage extends StatelessWidget {
       appBar: const DAppBar(
         title: 'Giao dịch',
       ),
-      body: ListView.builder(
-        itemBuilder: (context, index) {
-          return TransactionListTile(
-            icon: Image.asset(transactions[index]["icon"]),
-            title: transactions[index]["title"],
-            subtitle: transactions[index]["subtitle"],
-            description: transactions[index]["description"],
-            status: transactions[index]["status"],
-            showBottomDivider: true,
-            onTap: () {
-              context.push('/transaction/tracking-order');
+      body: Consumer<OrderProvider>(
+        builder: (context, provider, child) {
+          if (provider.isLoading) {
+            provider.getListOrders();
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          return ListView.builder(
+            itemBuilder: (context, index) {
+              return TransactionListTile(
+                // icon: Image.asset(transactions[index]["icon"]),
+                title:
+                    "${provider.orders[index].shippingDistrict}, ${provider.orders[index].shippingWard}, ${provider.orders[index].shippingProvince}",
+                subtitle: provider.orders[index].shippingAddress,
+                description: DateTimeHelper.getDateTime(
+                    provider.orders[index].expectedShippingDate),
+                status: provider.orders[index].currentOrderStatus,
+                showBottomDivider: true,
+                onTap: () {
+                  context.push('/home/tracking-order',
+                      extra: provider.orders[index].id);
+                },
+              );
             },
+            itemCount: provider.orders.length,
           );
         },
-        itemCount: transactions.length,
       ),
     );
   }
