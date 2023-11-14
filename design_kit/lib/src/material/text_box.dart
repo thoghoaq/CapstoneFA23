@@ -9,6 +9,8 @@ class DTextBox extends StatelessWidget {
   final bool? obscureText;
   final String? label;
   final int? maxLines;
+  final Function()? onTap;
+  final FocusNode? focusNode;
   final TextEditingController controller;
 
   const DTextBox({
@@ -20,6 +22,8 @@ class DTextBox extends StatelessWidget {
     this.obscureText,
     this.label,
     this.maxLines,
+    this.onTap,
+    this.focusNode,
   }) : super(key: key);
 
   @override
@@ -42,6 +46,8 @@ class DTextBox extends StatelessWidget {
             controller: controller,
             obscureText: obscureText ?? false,
             maxLines: maxLines ?? 1,
+            onTap: onTap,
+            focusNode: focusNode,
             decoration: InputDecoration(
               hintText: hintText,
               hintStyle: Theme.of(context).textTheme.bodyMedium,

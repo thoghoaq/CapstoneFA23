@@ -1,6 +1,6 @@
 class Profile {
   final String name;
-  final DateTime birthDay;
+  final String birthDay;
   final String province;
   final String district;
   final String ward;
@@ -20,7 +20,7 @@ class Profile {
   factory Profile.fromJson(Map<String, dynamic> json) {
     return Profile(
       name: json['name'],
-      birthDay: DateTime.parse(json['birthDay']),
+      birthDay: json['birthDay'],
       province: json['province'],
       district: json['district'],
       ward: json['ward'],
@@ -32,7 +32,7 @@ class Profile {
   factory Profile.mock() {
     return Profile(
       name: "Nguyễn Văn A",
-      birthDay: DateTime(1999, 1, 1),
+      birthDay: "01/01/2001",
       province: "Hà Nội",
       district: "Hoàn Kiếm",
       ward: "Tràng Tiền",

@@ -1,11 +1,19 @@
+import 'package:capstone_fa23_customer/helpers/datetime_helper.dart';
 import 'package:capstone_fa23_customer/providers/account_provider.dart';
 import 'package:design_kit/material.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
-class UpdateProfilePage extends StatelessWidget {
+class UpdateProfilePage extends StatefulWidget {
   const UpdateProfilePage({super.key});
+
+  @override
+  State<UpdateProfilePage> createState() => _UpdateProfilePageState();
+}
+
+class _UpdateProfilePageState extends State<UpdateProfilePage> {
+  final _birthDayTextController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +26,8 @@ class UpdateProfilePage extends StatelessWidget {
               provider.fetchAccountInformation();
               return const Center(child: CircularProgressIndicator());
             }
+            _birthDayTextController.text =
+                DateTimeHelper.getDate(provider.profile.birthDay);
             return Column(
               children: [
                 SizedBox(
@@ -97,10 +107,10 @@ class UpdateProfilePage extends StatelessWidget {
                     style: Theme.of(context).textTheme.headlineMedium),
                 const SizedBox(height: 30),
                 DTextBox(
-                  label: "Username",
-                  hintText: "Vui lòng nhập username",
+                  label: "Họ và tên",
+                  hintText: "Vui lòng nhập họ và tên",
                   controller: TextEditingController(
-                    text: provider.username,
+                    text: provider.profile.name,
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -110,6 +120,23 @@ class UpdateProfilePage extends StatelessWidget {
                   controller: TextEditingController(
                     text: provider.profile.phoneContact,
                   ),
+                ),
+                const SizedBox(height: 20),
+                DTextBox(
+                  label: "Ngày sinh",
+                  hintText: "Vui lòng nhập ngày sinh",
+                  controller: _birthDayTextController,
+                  onTap: () async {
+                    var selectedDate = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime(2001, 1, 1),
+                        firstDate: DateTime(1990, 1, 1),
+                        lastDate: DateTime.now());
+                    if (selectedDate != null) {
+                      _birthDayTextController.text = DateTimeHelper.getDate(
+                          selectedDate.toIso8601String());
+                    }
+                  },
                 ),
                 const SizedBox(height: 20),
                 DTextBox(
