@@ -71,4 +71,27 @@ class AccountProvider extends ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.clear();
   }
+
+  Future<bool> updateProfile(String name, DateTime birthDay, String province,
+      String district, String ward, String address, String phoneContact) async {
+    var data = {
+      "name": name,
+      "birthDay": birthDay.toIso8601String(),
+      "province": province,
+      "district": district,
+      "ward": ward,
+      "address": address,
+      "phoneContact": phoneContact,
+    };
+    final response = await ApiClient().put(
+      "/account-profile/$_id",
+      data,
+    );
+    if (response.statusCode == HttpStatus.noContent) {
+      _profile = Profile.fromJson(data);
+      notifyListeners();
+      return true;
+    }
+    return false;
+  }
 }

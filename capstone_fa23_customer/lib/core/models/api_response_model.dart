@@ -1,3 +1,5 @@
+import 'dart:io';
+
 class ApiResponse {
   final int statusCode;
   final dynamic result;
@@ -20,6 +22,12 @@ class ApiResponse {
       errorCode: json['errorCode'],
       errorMessage: json['errorMessage'],
       invalidField: json['invalidField'],
+    );
+  }
+
+  factory ApiResponse.noContent() {
+    return ApiResponse(
+      statusCode: HttpStatus.noContent,
     );
   }
 }

@@ -4,6 +4,7 @@ import 'package:capstone_fa23_customer/providers/account_provider.dart';
 import 'package:design_kit/material.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
 class UpdateProfilePage extends StatefulWidget {
@@ -14,10 +15,13 @@ class UpdateProfilePage extends StatefulWidget {
 }
 
 class _UpdateProfilePageState extends State<UpdateProfilePage> {
+  final _nameTextController = TextEditingController();
+  final _phoneNumberTextController = TextEditingController();
   final _birthDayTextController = TextEditingController();
   final _provinceTextController = TextEditingController();
   final _districTextController = TextEditingController();
   final _wardTextController = TextEditingController();
+  final _addressTextController = TextEditingController();
   int? _provinceCode;
   int? _districtCode;
 
@@ -32,6 +36,12 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
               provider.fetchAccountInformation();
               return const Center(child: CircularProgressIndicator());
             }
+            _nameTextController.text = provider.profile.name;
+            _phoneNumberTextController.text = provider.profile.phoneContact;
+            _addressTextController.text = provider.profile.address;
+            _provinceTextController.text = provider.profile.province;
+            _districTextController.text = provider.profile.district;
+            _wardTextController.text = provider.profile.ward;
             _birthDayTextController.text =
                 DateTimeHelper.getDate(provider.profile.birthDay);
             return Column(
@@ -115,17 +125,13 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                 DTextBox(
                   label: "Họ và tên",
                   hintText: "Vui lòng nhập họ và tên",
-                  controller: TextEditingController(
-                    text: provider.profile.name,
-                  ),
+                  controller: _nameTextController,
                 ),
                 const SizedBox(height: 20),
                 DTextBox(
                   label: "Số điện thoại",
                   hintText: "Vui lòng nhập số điện thoại",
-                  controller: TextEditingController(
-                    text: provider.profile.phoneContact,
-                  ),
+                  controller: _phoneNumberTextController,
                 ),
                 const SizedBox(height: 20),
                 DTextBox(
@@ -224,12 +230,25 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                 DTextBox(
                   label: "Địa chỉ",
                   hintText: "Vui lòng nhập địa chỉ",
-                  controller: TextEditingController(
-                    text: provider.profile.address,
-                  ),
+                  controller: _addressTextController,
                 ),
                 const SizedBox(height: 35),
-                DPrimaryButton.bigwide(text: "Cập nhật", onPressed: () {}),
+                DPrimaryButton.bigwide(
+                    text: "Cập nhật",
+                    onPressed: () async {
+                      bool result = await provider.updateProfile(
+                        _nameTextController.text,
+                        DateTimeHelper.parse(_birthDayTextController.text),
+                        _provinceTextController.text,
+                        _districTextController.text,
+                        _wardTextController.text,
+                        _addressTextController.text,
+                        _phoneNumberTextController.text,
+                      );
+                      if (result) {
+                        Fluttertoast.showToast(msg: "Cập nhật thành công");
+                      }
+                    }),
                 const SizedBox(height: 35),
               ],
             );
