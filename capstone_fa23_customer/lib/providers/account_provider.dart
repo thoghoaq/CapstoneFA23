@@ -6,7 +6,6 @@ import 'package:capstone_fa23_customer/core/models/api_response_model.dart';
 import 'package:capstone_fa23_customer/helpers/api_helper.dart';
 import 'package:capstone_fa23_customer/helpers/jwt_helper.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AccountProvider extends ChangeNotifier {
   late Profile _profile;
@@ -22,6 +21,14 @@ class AccountProvider extends ChangeNotifier {
   String? get username => _username;
   Role? get role => _role;
   bool get isLoading => _isLoading;
+
+  void clear() {
+    _id = null;
+    _phoneNumber = null;
+    _username = null;
+    _role = null;
+    _isLoading = true;
+  }
 
   Future<void> fetchAccountInformation() async {
     _id ??= await JWTHelper().getId();
@@ -54,6 +61,26 @@ class AccountProvider extends ChangeNotifier {
     return response;
   }
 
+  Future<ApiResponse> register(String username, String password) async {
+    final response = await ApiClient().post(
+      "/auth/register/username",
+      {
+        "username": username,
+        "role": Role.customer.index,
+        "password": password,
+      },
+    );
+    if (response.statusCode == HttpStatus.ok) {
+      await JWTHelper().store(response.result["jwtToken"]);
+      if (!await checkLoggedIn()) {
+        throw Exception("Access denied");
+      }
+      _role = Role.customer;
+      _id = await JWTHelper().getId();
+    }
+    return response;
+  }
+
   Future<bool> checkLoggedIn() async {
     try {
       var tokenStr = await JWTHelper().getTokenString();
@@ -65,11 +92,6 @@ class AccountProvider extends ChangeNotifier {
       return false;
     }
     return true;
-  }
-
-  Future<void> logout() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.clear();
   }
 
   Future<bool> updateProfile(String name, DateTime birthDay, String province,

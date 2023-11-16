@@ -1,6 +1,8 @@
+import 'package:capstone_fa23_customer/providers/account_provider.dart';
 import 'package:design_kit/material.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class RegisterUsernamePasswordModal extends StatefulWidget {
   const RegisterUsernamePasswordModal({Key? key}) : super(key: key);
@@ -29,6 +31,7 @@ class _LoginPhoneNumberModalState extends State<RegisterUsernamePasswordModal> {
       TextEditingController();
   bool _isShowPassword = false;
   bool _isShowConfirmPassword = false;
+  final _formKey = GlobalKey<FormState>();
 
   void toggleShowPassword() {
     setState(() {
@@ -40,6 +43,13 @@ class _LoginPhoneNumberModalState extends State<RegisterUsernamePasswordModal> {
     setState(() {
       _isShowConfirmPassword = !_isShowConfirmPassword;
     });
+  }
+
+  void register(BuildContext context, String username, String password) async {
+    await context.read<AccountProvider>().register(username, password);
+    if (mounted) {
+      context.go('/home');
+    }
   }
 
   @override
@@ -59,63 +69,102 @@ class _LoginPhoneNumberModalState extends State<RegisterUsernamePasswordModal> {
         children: [
           const DSwipeIndicator(),
           Expanded(
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16.0),
-                  child: Text(
-                    'Đăng ký với username & mật khẩu',
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    child: Text(
+                      'Đăng ký với username & mật khẩu',
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.headlineLarge?.apply(
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                    ),
+                  ),
+                  Text(
+                    'Sử dụng username và mật khẩu để đăng nhập hoặc đăng kí vào Customer App',
+                    style: Theme.of(context).textTheme.bodyMedium,
                     textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.headlineLarge?.apply(
-                          color: Theme.of(context).colorScheme.secondary,
-                        ),
                   ),
-                ),
-                Text(
-                  'Sử dụng username và mật khẩu để đăng nhập hoặc đăng kí vào Customer App',
-                  style: Theme.of(context).textTheme.bodyMedium,
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 32),
-                DTextBox(
-                  hintText: "Vui lòng nhập username",
-                  controller: _inputUsernameController,
-                ),
-                const SizedBox(height: 16),
-                DTextBox(
-                  hintText: "Vui lòng nhập mật khẩu",
-                  controller: _inputPasswordController,
-                  suffixIcon: GestureDetector(
-                    onTap: () => toggleShowPassword(),
-                    child: Icon(
-                        !_isShowPassword
-                            ? Icons.visibility_outlined
-                            : Icons.visibility_off_outlined,
-                        color: Theme.of(context).colorScheme.primary),
+                  const SizedBox(height: 32),
+                  SizedBox(
+                    width: 336,
+                    child: DTextFormField(
+                      hintText: "Vui lòng nhập username",
+                      controller: _inputUsernameController,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Vui lòng nhập username';
+                        }
+                        return null;
+                      },
+                    ),
                   ),
-                  obscureText: !_isShowPassword,
-                ),
-                const SizedBox(height: 16),
-                DTextBox(
-                  hintText: "Vui lòng nhập lại mật khẩu",
-                  controller: _inputConfirmPasswordController,
-                  suffixIcon: GestureDetector(
-                    onTap: () => toggleShowConfirmPassword(),
-                    child: Icon(
-                        !_isShowConfirmPassword
-                            ? Icons.visibility_outlined
-                            : Icons.visibility_off_outlined,
-                        color: Theme.of(context).colorScheme.primary),
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    width: 336,
+                    child: DTextFormField(
+                      hintText: "Vui lòng nhập mật khẩu",
+                      controller: _inputPasswordController,
+                      suffixIcon: GestureDetector(
+                        onTap: () => toggleShowPassword(),
+                        child: Icon(
+                            !_isShowPassword
+                                ? Icons.visibility_outlined
+                                : Icons.visibility_off_outlined,
+                            color: Theme.of(context).colorScheme.primary),
+                      ),
+                      obscureText: !_isShowPassword,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Vui lòng nhập mật khẩu';
+                        }
+                        if (value.length < 6) {
+                          return 'Mật khẩu phải có ít nhất 6 ký tự';
+                        }
+                        return null;
+                      },
+                    ),
                   ),
-                  obscureText: !_isShowConfirmPassword,
-                ),
-                const SizedBox(height: 32),
-                DPrimaryButton.bigwide(
-                    text: "Tiếp tục",
-                    onPressed: () {
-                      context.go('/home');
-                    }),
-              ],
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    width: 336,
+                    child: DTextFormField(
+                      hintText: "Vui lòng nhập lại mật khẩu",
+                      controller: _inputConfirmPasswordController,
+                      suffixIcon: GestureDetector(
+                        onTap: () => toggleShowConfirmPassword(),
+                        child: Icon(
+                            !_isShowConfirmPassword
+                                ? Icons.visibility_outlined
+                                : Icons.visibility_off_outlined,
+                            color: Theme.of(context).colorScheme.primary),
+                      ),
+                      obscureText: !_isShowConfirmPassword,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Vui lòng nhập mật khẩu';
+                        }
+                        if (value != _inputPasswordController.text) {
+                          return 'Mật khẩu không khớp';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 32),
+                  DPrimaryButton.bigwide(
+                      text: "Tiếp tục",
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          register(context, _inputUsernameController.text,
+                              _inputConfirmPasswordController.text);
+                        }
+                      }),
+                ],
+              ),
             ),
           )
         ],

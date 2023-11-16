@@ -1,10 +1,12 @@
 import 'package:capstone_fa23_customer/partials/profile_list_tile.dart';
 import 'package:capstone_fa23_customer/providers/account_provider.dart';
+import 'package:capstone_fa23_customer/providers/orders_provider.dart';
 import 'package:design_kit/material.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -120,8 +122,12 @@ class ProfilePage extends StatelessWidget {
                             )),
                     leading: SvgPicture.asset("assets/images/icons/exit.svg"),
                     onTap: () async {
-                      await context.read<AccountProvider>().logout();
+                      SharedPreferences prefs =
+                          await SharedPreferences.getInstance();
+                      prefs.clear();
                       if (context.mounted) {
+                        context.read<AccountProvider>().clear();
+                        context.read<OrderProvider>().clear();
                         context.go('/login');
                       }
                     },

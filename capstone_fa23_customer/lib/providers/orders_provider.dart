@@ -13,6 +13,10 @@ class OrderProvider extends ChangeNotifier {
   Order get order => _order;
   bool get isLoading => _isLoading;
 
+  void clear() {
+    _isLoading = true;
+  }
+
   Future<void> getListOrders() async {
     final response = await ApiClient().get("/orders");
     if (response.statusCode == HttpStatus.ok) {
