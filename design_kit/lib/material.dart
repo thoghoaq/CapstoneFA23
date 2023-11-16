@@ -15,3 +15,4 @@ export 'src/material/icon_circle.dart';
 export 'src/material/upload_image.dart';
 export 'src/material/multiple_select_chip_display.dart';
 export 'src/material/text_form_field.dart';
+export 'src/material/auto_complete_text_box.dart';

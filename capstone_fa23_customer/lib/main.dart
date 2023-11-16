@@ -1,12 +1,35 @@
+import 'dart:ui';
+
 import 'package:capstone_fa23_customer/providers/index.dart';
 import 'package:capstone_fa23_customer/routes/router.dart';
 import 'package:capstone_fa23_customer/themes/color_scheme.dart';
 import 'package:capstone_fa23_customer/themes/text_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
-void main() => runApp(const MyApp());
+Future<void> main() async {
+  FlutterError.onError = (details) {
+    FlutterError.presentError(details);
+    Fluttertoast.showToast(
+      msg: "Error: $details",
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.CENTER,
+    );
+  };
+  PlatformDispatcher.instance.onError = (error, stack) {
+    FlutterError.presentError(
+        FlutterErrorDetails(exception: error, stack: stack));
+    Fluttertoast.showToast(
+      msg: "Error: $error",
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.CENTER,
+    );
+    return true;
+  };
+  runApp(const MyApp());
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

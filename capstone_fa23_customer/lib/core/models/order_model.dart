@@ -28,9 +28,9 @@ class Order {
   factory Order.fromJson(Map<String, dynamic> json) {
     return Order(
       id: json['id'],
-      ownerId: json['ownerId'],
+      ownerId: json['owner']['id'],
       creatorId: json['creatorId'],
-      driverId: json['driverId'],
+      driverId: json['driver']['id'],
       shippingProvince: json['shippingProvince'],
       shippingDistrict: json['shippingDistrict'],
       shippingWard: json['shippingWard'],

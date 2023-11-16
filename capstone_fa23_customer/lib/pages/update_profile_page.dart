@@ -1,4 +1,5 @@
 import 'package:capstone_fa23_customer/helpers/datetime_helper.dart';
+import 'package:capstone_fa23_customer/helpers/province_api_helper.dart';
 import 'package:capstone_fa23_customer/providers/account_provider.dart';
 import 'package:design_kit/material.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,11 @@ class UpdateProfilePage extends StatefulWidget {
 
 class _UpdateProfilePageState extends State<UpdateProfilePage> {
   final _birthDayTextController = TextEditingController();
+  final _provinceTextController = TextEditingController();
+  final _districTextController = TextEditingController();
+  final _wardTextController = TextEditingController();
+  int? _provinceCode;
+  int? _districtCode;
 
   @override
   Widget build(BuildContext context) {
@@ -136,6 +142,82 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                       _birthDayTextController.text = DateTimeHelper.getDate(
                           selectedDate.toIso8601String());
                     }
+                  },
+                ),
+                const SizedBox(height: 20),
+                DAutoCompleteTextBox(
+                  provinceTextController: _provinceTextController,
+                  hintText: 'Vui lòng nhập tỉnh / thành phố',
+                  label: 'Tỉnh / Thành phố',
+                  itemBuilder: (context, item) {
+                    var it = item as Map<int, String>;
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        it.values.first,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    );
+                  },
+                  onSuggestionSelected: (suggestion) {
+                    var sug = suggestion as Map<int, String>;
+                    _provinceTextController.text = sug.values.first;
+                    _provinceCode = sug.keys.first;
+                    _districTextController.clear();
+                    _wardTextController.clear();
+                  },
+                  suggestionsCallback: (pattern) async {
+                    return ProvinceApiHelper().getListProvince(pattern);
+                  },
+                ),
+                const SizedBox(height: 20),
+                DAutoCompleteTextBox(
+                  provinceTextController: _districTextController,
+                  hintText: 'Vui lòng nhập quận / huyện',
+                  label: 'Quận / Huyện',
+                  itemBuilder: (context, item) {
+                    var it = item as Map<int, String>;
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        it.values.first,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    );
+                  },
+                  onSuggestionSelected: (suggestion) {
+                    var sug = suggestion as Map<int, String>;
+                    _districTextController.text = sug.values.first;
+                    _districtCode = sug.keys.first;
+                    _wardTextController.clear();
+                  },
+                  suggestionsCallback: (pattern) async {
+                    return ProvinceApiHelper()
+                        .getListDistrict(_provinceCode!, pattern);
+                  },
+                ),
+                const SizedBox(height: 20),
+                DAutoCompleteTextBox(
+                  provinceTextController: _wardTextController,
+                  hintText: 'Vui lòng nhập phường / xã',
+                  label: 'Phường / Xã',
+                  itemBuilder: (context, item) {
+                    var it = item as Map<int, String>;
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        it.values.first,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    );
+                  },
+                  onSuggestionSelected: (suggestion) {
+                    var sug = suggestion as Map<int, String>;
+                    _wardTextController.text = sug.values.first;
+                  },
+                  suggestionsCallback: (pattern) async {
+                    return ProvinceApiHelper()
+                        .getListWard(_provinceCode!, _districtCode!, pattern);
                   },
                 ),
                 const SizedBox(height: 20),

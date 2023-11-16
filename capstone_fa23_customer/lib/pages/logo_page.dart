@@ -9,21 +9,21 @@ class LogoScreenPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    isLogged() async {
-      if (await context.read<AccountProvider>().checkLoggedIn()) {
-        if (context.mounted) {
-          context.go('/home');
-        }
-      } else {
-        if (context.mounted) {
-          context.go('/login');
-        }
-      }
-    }
+    // isLogged() async {
+    //   if (await context.read<AccountProvider>().checkLoggedIn()) {
+    //     if (context.mounted) {
+    //       context.go('/home');
+    //     }
+    //   } else {
+    //     if (context.mounted) {
+    //       context.go('/login');
+    //     }
+    //   }
+    // }
 
-    Future.delayed(const Duration(milliseconds: 3000), () {
-      isLogged();
-    });
+    // Future.delayed(const Duration(milliseconds: 3000), () {
+    //   isLogged();
+    // });
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.primary,
       body: GestureDetector(
