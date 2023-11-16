@@ -23,7 +23,7 @@ class OrderDetailsModal extends StatelessWidget {
           const DSwipeIndicator(),
           TransactionListTile(
             title: order["title"],
-            icon: Image.asset(order["icon"]),
+            // icon: Image.asset(order["icon"]),
             description: order["description"],
             subtitle: order["subtitle"],
             status: order["status"],
@@ -38,11 +38,11 @@ class OrderDetailsModal extends StatelessWidget {
                     width: double.infinity,
                   ),
                   Text(
-                    "Creamy nachos",
+                    "Ghi chú",
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
                   Text(
-                    "Thông tin chi tiết",
+                    order["note"] ?? '',
                     style: Theme.of(context).textTheme.bodySmall,
                   )
                 ],
@@ -50,7 +50,7 @@ class OrderDetailsModal extends StatelessWidget {
             ),
           ),
           Text(
-            "Mã đơn hàng DX672612",
+            "Mã đơn hàng ${order["id"]}",
             style: Theme.of(context).textTheme.labelLarge,
           ),
           const SizedBox(height: 32)

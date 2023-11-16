@@ -23,24 +23,28 @@ class TransactionPage extends StatelessWidget {
               child: CircularProgressIndicator(),
             );
           }
-          return ListView.builder(
-            itemBuilder: (context, index) {
-              return TransactionListTile(
-                // icon: Image.asset(transactions[index]["icon"]),
-                title:
-                    "${provider.orders[index].shippingDistrict}, ${provider.orders[index].shippingWard}, ${provider.orders[index].shippingProvince}",
-                subtitle: provider.orders[index].shippingAddress,
-                description: DateTimeHelper.getDateTime(
-                    provider.orders[index].expectedShippingDate),
-                status: provider.orders[index].currentOrderStatus,
-                showBottomDivider: true,
-                onTap: () {
-                  context.push('/home/tracking-order',
-                      extra: provider.orders[index].id);
-                },
-              );
-            },
-            itemCount: provider.orders.length,
+          return RefreshIndicator(
+            onRefresh: () => provider.getListOrders(),
+            child: ListView.builder(
+              itemBuilder: (context, index) {
+                return TransactionListTile(
+                  // icon: Image.asset(transactions[index]["icon"]),
+                  title:
+                      "Đơn hàng giao bởi ${provider.orders[index].driverName}",
+                  subtitle:
+                      "${provider.orders[index].shippingAddress}, ${provider.orders[index].shippingDistrict}, ${provider.orders[index].shippingWard}, ${provider.orders[index].shippingProvince}",
+                  description:
+                      "Ngày nhận dự kiến: ${DateTimeHelper.getDateTime(provider.orders[index].expectedShippingDate)}",
+                  status: provider.orders[index].currentOrderStatus,
+                  showBottomDivider: true,
+                  onTap: () {
+                    context.push(
+                        '/home/tracking-order/${provider.orders[index].id}');
+                  },
+                );
+              },
+              itemCount: provider.orders.length,
+            ),
           );
         },
       ),

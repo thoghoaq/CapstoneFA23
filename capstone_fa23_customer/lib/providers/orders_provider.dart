@@ -6,9 +6,11 @@ import 'package:flutter/material.dart';
 
 class OrderProvider extends ChangeNotifier {
   late List<Order> _orders;
+  late Order _order;
   bool _isLoading = true;
 
   List<Order> get orders => _orders;
+  Order get order => _order;
   bool get isLoading => _isLoading;
 
   Future<void> getListOrders() async {
@@ -20,6 +22,15 @@ class OrderProvider extends ChangeNotifier {
       notifyListeners();
     } else {
       throw Exception("Failed to load orders");
+    }
+  }
+
+  Future<void> getOrder(String id) async {
+    final response = await ApiClient().get("/orders/$id");
+    if (response.statusCode == HttpStatus.ok) {
+      _order = Order.fromJsonDetail(response.result);
+    } else {
+      throw Exception("Failed to load order $id");
     }
   }
 }

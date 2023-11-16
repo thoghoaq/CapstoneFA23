@@ -56,6 +56,7 @@ class TransactionListTile extends StatelessWidget {
                       children: [
                         Text(
                           title,
+                          overflow: TextOverflow.ellipsis,
                           style: Theme.of(context)
                               .textTheme
                               .titleSmall
@@ -66,10 +67,12 @@ class TransactionListTile extends StatelessWidget {
                         ),
                         Text(
                           subtitle ?? '',
+                          overflow: TextOverflow.ellipsis,
                           style: Theme.of(context).textTheme.displaySmall,
                         ),
                         Text(
                           description ?? '',
+                          overflow: TextOverflow.ellipsis,
                           style: Theme.of(context)
                               .textTheme
                               .labelSmall
