@@ -1,4 +1,4 @@
-import 'package:capstone_fa23_driver/domain/enums/transaction_status.dart';
+import 'package:capstone_fa23_driver/core/enums/transaction_status.dart';
 import 'package:design_kit/material.dart';
 import 'package:flutter/material.dart';
 
@@ -63,10 +63,12 @@ class TransactionListTile extends StatelessWidget {
                                   color:
                                       Theme.of(context).colorScheme.secondary,
                                   fontWeight: FontWeight.w600),
+                          overflow: TextOverflow.ellipsis,
                         ),
                         Text(
                           subtitle ?? '',
                           style: Theme.of(context).textTheme.displaySmall,
+                          overflow: TextOverflow.ellipsis,
                         ),
                         Text(
                           description ?? '',
@@ -74,6 +76,7 @@ class TransactionListTile extends StatelessWidget {
                               .textTheme
                               .labelSmall
                               ?.copyWith(color: DColors.gray3),
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ],
                     ),

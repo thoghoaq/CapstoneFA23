@@ -1,5 +1,4 @@
 import 'package:capstone_fa23_driver/pages/change_password_page.dart';
-import 'package:capstone_fa23_driver/pages/home_page.dart';
 import 'package:capstone_fa23_driver/pages/login_page.dart';
 import 'package:capstone_fa23_driver/pages/logo_page.dart';
 import 'package:capstone_fa23_driver/pages/main_page.dart';
@@ -25,11 +24,11 @@ final router = GoRouter(
           ShellRoute(
             builder: (context, state, child) => MainPage(child: child),
             routes: [
-              GoRoute(
-                name: "home",
-                path: "home",
-                builder: (context, state) => const HomePage(),
-              ),
+              // GoRoute(
+              //   name: "home",
+              //   path: "home",
+              //   builder: (context, state) => const HomePage(),
+              // ),
               GoRoute(
                 name: "orders",
                 path: "orders",

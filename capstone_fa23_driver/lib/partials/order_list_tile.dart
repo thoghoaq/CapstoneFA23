@@ -1,3 +1,5 @@
+import 'package:capstone_fa23_driver/core/enums/transaction_status.dart';
+import 'package:capstone_fa23_driver/helpers/datetime_helper.dart';
 import 'package:design_kit/material.dart';
 import 'package:flutter/material.dart';
 
@@ -32,18 +34,21 @@ class OrderListTile extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      order["status"],
+                      TransactionStatus
+                          .values[order["currentOrderStatus"]].label,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: DColors.primary,
                             fontWeight: FontWeight.w400,
                           ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                     Text(
-                      order["time"],
+                      DateTimeHelper.getDate(order["expectedShippingDate"]),
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: Theme.of(context).colorScheme.secondary,
                             fontWeight: FontWeight.w400,
                           ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),
@@ -59,37 +64,48 @@ class OrderListTile extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          order["title"],
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodySmall
-                              ?.copyWith(
-                                color: Theme.of(context).colorScheme.secondary,
-                                fontWeight: FontWeight.w400,
-                              ),
-                        ),
-                        const SizedBox(
-                          height: 4,
-                        ),
-                        Text(
-                          order["subtitle"],
-                          style:
-                              Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                        ),
-                      ],
-                    ),
-                    Text(
-                      "Mã: ${order["code"]}",
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            fontWeight: FontWeight.w400,
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            order["ownerName"] +
+                                " - " +
+                                order["ownerPhoneContact"],
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodySmall
+                                ?.copyWith(
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                            overflow: TextOverflow.ellipsis,
                           ),
+                          const SizedBox(
+                            height: 4,
+                          ),
+                          Text(
+                            "${order['shippingAddress']}, ${order['shippingDistrict']}, ${order['shippingWard']}, ${order['shippingProvince']}",
+                            style:
+                                Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      width: 70,
+                      child: Text(
+                        "Mã: ${order["id"]}",
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              fontWeight: FontWeight.w400,
+                            ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   ],
                 ),

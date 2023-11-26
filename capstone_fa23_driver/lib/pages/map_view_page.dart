@@ -1,4 +1,4 @@
-import 'package:capstone_fa23_driver/domain/enums/transaction_status.dart';
+import 'package:capstone_fa23_driver/core/enums/transaction_status.dart';
 import 'package:capstone_fa23_driver/modals/ship_cancel_dialog.dart';
 import 'package:capstone_fa23_driver/modals/ship_success_dialog.dart';
 import 'package:capstone_fa23_driver/partials/address_list_tile.dart';
@@ -22,7 +22,7 @@ class _MapViewPageState extends State<MapViewPage> {
         "title": "JCO Jwalk Mall",
         "subtitle": "Được giao bởi Gofood",
         "code": "198271DX",
-        "status": TransactionStatus.ongoing,
+        "status": TransactionStatus.created,
         "sender": {
           "name": "Dunkin Donuts Ambarukm..",
           "phone": "+84 123134343",
