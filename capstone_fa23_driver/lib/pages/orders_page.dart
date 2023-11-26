@@ -214,7 +214,7 @@ class _Ongoing extends StatelessWidget {
                     child: OrderListTile(
                       order: orders[index],
                       onTap: () {
-                        context.push("/orders/map-view");
+                        context.push("/orders/map-view/${orders[index]["id"]}");
                       },
                     ),
                   );

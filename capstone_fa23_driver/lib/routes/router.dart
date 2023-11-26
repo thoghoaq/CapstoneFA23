@@ -36,8 +36,9 @@ final router = GoRouter(
                 routes: [
                   GoRoute(
                     name: "mapView",
-                    path: "map-view",
-                    builder: (context, state) => const MapViewPage(),
+                    path: "map-view/:id",
+                    builder: (context, state) =>
+                        MapViewPage(id: state.pathParameters['id']!),
                   ),
                 ],
               ),

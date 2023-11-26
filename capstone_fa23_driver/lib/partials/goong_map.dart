@@ -12,9 +12,11 @@ class GoongMap extends StatefulWidget {
   State<GoongMap> createState() => _GoongMapState();
 }
 
-LatLng _current = const LatLng(21.027763, 105.834160);
+LatLng _current = const LatLng(50.027763, 40.834160);
 
 class _GoongMapState extends State<GoongMap> {
+  late MapboxMapController mapController;
+
   Future<LatLng> _getCurrentLatLng() async {
     LocationPermission permission = await Geolocator.checkPermission();
 
@@ -39,7 +41,7 @@ class _GoongMapState extends State<GoongMap> {
     }
 
     Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.best);
+        desiredAccuracy: LocationAccuracy.high);
 
     return LatLng(position.latitude, position.longitude);
   }
@@ -52,6 +54,12 @@ class _GoongMapState extends State<GoongMap> {
         return MapboxMap(
           accessToken: dotenv.env['STYLE_ACCESS_TOKEN'],
           styleString: dotenv.env['STYLE_STRING'],
+          // myLocationEnabled: true,
+          // myLocationTrackingMode: MyLocationTrackingMode.Tracking,
+          onMapCreated: (MapboxMapController controller) {
+            mapController = controller;
+          },
+          compassEnabled: true,
           initialCameraPosition: CameraPosition(
             target: snapshot.data ?? _current,
             zoom: 12.0,

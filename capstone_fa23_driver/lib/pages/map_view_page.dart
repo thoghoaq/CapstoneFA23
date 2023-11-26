@@ -5,12 +5,16 @@ import 'package:capstone_fa23_driver/partials/address_list_tile.dart';
 import 'package:capstone_fa23_driver/partials/contact_list_title.dart';
 import 'package:capstone_fa23_driver/partials/goong_map.dart';
 import 'package:capstone_fa23_driver/partials/transaction_list_tile.dart';
+import 'package:capstone_fa23_driver/providers/orders_provider.dart';
 import 'package:design_kit/material.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 class MapViewPage extends StatefulWidget {
-  const MapViewPage({super.key});
+  const MapViewPage({super.key, required this.id});
+
+  final String id;
 
   @override
   State<MapViewPage> createState() => _MapViewPageState();
@@ -61,74 +65,86 @@ class _MapViewPageState extends State<MapViewPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: DAppBar(title: "Mã đơn ${_order["code"]}"),
-      body: Stack(
-        children: [
-          const GoongMap(),
-          NotificationListener<DraggableScrollableNotification>(
-            onNotification: (DraggableScrollableNotification dsNotification) {
-              if (dsNotification.extent <= 0.3) {
-                setState(() {
-                  _displayBottomSheetSize = 0.2;
-                });
-              } else if (dsNotification.extent <= 0.6) {
-                setState(() {
-                  _displayBottomSheetSize = 0.5;
-                });
-              } else {
-                setState(() {
-                  _displayBottomSheetSize = 1;
-                });
-              }
-              return true;
-            },
-            child: DraggableScrollableSheet(
-                expand: true,
-                maxChildSize: 1,
-                minChildSize: 0.2,
-                initialChildSize: 0.2,
-                snap: true,
-                snapSizes: const [0.2, 0.5, 1],
-                builder:
-                    (BuildContext context, ScrollController scrollController) {
-                  return Container(
-                    height: 700,
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.background,
-                      borderRadius: const BorderRadius.vertical(
-                        top: Radius.circular(8),
-                      ),
-                    ),
-                    child: ListView(
-                      controller: scrollController,
-                      children: [
-                        Column(
-                          children: [
-                            const DSwipeIndicator(),
-                            if (_displayBottomSheetSize == 1)
-                              _RoutingWithContact(
-                                order: _order,
-                                complete: complete,
-                                cancel: cancel,
-                              ),
-                            if (_displayBottomSheetSize == 0.5)
-                              _Routing(
-                                order: _order,
-                                complete: complete,
-                                cancel: cancel,
-                              ),
-                            if (_displayBottomSheetSize == 0.2)
-                              _ReceiverContact(receiver: _receiver),
-                          ],
-                        )
-                      ],
-                    ),
-                  );
-                }),
-          )
-        ],
-      ),
+    return Consumer<OrderProvider>(
+      builder: (context, provider, child) {
+        return Scaffold(
+          appBar: DAppBar(title: "Mã đơn ${widget.id}"),
+          body: Stack(
+            children: [
+              const GoongMap(),
+              if (false)
+                FutureBuilder(
+                    future: provider.getOrder(widget.id),
+                    builder: (context, snapshot) {
+                      return NotificationListener<
+                          DraggableScrollableNotification>(
+                        onNotification:
+                            (DraggableScrollableNotification dsNotification) {
+                          if (dsNotification.extent <= 0.3) {
+                            setState(() {
+                              _displayBottomSheetSize = 0.2;
+                            });
+                          } else if (dsNotification.extent <= 0.6) {
+                            setState(() {
+                              _displayBottomSheetSize = 0.5;
+                            });
+                          } else {
+                            setState(() {
+                              _displayBottomSheetSize = 1;
+                            });
+                          }
+                          return true;
+                        },
+                        child: DraggableScrollableSheet(
+                            expand: true,
+                            maxChildSize: 1,
+                            minChildSize: 0.2,
+                            initialChildSize: 0.2,
+                            snap: true,
+                            snapSizes: const [0.2, 0.5, 1],
+                            builder: (BuildContext context,
+                                ScrollController scrollController) {
+                              return Container(
+                                height: 700,
+                                decoration: BoxDecoration(
+                                  color:
+                                      Theme.of(context).colorScheme.background,
+                                  borderRadius: const BorderRadius.vertical(
+                                    top: Radius.circular(8),
+                                  ),
+                                ),
+                                child: ListView(
+                                  controller: scrollController,
+                                  children: [
+                                    Column(
+                                      children: [
+                                        const DSwipeIndicator(),
+                                        if (_displayBottomSheetSize == 1)
+                                          _RoutingWithContact(
+                                            order: _order,
+                                            complete: complete,
+                                            cancel: cancel,
+                                          ),
+                                        if (_displayBottomSheetSize == 0.5)
+                                          _Routing(
+                                            order: _order,
+                                            complete: complete,
+                                            cancel: cancel,
+                                          ),
+                                        if (_displayBottomSheetSize == 0.2)
+                                          _ReceiverContact(receiver: _receiver),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              );
+                            }),
+                      );
+                    }),
+            ],
+          ),
+        );
+      },
     );
   }
 }
