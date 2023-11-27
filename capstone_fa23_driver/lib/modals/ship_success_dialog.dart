@@ -68,10 +68,13 @@ class ShipSuccessDialog extends StatelessWidget {
       actionsOverflowButtonSpacing: 8,
       actions: [
         DPrimaryButton.small(
-          onPressed: () {
-            context.pop();
-            context.go(
-                "/orders/map-view/${context.read<OrderProvider>().order.id}");
+          onPressed: () async {
+            await context.read<OrderProvider>().completeOrder();
+            if (context.mounted) {
+              context.pop();
+              context.go(
+                  "/orders/map-view/${context.read<OrderProvider>().order.id}");
+            }
           },
           text: "Chấp nhận",
         ),

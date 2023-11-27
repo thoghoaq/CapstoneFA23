@@ -23,21 +23,6 @@ class MapViewPage extends StatefulWidget {
 class _MapViewPageState extends State<MapViewPage> {
   double _displayBottomSheetSize = 0.2;
 
-  void cancel(OrderProvider provider) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) => const ShipCancelDialog());
-  }
-
-  void complete(OrderProvider provider) async {
-    await provider.completeOrder();
-    if (mounted) {
-      showDialog(
-          context: context,
-          builder: (BuildContext context) => const ShipSuccessDialog());
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Consumer<OrderProvider>(
@@ -119,14 +104,38 @@ class _MapViewPageState extends State<MapViewPage> {
                                       if (_displayBottomSheetSize == 1)
                                         _RoutingWithContact(
                                           order: order,
-                                          complete: () => complete(provider),
-                                          cancel: () => cancel(provider),
+                                          complete: () {
+                                            showDialog(
+                                                context: context,
+                                                builder: (BuildContext
+                                                        context) =>
+                                                    const ShipSuccessDialog());
+                                          },
+                                          cancel: () {
+                                            showDialog(
+                                                context: context,
+                                                builder: (BuildContext
+                                                        context) =>
+                                                    const ShipCancelDialog());
+                                          },
                                         ),
                                       if (_displayBottomSheetSize == 0.5)
                                         _Routing(
                                           order: order,
-                                          complete: () => complete(provider),
-                                          cancel: () => cancel(provider),
+                                          complete: () {
+                                            showDialog(
+                                                context: context,
+                                                builder: (BuildContext
+                                                        context) =>
+                                                    const ShipSuccessDialog());
+                                          },
+                                          cancel: () {
+                                            showDialog(
+                                                context: context,
+                                                builder: (BuildContext
+                                                        context) =>
+                                                    const ShipCancelDialog());
+                                          },
                                         ),
                                       if (_displayBottomSheetSize == 0.2)
                                         _ReceiverContact(receiver: {

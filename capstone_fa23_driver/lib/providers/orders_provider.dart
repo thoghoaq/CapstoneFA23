@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:capstone_fa23_driver/core/enums/transaction_status.dart';
@@ -85,9 +86,23 @@ class OrderProvider extends ChangeNotifier {
   }
 
   Future<void> calculateRoutes(LatLng currentLocation) async {
-    final response = await ApiClient().get("/routes");
+    final response = await ApiClient().getRaw(
+        "/orders/routes?originLat=${currentLocation.latitude}&originLng=${currentLocation.longitude}");
     if (response.statusCode == HttpStatus.ok) {
-      // var responseData = json.decode(response.body);
+      var responseData = json.decode(response.body);
+      var orders = responseData["result"]["listRoute"]
+          .map((e) => {
+                "id": e["order"]["id"],
+                "no": e["no"],
+              })
+          .toList();
+      _orders.sort((a, b) => orders
+          .firstWhere((element) => element["id"] == a.id)["no"]
+          .compareTo(
+              orders.firstWhere((element) => element["id"] == b.id)["no"]));
+      notifyListeners();
+    } else {
+      throw Exception("Tính toán lộ trình thất bại");
     }
   }
 }

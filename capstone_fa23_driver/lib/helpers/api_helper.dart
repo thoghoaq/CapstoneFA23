@@ -23,6 +23,14 @@ class ApiClient {
     return _handleResponse(response);
   }
 
+  Future<Response> getRaw(String endpoint) async {
+    final response = await http.get(
+      Uri.parse('$apiUrl/api$endpoint'),
+      headers: await _createHeaders(),
+    );
+    return response;
+  }
+
   Future<ApiResponse> post(String endpoint, String data) async {
     final response = await http.post(
       Uri.parse('$apiUrl/api$endpoint'),

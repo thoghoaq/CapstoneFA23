@@ -1,12 +1,12 @@
 import 'package:capstone_fa23_driver/core/enums/transaction_status.dart';
 import 'package:capstone_fa23_driver/helpers/datetime_helper.dart';
+import 'package:capstone_fa23_driver/helpers/location_helper.dart';
 import 'package:capstone_fa23_driver/partials/order_list_tile.dart';
 import 'package:capstone_fa23_driver/partials/transaction_list_tile.dart';
 import 'package:capstone_fa23_driver/providers/orders_provider.dart';
 import 'package:design_kit/material.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:provider/provider.dart';
 
 class OrdersPage extends StatelessWidget {
@@ -227,7 +227,8 @@ class _Ongoing extends StatelessWidget {
                 DOutlinedButton.small(
                   text: "Tính toán lộ trình",
                   onPressed: () async {
-                    await provider.calculateRoutes(LatLng(120, 10));
+                    await provider.calculateRoutes(
+                        await LocationHelper().getCurrentLocation());
                   },
                 ),
               const SizedBox(
