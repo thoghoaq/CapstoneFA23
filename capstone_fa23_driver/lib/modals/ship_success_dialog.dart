@@ -1,7 +1,9 @@
+import 'package:capstone_fa23_driver/providers/orders_provider.dart';
 import 'package:design_kit/material.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class ShipSuccessDialog extends StatelessWidget {
   const ShipSuccessDialog({super.key});
@@ -68,7 +70,8 @@ class ShipSuccessDialog extends StatelessWidget {
         DPrimaryButton.small(
           onPressed: () {
             context.pop();
-            context.go("/orders/map-view");
+            context.go(
+                "/orders/map-view/${context.read<OrderProvider>().order.id}");
           },
           text: "Chấp nhận",
         ),

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:capstone_fa23_driver/core/enums/role.dart';
@@ -45,10 +46,10 @@ class AccountProvider extends ChangeNotifier {
   Future<ApiResponse> loginUsername(String username, String password) async {
     final response = await ApiClient().post(
       "/auth/login/username",
-      {
+      json.encode({
         "username": username,
         "password": password,
-      },
+      }),
     );
     if (response.statusCode == HttpStatus.ok) {
       await JWTHelper().store(response.result["jwtToken"]);
@@ -64,11 +65,11 @@ class AccountProvider extends ChangeNotifier {
   Future<ApiResponse> register(String username, String password) async {
     final response = await ApiClient().post(
       "/auth/register/username",
-      {
+      json.encode({
         "username": username,
         "role": Role.driver.index,
         "password": password,
-      },
+      }),
     );
     if (response.statusCode == HttpStatus.ok) {
       await JWTHelper().store(response.result["jwtToken"]);

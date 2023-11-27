@@ -18,6 +18,10 @@ class Order {
   final String? senderName;
   final String? senderPhoneNumber;
   final String? note;
+  double? lat;
+  double? lng;
+  int? priority;
+  final String? recipientName;
 
   Order({
     required this.id,
@@ -37,6 +41,9 @@ class Order {
     this.note,
     this.ownerName,
     this.ownerPhoneContact,
+    this.lat,
+    this.lng,
+    this.recipientName,
   });
 
   factory Order.fromJson(Map<String, dynamic> json) {
@@ -62,6 +69,8 @@ class Order {
     return Order(
       id: json['id'],
       ownerId: json['owner']['id'],
+      ownerName: json['owner']['name'],
+      ownerPhoneContact: json['owner']['phoneContact'],
       creatorId: json['creatorId'],
       driverId: json['driver']['id'],
       driverName: json['driver']['name'],
@@ -75,6 +84,9 @@ class Order {
       senderName: json['senderName'],
       senderPhoneNumber: json['senderPhoneNumber'],
       note: json['note'],
+      lat: json['lat'] != null ? double.parse(json['lat'].toString()) : null,
+      lng: json['lng'] != null ? double.parse(json['lng'].toString()) : null,
+      recipientName: json['recipientName'],
     );
   }
 

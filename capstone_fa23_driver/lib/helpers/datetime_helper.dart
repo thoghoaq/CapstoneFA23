@@ -16,4 +16,12 @@ class DateTimeHelper {
     int year = int.parse(parts[2]);
     return DateTime(year, month, day);
   }
+
+  static bool isToday(String dateString) {
+    DateTime dateTime = DateTime.parse(dateString);
+    DateTime now = DateTime.now();
+    return dateTime.day == now.day &&
+        dateTime.month == now.month &&
+        dateTime.year == now.year;
+  }
 }

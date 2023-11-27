@@ -13,24 +13,24 @@ import 'package:responsive_framework/responsive_breakpoints.dart';
 
 void main() async {
   await dotenv.load();
-  // FlutterError.onError = (details) {
-  //   FlutterError.presentError(details);
-  //   Fluttertoast.showToast(
-  //     msg: "Error: $details",
-  //     toastLength: Toast.LENGTH_LONG,
-  //     gravity: ToastGravity.CENTER,
-  //   );
-  // };
-  // PlatformDispatcher.instance.onError = (error, stack) {
-  //   FlutterError.presentError(
-  //       FlutterErrorDetails(exception: error, stack: stack));
-  //   Fluttertoast.showToast(
-  //     msg: "Error: $error",
-  //     toastLength: Toast.LENGTH_LONG,
-  //     gravity: ToastGravity.CENTER,
-  //   );
-  //   return true;
-  // };
+  FlutterError.onError = (details) {
+    FlutterError.presentError(details);
+    Fluttertoast.showToast(
+      msg: "Error: $details",
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.CENTER,
+    );
+  };
+  PlatformDispatcher.instance.onError = (error, stack) {
+    FlutterError.presentError(
+        FlutterErrorDetails(exception: error, stack: stack));
+    Fluttertoast.showToast(
+      msg: "Error: $error",
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.CENTER,
+    );
+    return true;
+  };
   runApp(const MyApp());
 }
 

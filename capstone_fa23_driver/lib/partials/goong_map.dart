@@ -51,6 +51,14 @@ class _GoongMapState extends State<GoongMap> {
     return FutureBuilder(
       future: _getCurrentLatLng(),
       builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        if (snapshot.hasData) {
+          _current = snapshot.data as LatLng;
+        }
         return MapboxMap(
           accessToken: dotenv.env['STYLE_ACCESS_TOKEN'],
           styleString: dotenv.env['STYLE_STRING'],
@@ -61,7 +69,7 @@ class _GoongMapState extends State<GoongMap> {
           },
           compassEnabled: true,
           initialCameraPosition: CameraPosition(
-            target: snapshot.data ?? _current,
+            target: _current,
             zoom: 12.0,
           ),
         );

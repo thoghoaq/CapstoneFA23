@@ -1,4 +1,4 @@
-import 'package:capstone_fa23_driver/core/enums/transaction_status.dart';
+import 'package:capstone_fa23_driver/helpers/datetime_helper.dart';
 import 'package:capstone_fa23_driver/modals/ship_cancel_dialog.dart';
 import 'package:capstone_fa23_driver/modals/ship_success_dialog.dart';
 import 'package:capstone_fa23_driver/partials/address_list_tile.dart';
@@ -21,46 +21,21 @@ class MapViewPage extends StatefulWidget {
 }
 
 class _MapViewPageState extends State<MapViewPage> {
-  get _order => {
-        "time": "17/8/2016 3:58 PM",
-        "title": "JCO Jwalk Mall",
-        "subtitle": "Được giao bởi Gofood",
-        "code": "198271DX",
-        "status": TransactionStatus.created,
-        "sender": {
-          "name": "Dunkin Donuts Ambarukm..",
-          "phone": "+84 123134343",
-          "avatar": "assets/images/contexts/brand_1.png",
-          "address": "Jwalk Mall, Jl. A. Yani No. 88, Ambarukmo, Yogyakarta",
-          "distance": 1.4
-        },
-        "receiver": {
-          "name": "Priscilla Watson",
-          "phone": "+84 123134343",
-          "avatar": "assets/images/contexts/avatar_1.jpg",
-          "address": "54, Lê Văn Việt, Quận 9, Thành phố Hồ Chí Minh",
-          "distance": 10.2
-        }
-      };
-
-  get _receiver => {
-        "name": "Priscilla Watson",
-        "phone": "+84 123134343",
-        "avatar": "assets/images/contexts/avatar_1.jpg"
-      };
-
   double _displayBottomSheetSize = 0.2;
 
-  void cancel() {
+  void cancel(OrderProvider provider) {
     showDialog(
         context: context,
         builder: (BuildContext context) => const ShipCancelDialog());
   }
 
-  void complete() {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) => const ShipSuccessDialog());
+  void complete(OrderProvider provider) async {
+    await provider.completeOrder();
+    if (mounted) {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) => const ShipSuccessDialog());
+    }
   }
 
   @override
@@ -72,75 +47,103 @@ class _MapViewPageState extends State<MapViewPage> {
           body: Stack(
             children: [
               const GoongMap(),
-              if (false)
-                FutureBuilder(
-                    future: provider.getOrder(widget.id),
-                    builder: (context, snapshot) {
-                      return NotificationListener<
-                          DraggableScrollableNotification>(
-                        onNotification:
-                            (DraggableScrollableNotification dsNotification) {
-                          if (dsNotification.extent <= 0.3) {
-                            setState(() {
-                              _displayBottomSheetSize = 0.2;
-                            });
-                          } else if (dsNotification.extent <= 0.6) {
-                            setState(() {
-                              _displayBottomSheetSize = 0.5;
-                            });
-                          } else {
-                            setState(() {
-                              _displayBottomSheetSize = 1;
-                            });
-                          }
-                          return true;
-                        },
-                        child: DraggableScrollableSheet(
-                            expand: true,
-                            maxChildSize: 1,
-                            minChildSize: 0.2,
-                            initialChildSize: 0.2,
-                            snap: true,
-                            snapSizes: const [0.2, 0.5, 1],
-                            builder: (BuildContext context,
-                                ScrollController scrollController) {
-                              return Container(
-                                height: 700,
-                                decoration: BoxDecoration(
-                                  color:
-                                      Theme.of(context).colorScheme.background,
-                                  borderRadius: const BorderRadius.vertical(
-                                    top: Radius.circular(8),
-                                  ),
+              FutureBuilder(
+                  future: provider.getOrder(widget.id),
+                  builder: (context, snapshot) {
+                    var order = {
+                      "time": DateTimeHelper.getDate(
+                          provider.order.expectedShippingDate),
+                      "title": provider.order.id,
+                      "subtitle":
+                          "Được tạo bởi ${provider.order.recipientName}",
+                      "code": provider.order.id,
+                      "status": provider.order.currentOrderStatus,
+                      "sender": {
+                        "name": provider.order.senderName,
+                        "phone": provider.order.senderPhoneNumber,
+                        "avatar": "assets/images/contexts/brand_1.png",
+                        "address": provider.order.senderPhoneNumber,
+                        "distance": 1.4
+                      },
+                      "receiver": {
+                        "name": provider.order.ownerName,
+                        "phone": provider.order.ownerPhoneContact,
+                        "avatar": "assets/images/contexts/avatar_1.jpg",
+                        "address":
+                            "${provider.order.shippingAddress}, ${provider.order.shippingWard}, ${provider.order.shippingDistrict}, ${provider.order.shippingProvince}",
+                        "distance": 10.2
+                      }
+                    };
+                    return NotificationListener<
+                        DraggableScrollableNotification>(
+                      onNotification:
+                          (DraggableScrollableNotification dsNotification) {
+                        if (dsNotification.extent <= 0.3) {
+                          setState(() {
+                            _displayBottomSheetSize = 0.2;
+                          });
+                        } else if (dsNotification.extent <= 0.6) {
+                          setState(() {
+                            _displayBottomSheetSize = 0.5;
+                          });
+                        } else {
+                          setState(() {
+                            _displayBottomSheetSize = 1;
+                          });
+                        }
+                        return true;
+                      },
+                      child: DraggableScrollableSheet(
+                          expand: true,
+                          maxChildSize: 1,
+                          minChildSize: 0.2,
+                          initialChildSize: 0.2,
+                          snap: true,
+                          snapSizes: const [0.2, 0.5, 1],
+                          builder: (BuildContext context,
+                              ScrollController scrollController) {
+                            return Container(
+                              height: 700,
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.background,
+                                borderRadius: const BorderRadius.vertical(
+                                  top: Radius.circular(8),
                                 ),
-                                child: ListView(
-                                  controller: scrollController,
-                                  children: [
-                                    Column(
-                                      children: [
-                                        const DSwipeIndicator(),
-                                        if (_displayBottomSheetSize == 1)
-                                          _RoutingWithContact(
-                                            order: _order,
-                                            complete: complete,
-                                            cancel: cancel,
-                                          ),
-                                        if (_displayBottomSheetSize == 0.5)
-                                          _Routing(
-                                            order: _order,
-                                            complete: complete,
-                                            cancel: cancel,
-                                          ),
-                                        if (_displayBottomSheetSize == 0.2)
-                                          _ReceiverContact(receiver: _receiver),
-                                      ],
-                                    )
-                                  ],
-                                ),
-                              );
-                            }),
-                      );
-                    }),
+                              ),
+                              child: ListView(
+                                controller: scrollController,
+                                children: [
+                                  Column(
+                                    children: [
+                                      const DSwipeIndicator(),
+                                      if (_displayBottomSheetSize == 1)
+                                        _RoutingWithContact(
+                                          order: order,
+                                          complete: () => complete(provider),
+                                          cancel: () => cancel(provider),
+                                        ),
+                                      if (_displayBottomSheetSize == 0.5)
+                                        _Routing(
+                                          order: order,
+                                          complete: () => complete(provider),
+                                          cancel: () => cancel(provider),
+                                        ),
+                                      if (_displayBottomSheetSize == 0.2)
+                                        _ReceiverContact(receiver: {
+                                          "name": provider.order.ownerName,
+                                          "phone":
+                                              provider.order.ownerPhoneContact,
+                                          "avatar":
+                                              "assets/images/contexts/avatar_1.jpg"
+                                        }),
+                                    ],
+                                  )
+                                ],
+                              ),
+                            );
+                          }),
+                    );
+                  }),
             ],
           ),
         );
@@ -306,7 +309,7 @@ class _Routing extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Điểm lấy hàng",
+                "Người gửi",
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
               const SizedBox(
@@ -328,7 +331,7 @@ class _Routing extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Điểm nhận hàng",
+                "Điểm giao hàng",
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
               const SizedBox(

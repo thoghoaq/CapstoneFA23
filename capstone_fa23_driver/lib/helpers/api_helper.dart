@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:capstone_fa23_driver/core/models/api_response_model.dart';
 import 'package:capstone_fa23_driver/helpers/jwt_helper.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 
 const apiUrl =
     "http://optimizing-last-mile-env.eba-ix8wtpqt.ap-southeast-1.elasticbeanstalk.com";
@@ -22,13 +23,22 @@ class ApiClient {
     return _handleResponse(response);
   }
 
-  Future<ApiResponse> post(String endpoint, Map<String, dynamic> data) async {
+  Future<ApiResponse> post(String endpoint, String data) async {
     final response = await http.post(
       Uri.parse('$apiUrl/api$endpoint'),
       headers: await _createHeaders(),
-      body: json.encode(data),
+      body: data,
     );
     return _handleResponse(response);
+  }
+
+  Future<Response> postRaw(String endpoint, String data) async {
+    final response = await http.post(
+      Uri.parse('$apiUrl/api$endpoint'),
+      headers: await _createHeaders(),
+      body: data,
+    );
+    return response;
   }
 
   Future<ApiResponse> put(String endpoint, Map<String, dynamic> data) async {
