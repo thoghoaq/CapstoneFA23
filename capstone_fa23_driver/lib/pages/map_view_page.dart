@@ -326,7 +326,7 @@ class _Routing extends StatelessWidget {
                 avatar: SvgPicture.asset("assets/images/icons/location.svg"),
                 title: order["sender"]["name"],
                 address: order["sender"]["address"],
-                subtitle: "Cách bạn ${order["sender"]["distance"]} km",
+                // subtitle: "Cách bạn ${order["sender"]["distance"]} km",
                 trailing: SvgPicture.asset("assets/images/icons/direction.svg"),
               ),
             ],

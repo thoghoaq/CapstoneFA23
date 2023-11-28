@@ -24,6 +24,8 @@ class OrderProvider extends ChangeNotifier {
 
   void clear() {
     _isLoading = true;
+    _orders = [];
+    _history = [];
   }
 
   Future<void> getListOrders(
@@ -124,8 +126,11 @@ class OrderProvider extends ChangeNotifier {
       orders.sort((a, b) => (a["no"] as int).compareTo(b["no"] as int));
       List<Order> sortedOrder = [];
       for (var ord in orders) {
-        sortedOrder
-            .add(_orders.firstWhere((element) => element.id == ord["id"]));
+        var order =
+            _orders.where((element) => element.id == ord["id"]).firstOrNull;
+        if (order != null) {
+          sortedOrder.add(order);
+        }
       }
       _orders = sortedOrder;
 
