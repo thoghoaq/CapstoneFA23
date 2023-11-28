@@ -36,14 +36,28 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
               provider.fetchAccountInformation();
               return const Center(child: CircularProgressIndicator());
             }
-            _nameTextController.text = provider.profile.name;
-            _phoneNumberTextController.text = provider.profile.phoneContact;
-            _addressTextController.text = provider.profile.address;
-            _provinceTextController.text = provider.profile.province;
-            _districTextController.text = provider.profile.district;
-            _wardTextController.text = provider.profile.ward;
-            _birthDayTextController.text =
-                DateTimeHelper.getDate(provider.profile.birthDay);
+            if (provider.profile.name != null) {
+              _nameTextController.text = provider.profile.name!;
+            }
+            if (provider.profile.phoneContact != null) {
+              _phoneNumberTextController.text = provider.profile.phoneContact!;
+            }
+            if (provider.profile.address != null) {
+              _addressTextController.text = provider.profile.address!;
+            }
+            if (provider.profile.province != null) {
+              _provinceTextController.text = provider.profile.province!;
+            }
+            if (provider.profile.district != null) {
+              _districTextController.text = provider.profile.district!;
+            }
+            if (provider.profile.ward != null) {
+              _wardTextController.text = provider.profile.ward!;
+            }
+            if (provider.profile.birthDay != null) {
+              _birthDayTextController.text =
+                  DateTimeHelper.getDate(provider.profile.birthDay!);
+            }
             return Column(
               children: [
                 SizedBox(
@@ -119,7 +133,11 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                Text(provider.profile.name,
+                Text(
+                    provider.profile.name ??
+                        provider.username ??
+                        provider.phoneNumber ??
+                        "",
                     style: Theme.of(context).textTheme.headlineMedium),
                 const SizedBox(height: 30),
                 DTextBox(

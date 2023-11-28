@@ -56,7 +56,11 @@ class ProfilePage extends StatelessWidget {
                 provider.fetchAccountInformation();
                 return const Center(child: CircularProgressIndicator());
               }
-              return Text(provider.profile.name,
+              return Text(
+                  provider.profile.name ??
+                      provider.username ??
+                      provider.phoneNumber ??
+                      "",
                   style: Theme.of(context).textTheme.headlineMedium);
             },
           ),
