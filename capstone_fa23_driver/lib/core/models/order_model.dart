@@ -22,6 +22,8 @@ class Order {
   double? lng;
   int? priority;
   final String? recipientName;
+  int? distanceFromYou;
+  int? durationFromYou;
 
   Order({
     required this.id,
@@ -44,6 +46,8 @@ class Order {
     this.lat,
     this.lng,
     this.recipientName,
+    this.distanceFromYou,
+    this.durationFromYou,
   });
 
   factory Order.fromJson(Map<String, dynamic> json) {

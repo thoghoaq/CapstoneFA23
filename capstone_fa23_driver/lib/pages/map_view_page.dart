@@ -21,6 +21,7 @@ class MapViewPage extends StatefulWidget {
 
 class _MapViewPageState extends State<MapViewPage> {
   double _displayBottomSheetSize = 0.2;
+  int? distance;
 
   @override
   Widget build(BuildContext context) {
@@ -31,131 +32,129 @@ class _MapViewPageState extends State<MapViewPage> {
           body: Stack(
             children: [
               // const GoongMap(),
-              FutureBuilder(
-                  future: provider.getOrder(widget.id),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData == false) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
+              NotificationListener<DraggableScrollableNotification>(
+                onNotification:
+                    (DraggableScrollableNotification dsNotification) {
+                  if (dsNotification.extent <= 0.3) {
+                    setState(() {
+                      _displayBottomSheetSize = 0.2;
+                    });
+                  } else if (dsNotification.extent <= 0.6) {
+                    setState(() {
+                      _displayBottomSheetSize = 0.5;
+                    });
+                  } else {
+                    setState(() {
+                      _displayBottomSheetSize = 1;
+                    });
+                  }
+                  return true;
+                },
+                child: DraggableScrollableSheet(
+                    expand: true,
+                    maxChildSize: 1,
+                    minChildSize: 0.2,
+                    initialChildSize: 0.2,
+                    snap: true,
+                    snapSizes: const [0.2, 0.5, 1],
+                    builder: (BuildContext context,
+                        ScrollController scrollController) {
+                      return Container(
+                        height: 700,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.background,
+                          borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(8),
+                          ),
+                        ),
+                        child: ListView(
+                          controller: scrollController,
+                          children: [
+                            FutureBuilder(
+                              future: provider.getOrder(widget.id),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData == false) {
+                                  return const Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                }
+                                var order = {
+                                  "time": DateTimeHelper.getDate(
+                                      provider.order.expectedShippingDate),
+                                  "title": provider.order.id,
+                                  "subtitle":
+                                      "Được tạo bởi ${provider.order.recipientName}",
+                                  "code": provider.order.id,
+                                  "status": provider.order.currentOrderStatus,
+                                  "sender": {
+                                    "name": provider.order.senderName,
+                                    "phone": provider.order.senderPhoneNumber,
+                                    "avatar":
+                                        "assets/images/contexts/brand_1.png",
+                                    "address": provider.order.senderPhoneNumber,
+                                  },
+                                  "receiver": {
+                                    "name": provider.order.ownerName,
+                                    "phone": provider.order.ownerPhoneContact,
+                                    "avatar":
+                                        "assets/images/contexts/avatar_1.jpg",
+                                    "address":
+                                        "${provider.order.shippingAddress}, ${provider.order.shippingWard}, ${provider.order.shippingDistrict}, ${provider.order.shippingProvince}",
+                                    "distance": provider.order.distanceFromYou,
+                                  }
+                                };
+                                return Column(
+                                  children: [
+                                    const DSwipeIndicator(),
+                                    if (_displayBottomSheetSize == 1)
+                                      _RoutingWithContact(
+                                        order: order,
+                                        complete: () {
+                                          showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) =>
+                                                  const ShipSuccessDialog());
+                                        },
+                                        cancel: () {
+                                          showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) =>
+                                                  const ShipCancelDialog());
+                                        },
+                                      ),
+                                    if (_displayBottomSheetSize == 0.5)
+                                      _Routing(
+                                        order: order,
+                                        complete: () {
+                                          showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) =>
+                                                  const ShipSuccessDialog());
+                                        },
+                                        cancel: () {
+                                          showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) =>
+                                                  const ShipCancelDialog());
+                                        },
+                                      ),
+                                    if (_displayBottomSheetSize == 0.2)
+                                      _ReceiverContact(receiver: {
+                                        "name": provider.order.ownerName,
+                                        "phone":
+                                            provider.order.ownerPhoneContact,
+                                        "avatar":
+                                            "assets/images/contexts/avatar_1.jpg"
+                                      }),
+                                  ],
+                                );
+                              },
+                            )
+                          ],
+                        ),
                       );
-                    }
-                    var order = {
-                      "time": DateTimeHelper.getDate(
-                          provider.order.expectedShippingDate),
-                      "title": provider.order.id,
-                      "subtitle":
-                          "Được tạo bởi ${provider.order.recipientName}",
-                      "code": provider.order.id,
-                      "status": provider.order.currentOrderStatus,
-                      "sender": {
-                        "name": provider.order.senderName,
-                        "phone": provider.order.senderPhoneNumber,
-                        "avatar": "assets/images/contexts/brand_1.png",
-                        "address": provider.order.senderPhoneNumber,
-                      },
-                      "receiver": {
-                        "name": provider.order.ownerName,
-                        "phone": provider.order.ownerPhoneContact,
-                        "avatar": "assets/images/contexts/avatar_1.jpg",
-                        "address":
-                            "${provider.order.shippingAddress}, ${provider.order.shippingWard}, ${provider.order.shippingDistrict}, ${provider.order.shippingProvince}",
-                        "distance": 10.2
-                      }
-                    };
-                    return NotificationListener<
-                        DraggableScrollableNotification>(
-                      onNotification:
-                          (DraggableScrollableNotification dsNotification) {
-                        if (dsNotification.extent <= 0.3) {
-                          setState(() {
-                            _displayBottomSheetSize = 0.2;
-                          });
-                        } else if (dsNotification.extent <= 0.6) {
-                          setState(() {
-                            _displayBottomSheetSize = 0.5;
-                          });
-                        } else {
-                          setState(() {
-                            _displayBottomSheetSize = 1;
-                          });
-                        }
-                        return true;
-                      },
-                      child: DraggableScrollableSheet(
-                          expand: true,
-                          maxChildSize: 1,
-                          minChildSize: 0.2,
-                          initialChildSize: 0.2,
-                          snap: true,
-                          snapSizes: const [0.2, 0.5, 1],
-                          builder: (BuildContext context,
-                              ScrollController scrollController) {
-                            return Container(
-                              height: 700,
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.background,
-                                borderRadius: const BorderRadius.vertical(
-                                  top: Radius.circular(8),
-                                ),
-                              ),
-                              child: ListView(
-                                controller: scrollController,
-                                children: [
-                                  Column(
-                                    children: [
-                                      const DSwipeIndicator(),
-                                      if (_displayBottomSheetSize == 1)
-                                        _RoutingWithContact(
-                                          order: order,
-                                          complete: () {
-                                            showDialog(
-                                                context: context,
-                                                builder: (BuildContext
-                                                        context) =>
-                                                    const ShipSuccessDialog());
-                                          },
-                                          cancel: () {
-                                            showDialog(
-                                                context: context,
-                                                builder: (BuildContext
-                                                        context) =>
-                                                    const ShipCancelDialog());
-                                          },
-                                        ),
-                                      if (_displayBottomSheetSize == 0.5)
-                                        _Routing(
-                                          order: order,
-                                          complete: () {
-                                            showDialog(
-                                                context: context,
-                                                builder: (BuildContext
-                                                        context) =>
-                                                    const ShipSuccessDialog());
-                                          },
-                                          cancel: () {
-                                            showDialog(
-                                                context: context,
-                                                builder: (BuildContext
-                                                        context) =>
-                                                    const ShipCancelDialog());
-                                          },
-                                        ),
-                                      if (_displayBottomSheetSize == 0.2)
-                                        _ReceiverContact(receiver: {
-                                          "name": provider.order.ownerName,
-                                          "phone":
-                                              provider.order.ownerPhoneContact,
-                                          "avatar":
-                                              "assets/images/contexts/avatar_1.jpg"
-                                        }),
-                                    ],
-                                  )
-                                ],
-                              ),
-                            );
-                          }),
-                    );
-                  }),
+                    }),
+              ),
             ],
           ),
         );
@@ -164,7 +163,7 @@ class _MapViewPageState extends State<MapViewPage> {
   }
 }
 
-class _RoutingWithContact extends StatelessWidget {
+class _RoutingWithContact extends StatefulWidget {
   const _RoutingWithContact({
     Key? key,
     required this.order,
@@ -177,15 +176,25 @@ class _RoutingWithContact extends StatelessWidget {
   final VoidCallback complete;
 
   @override
+  State<_RoutingWithContact> createState() => _RoutingWithContactState();
+}
+
+class _RoutingWithContactState extends State<_RoutingWithContact> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         TransactionListTile(
-          title: order["title"],
-          icon: Image.asset(order["sender"]["avatar"]),
-          description: order["time"],
-          subtitle: order["subtitle"],
-          status: order["status"],
+          title: widget.order["title"],
+          icon: Image.asset(widget.order["sender"]["avatar"]),
+          description: widget.order["time"],
+          subtitle: widget.order["subtitle"],
+          status: widget.order["status"],
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -207,9 +216,9 @@ class _RoutingWithContact extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     child: ContactListTile(
-                      title: order["sender"]["name"],
-                      subtitle: order["sender"]["phone"],
-                      avatar: Image.asset(order["sender"]["avatar"]),
+                      title: widget.order["sender"]["name"] ?? "Unknown",
+                      subtitle: widget.order["sender"]["phone"] ?? "Unknown",
+                      avatar: Image.asset(widget.order["sender"]["avatar"]),
                     ),
                   )
                 ],
@@ -236,18 +245,20 @@ class _RoutingWithContact extends StatelessWidget {
                   AddressListTile(
                     avatar:
                         SvgPicture.asset("assets/images/icons/location.svg"),
-                    title: order["receiver"]["name"],
-                    address: order["receiver"]["address"],
-                    subtitle: "Cách bạn ${order["receiver"]["distance"]} km",
+                    title: widget.order["receiver"]["name"],
+                    address: widget.order["receiver"]["address"],
+                    subtitle: widget.order["receiver"]["distance"] != null
+                        ? "Cách bạn ${widget.order["receiver"]["distance"]} km"
+                        : null,
                     trailing:
                         SvgPicture.asset("assets/images/icons/direction.svg"),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     child: ContactListTile(
-                      title: order["receiver"]["name"],
-                      subtitle: order["receiver"]["phone"],
-                      avatar: Image.asset(order["receiver"]["avatar"]),
+                      title: widget.order["receiver"]["name"],
+                      subtitle: widget.order["receiver"]["phone"],
+                      avatar: Image.asset(widget.order["receiver"]["avatar"]),
                     ),
                   )
                 ],
@@ -258,7 +269,7 @@ class _RoutingWithContact extends StatelessWidget {
                     height: 36,
                   ),
                   Text(
-                    "Mã đơn hàng ${order["code"]}",
+                    "Mã đơn hàng ${widget.order["code"]}",
                     style: Theme.of(context).textTheme.labelLarge,
                   ),
                   const SizedBox(
@@ -270,13 +281,13 @@ class _RoutingWithContact extends StatelessWidget {
                       DPrimaryButton.small(
                         text: "Hoàn thành",
                         onPressed: () {
-                          complete();
+                          widget.complete();
                         },
                       ),
                       DOutlinedButton.small(
                         text: "Hủy",
                         onPressed: () {
-                          cancel();
+                          widget.cancel();
                         },
                       )
                     ],
@@ -324,8 +335,8 @@ class _Routing extends StatelessWidget {
               ),
               AddressListTile(
                 avatar: SvgPicture.asset("assets/images/icons/location.svg"),
-                title: order["sender"]["name"],
-                address: order["sender"]["address"],
+                title: order["sender"]["name"] ?? "Unknown",
+                address: order["sender"]["address"] ?? "Unknown",
                 // subtitle: "Cách bạn ${order["sender"]["distance"]} km",
                 trailing: SvgPicture.asset("assets/images/icons/direction.svg"),
               ),
@@ -348,7 +359,9 @@ class _Routing extends StatelessWidget {
                 avatar: SvgPicture.asset("assets/images/icons/location.svg"),
                 title: order["receiver"]["name"],
                 address: order["receiver"]["address"],
-                subtitle: "Cách bạn ${order["receiver"]["distance"]} km",
+                subtitle: order["receiver"]["distance"] != null
+                    ? "Cách bạn ${order["receiver"]["distance"]} km"
+                    : null,
                 trailing: SvgPicture.asset("assets/images/icons/direction.svg"),
               ),
             ],

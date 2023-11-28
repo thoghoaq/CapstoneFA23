@@ -1,12 +1,53 @@
+import 'package:capstone_fa23_driver/core/models/order_model.dart';
+import 'package:capstone_fa23_driver/core/models/traffic_model.dart';
 import 'package:capstone_fa23_driver/providers/orders_provider.dart';
 import 'package:design_kit/material.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:provider/provider.dart';
 
-class ShipSuccessDialog extends StatelessWidget {
+class ShipSuccessDialog extends StatefulWidget {
   const ShipSuccessDialog({super.key});
+
+  @override
+  State<ShipSuccessDialog> createState() => _ShipSuccessDialogState();
+}
+
+class _ShipSuccessDialogState extends State<ShipSuccessDialog> {
+  String? nextUrl;
+
+  Order? nextOrder;
+  TrafficModel? traffic;
+
+  void getNextLocation() async {
+    var next = context.read<OrderProvider>().getNextOrder();
+    setState(() {
+      if (next != null) {
+        nextUrl = "/orders/map-view/${next.id}";
+        nextOrder = next;
+      }
+    });
+    await getDistance();
+  }
+
+  getDistance() async {
+    if (nextOrder == null && nextOrder?.lat != null && nextOrder?.lng != null) {
+      var traffic = await context
+          .read<OrderProvider>()
+          .traffic(LatLng(nextOrder?.lat as double, nextOrder?.lng as double));
+      setState(() {
+        this.traffic = traffic;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    getNextLocation();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,17 +87,18 @@ class ShipSuccessDialog extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("554, 12B Amasado",
+                  Text(nextOrder?.shippingAddress ?? "",
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                             color: Theme.of(context).colorScheme.primary,
                           ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis),
-                  Text("Cách bạn 10.2 km",
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: DColors.gray2,
-                            fontWeight: FontWeight.w500,
-                          ))
+                  if (traffic != null)
+                    Text("Cách bạn ${traffic?.distance} km",
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: DColors.gray2,
+                              fontWeight: FontWeight.w500,
+                            ))
                 ],
               ),
             ],
@@ -72,8 +114,7 @@ class ShipSuccessDialog extends StatelessWidget {
             await context.read<OrderProvider>().completeOrder();
             if (context.mounted) {
               context.pop();
-              context.go(
-                  "/orders/map-view/${context.read<OrderProvider>().order.id}");
+              context.go(nextUrl ?? "/orders");
             }
           },
           text: "Chấp nhận",

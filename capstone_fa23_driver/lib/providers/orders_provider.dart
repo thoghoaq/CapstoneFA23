@@ -6,8 +6,10 @@ import 'dart:io';
 import 'package:capstone_fa23_driver/core/enums/route_calculation_type.dart';
 import 'package:capstone_fa23_driver/core/enums/transaction_status.dart';
 import 'package:capstone_fa23_driver/core/models/order_model.dart';
+import 'package:capstone_fa23_driver/core/models/traffic_model.dart';
 import 'package:capstone_fa23_driver/helpers/api_helper.dart';
 import 'package:capstone_fa23_driver/helpers/datetime_helper.dart';
+import 'package:capstone_fa23_driver/helpers/location_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 
@@ -46,6 +48,11 @@ class OrderProvider extends ChangeNotifier {
           .toList();
       if (page == 1) {
         _orders = orders;
+        int p = 1;
+        while (_orders.isEmpty && p <= response.result["totalPage"]) {
+          await getListOrders(page: p + 1);
+          p++;
+        }
       } else {
         for (var i = 0; i < orders.length; i++) {
           _orders.add(orders[i]);
@@ -88,8 +95,9 @@ class OrderProvider extends ChangeNotifier {
   Future<Order> getOrder(String id) async {
     final response = await ApiClient().get("/orders/$id");
     if (response.statusCode == HttpStatus.ok) {
-      _order = Order.fromJsonDetail(response.result);
-      return _order;
+      var order = Order.fromJsonDetail(response.result);
+      _order = order;
+      return order;
     } else {
       throw Exception("Failed to load order $id");
     }
@@ -137,6 +145,46 @@ class OrderProvider extends ChangeNotifier {
       notifyListeners();
     } else {
       throw Exception("Tính toán lộ trình thất bại");
+    }
+  }
+
+  Future<TrafficModel> traffic(LatLng orderLocation) async {
+    var currentLocation = await LocationHelper().getCurrentLocation();
+    var data = json.encode([
+      {
+        "address": "Vị trí hiện tại",
+        "lat": currentLocation.latitude,
+        "lng": currentLocation.longitude
+      },
+      {
+        "address": "Vị trí đơn hàng ${_order.id}",
+        "lat": orderLocation.latitude,
+        "lng": orderLocation.longitude
+      }
+    ]);
+    var response = await ApiClient().postRaw("/traffics", data);
+    if (response.statusCode == HttpStatus.ok) {
+      var responseData = json.decode(response.body);
+      _order.distanceFromYou = responseData.first["distance"]["value"];
+      _order.durationFromYou = responseData.first["duration"]["value"];
+      return TrafficModel(
+        distance: responseData.first["distance"]["value"],
+        distanceUnit: responseData.first["distance"]["unit"],
+        duration: responseData.first["duration"]["value"],
+        durationUnit: responseData.first["duration"]["unit"],
+      );
+    } else {
+      throw Exception("Tính khoảng cách thất bại");
+    }
+  }
+
+  Order? getNextOrder() {
+    var index = _orders.indexOf(_order);
+    if (index < _orders.length - 1) {
+      _order = _orders[index + 1];
+      return _order;
+    } else {
+      return null;
     }
   }
 }
