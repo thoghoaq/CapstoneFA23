@@ -81,7 +81,7 @@ class ShipSuccessDialog extends StatelessWidget {
         DOutlinedButton.small(
           onPressed: () {
             context.pop();
-            context.go("/home");
+            context.go("/orders");
           },
           text: "Trở về trang chủ",
         ),
