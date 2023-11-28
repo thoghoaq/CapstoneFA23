@@ -1,6 +1,9 @@
+// ignore_for_file: unused_import
+
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:capstone_fa23_driver/core/enums/route_calculation_type.dart';
 import 'package:capstone_fa23_driver/core/enums/transaction_status.dart';
 import 'package:capstone_fa23_driver/core/models/order_model.dart';
 import 'package:capstone_fa23_driver/helpers/api_helper.dart';
@@ -9,12 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 
 class OrderProvider extends ChangeNotifier {
-  final List<Order> _orders = [];
-  final List<Order> _history = [];
-  int _ordersPage = 1;
-  final int _ordersSize = 10;
-  int _historyPage = 1;
-  final int _historySize = 10;
+  List<Order> _orders = [];
+  List<Order> _history = [];
   late Order _order;
   bool _isLoading = true;
 
@@ -27,8 +26,9 @@ class OrderProvider extends ChangeNotifier {
     _isLoading = true;
   }
 
-  Future<void> getListOrders({TransactionStatus? status}) async {
-    var url = "/orders?Limit=$_ordersSize&Page=$_ordersPage";
+  Future<void> getListOrders(
+      {TransactionStatus? status, int size = 10, int page = 1}) async {
+    var url = "/orders?Limit=$size&Page=$page";
     if (status != null) {
       url += "&Status=${status.index}";
     }
@@ -37,16 +37,18 @@ class OrderProvider extends ChangeNotifier {
       var orders = List<Order>.from(
               response.result["data"].map((e) => Order.fromJson(e)))
           .where((element) =>
-              TransactionStatus.isOngoing(element.currentOrderStatus) &&
-              DateTimeHelper.isToday(element.expectedShippingDate))
+                  TransactionStatus.isOngoing(element.currentOrderStatus)
+              // &&
+              // DateTimeHelper.isToday(element.expectedShippingDate)
+              )
           .toList();
-      for (var i = 0; i < orders.length; i++) {
-        var location = await _getLatLng(orders[i]);
-        orders[i].lat = location.latitude;
-        orders[i].lng = location.longitude;
-        _orders.add(orders[i]);
+      if (page == 1) {
+        _orders = orders;
+      } else {
+        for (var i = 0; i < orders.length; i++) {
+          _orders.add(orders[i]);
+        }
       }
-      _ordersPage++;
       _isLoading = false;
       notifyListeners();
     } else {
@@ -54,8 +56,9 @@ class OrderProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> getHistory({TransactionStatus? status}) async {
-    var url = "/orders?Limit=$_historySize&Page=$_historyPage";
+  Future<void> getHistory(
+      {TransactionStatus? status, int size = 10, int page = 1}) async {
+    var url = "/orders?Limit=$size&Page=$page";
     if (status != null) {
       url += "&Status=${status.index}";
     }
@@ -66,10 +69,13 @@ class OrderProvider extends ChangeNotifier {
           .where((element) =>
               TransactionStatus.isCompleted(element.currentOrderStatus))
           .toList();
-      for (var i = 0; i < history.length; i++) {
-        _history.add(history[i]);
+      if (page == 1) {
+        _history = history;
+      } else {
+        for (var i = 0; i < history.length; i++) {
+          _history.add(history[i]);
+        }
       }
-      _historyPage++;
       _isLoading = false;
       notifyListeners();
     } else {
@@ -77,22 +83,13 @@ class OrderProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> getOrder(String id) async {
+  Future<Order> getOrder(String id) async {
     final response = await ApiClient().get("/orders/$id");
     if (response.statusCode == HttpStatus.ok) {
       _order = Order.fromJsonDetail(response.result);
+      return _order;
     } else {
       throw Exception("Failed to load order $id");
-    }
-  }
-
-  Future<LatLng> _getLatLng(Order order) async {
-    final response = await ApiClient().get("/orders/${order.id}");
-    if (response.statusCode == HttpStatus.ok) {
-      _order = Order.fromJsonDetail(response.result);
-      return LatLng(_order.lat ?? 0, _order.lng ?? 0);
-    } else {
-      throw Exception("Failed to load order ${order.id}");
     }
   }
 
@@ -103,25 +100,19 @@ class OrderProvider extends ChangeNotifier {
     });
     if (response.statusCode == HttpStatus.noContent ||
         response.statusCode == HttpStatus.ok) {
+      getListOrders();
+      getHistory();
       notifyListeners();
     } else {
       throw Exception("Failed to complete order ${_order.id}");
     }
   }
 
-  void ordersInit() {
-    _ordersPage = 1;
-    _orders.clear();
-  }
-
-  void historyInit() {
-    _ordersPage = 1;
-    _history.clear();
-  }
-
-  Future<void> calculateRoutes(LatLng currentLocation) async {
+  Future<void> calculateRoutes(
+      LatLng currentLocation, RouteCalculationType? calculationType) async {
+    bool useDuration = calculationType == RouteCalculationType.duration;
     final response = await ApiClient().getRaw(
-        "/orders/routes?originLat=${currentLocation.latitude}&originLng=${currentLocation.longitude}");
+        "/orders/routes?originLat=${currentLocation.latitude}&originLng=${currentLocation.longitude}&useDuration=$useDuration");
     if (response.statusCode == HttpStatus.ok) {
       var responseData = json.decode(response.body);
       var orders = responseData["result"]["listRoute"]
@@ -130,10 +121,14 @@ class OrderProvider extends ChangeNotifier {
                 "no": e["no"],
               })
           .toList();
-      _orders.sort((a, b) => orders
-          .firstWhere((element) => element["id"] == a.id)["no"]
-          .compareTo(
-              orders.firstWhere((element) => element["id"] == b.id)["no"]));
+      orders.sort((a, b) => (a["no"] as int).compareTo(b["no"] as int));
+      List<Order> sortedOrder = [];
+      for (var ord in orders) {
+        sortedOrder
+            .add(_orders.firstWhere((element) => element.id == ord["id"]));
+      }
+      _orders = sortedOrder;
+
       notifyListeners();
     } else {
       throw Exception("Tính toán lộ trình thất bại");

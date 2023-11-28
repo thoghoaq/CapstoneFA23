@@ -34,6 +34,11 @@ class _MapViewPageState extends State<MapViewPage> {
               FutureBuilder(
                   future: provider.getOrder(widget.id),
                   builder: (context, snapshot) {
+                    if (snapshot.hasData == false) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
                     var order = {
                       "time": DateTimeHelper.getDate(
                           provider.order.expectedShippingDate),

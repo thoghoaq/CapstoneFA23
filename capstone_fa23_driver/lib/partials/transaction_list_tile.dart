@@ -2,7 +2,7 @@ import 'package:capstone_fa23_driver/core/enums/transaction_status.dart';
 import 'package:design_kit/material.dart';
 import 'package:flutter/material.dart';
 
-class TransactionListTile extends StatelessWidget {
+class TransactionListTile extends StatefulWidget {
   final String title;
   final String? subtitle;
   final String? description;
@@ -25,27 +25,33 @@ class TransactionListTile extends StatelessWidget {
   });
 
   @override
+  State<TransactionListTile> createState() => _TransactionListTileState();
+}
+
+class _TransactionListTileState extends State<TransactionListTile> {
+  @override
   Widget build(BuildContext context) {
     return Container(
         decoration: BoxDecoration(
           border: Border(
-            bottom: showBottomDivider
+            bottom: widget.showBottomDivider
                 ? const BorderSide(color: DColors.gray6)
                 : BorderSide.none,
-            top: showTopDivider
+            top: widget.showTopDivider
                 ? const BorderSide(color: DColors.gray6)
                 : BorderSide.none,
           ),
         ),
         child: InkWell(
-          onTap: onTap,
+          onTap: widget.onTap,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Row(
               children: [
                 // Leading
-                if (icon != null) DAvatarCircle(image: icon!, radius: 41),
-                SizedBox(width: icon != null ? 16 : 0),
+                if (widget.icon != null)
+                  DAvatarCircle(image: widget.icon!, radius: 41),
+                SizedBox(width: widget.icon != null ? 16 : 0),
                 // Body
                 Expanded(
                   child: SizedBox(
@@ -55,7 +61,7 @@ class TransactionListTile extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Text(
-                          title,
+                          widget.title,
                           style: Theme.of(context)
                               .textTheme
                               .titleSmall
@@ -66,12 +72,12 @@ class TransactionListTile extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                         Text(
-                          subtitle ?? '',
+                          widget.subtitle ?? '',
                           style: Theme.of(context).textTheme.displaySmall,
                           overflow: TextOverflow.ellipsis,
                         ),
                         Text(
-                          description ?? '',
+                          widget.description ?? '',
                           style: Theme.of(context)
                               .textTheme
                               .labelSmall
@@ -83,22 +89,22 @@ class TransactionListTile extends StatelessWidget {
                   ),
                 ),
                 // Trailing
-                SizedBox(width: status != null ? 16 : 0),
-                status != null
+                SizedBox(width: widget.status != null ? 16 : 0),
+                widget.status != null
                     ? Container(
                         width: 65,
                         height: 27,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(4),
-                          color: status!.backgroundColor,
+                          color: widget.status!.backgroundColor,
                         ),
                         child: Center(
                           child: Text(
-                            status!.label,
+                            widget.status!.label,
                             style: Theme.of(context)
                                 .textTheme
                                 .labelSmall
-                                ?.apply(color: status!.color),
+                                ?.apply(color: widget.status!.color),
                           ),
                         ),
                       )

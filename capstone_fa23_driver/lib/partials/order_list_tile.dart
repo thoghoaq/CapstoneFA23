@@ -3,15 +3,20 @@ import 'package:capstone_fa23_driver/helpers/datetime_helper.dart';
 import 'package:design_kit/material.dart';
 import 'package:flutter/material.dart';
 
-class OrderListTile extends StatelessWidget {
+class OrderListTile extends StatefulWidget {
   final dynamic order;
   final VoidCallback? onTap;
   const OrderListTile({super.key, this.order, this.onTap});
 
   @override
+  State<OrderListTile> createState() => _OrderListTileState();
+}
+
+class _OrderListTileState extends State<OrderListTile> {
+  @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onTap,
+      onTap: widget.onTap,
       child: Container(
         width: 335,
         height: 143,
@@ -35,7 +40,7 @@ class OrderListTile extends StatelessWidget {
                   children: [
                     Text(
                       TransactionStatus
-                          .values[order["currentOrderStatus"]].label,
+                          .values[widget.order["currentOrderStatus"]].label,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: DColors.primary,
                             fontWeight: FontWeight.w400,
@@ -43,7 +48,8 @@ class OrderListTile extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     Text(
-                      DateTimeHelper.getDate(order["expectedShippingDate"]),
+                      DateTimeHelper.getDate(
+                          widget.order["expectedShippingDate"]),
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: Theme.of(context).colorScheme.secondary,
                             fontWeight: FontWeight.w400,
@@ -70,9 +76,9 @@ class OrderListTile extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            order["ownerName"] +
+                            widget.order["ownerName"] +
                                 " - " +
-                                order["ownerPhoneContact"],
+                                widget.order["ownerPhoneContact"],
                             style: Theme.of(context)
                                 .textTheme
                                 .bodySmall
@@ -87,7 +93,7 @@ class OrderListTile extends StatelessWidget {
                             height: 4,
                           ),
                           Text(
-                            "${order['shippingAddress']}, ${order['shippingDistrict']}, ${order['shippingWard']}, ${order['shippingProvince']}",
+                            "${widget.order['shippingAddress']}, ${widget.order['shippingDistrict']}, ${widget.order['shippingWard']}, ${widget.order['shippingProvince']}",
                             style:
                                 Theme.of(context).textTheme.bodySmall?.copyWith(
                                       fontWeight: FontWeight.w400,
@@ -100,7 +106,7 @@ class OrderListTile extends StatelessWidget {
                     SizedBox(
                       width: 70,
                       child: Text(
-                        "Mã: ${order["id"]}",
+                        "Mã: ${widget.order["id"]}",
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               fontWeight: FontWeight.w400,
                             ),
