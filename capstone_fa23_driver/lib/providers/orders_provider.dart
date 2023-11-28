@@ -49,7 +49,7 @@ class OrderProvider extends ChangeNotifier {
       if (page == 1) {
         _orders = orders;
         int p = 1;
-        while (_orders.isEmpty && p <= response.result["totalPage"]) {
+        while (_orders.isEmpty && p < response.result["totalPage"]) {
           await getListOrders(page: p + 1);
           p++;
         }
@@ -115,6 +115,24 @@ class OrderProvider extends ChangeNotifier {
       notifyListeners();
     } else {
       throw Exception("Failed to complete order ${_order.id}");
+    }
+  }
+
+  Future<void> cancelOrder(List<String> reasons) async {
+    var description = reasons.isNotEmpty
+        ? reasons.join(", ")
+        : TransactionStatus.deliveryFailed.label;
+    final response = await ApiClient().put("/orders/${_order.id}/status", {
+      "status": TransactionStatus.deliveryFailed.index,
+      "description": description
+    });
+    if (response.statusCode == HttpStatus.noContent ||
+        response.statusCode == HttpStatus.ok) {
+      getListOrders();
+      getHistory();
+      notifyListeners();
+    } else {
+      throw Exception("Failed to cancel order ${_order.id}");
     }
   }
 

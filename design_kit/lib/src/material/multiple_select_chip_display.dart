@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 class DMultiSelectChipDisplay extends StatefulWidget {
   final List<String> options;
-  const DMultiSelectChipDisplay({Key? key, required this.options})
+  final List<String> selectedChips;
+  const DMultiSelectChipDisplay(
+      {Key? key, required this.options, required this.selectedChips})
       : super(key: key);
 
   @override
@@ -11,8 +13,6 @@ class DMultiSelectChipDisplay extends StatefulWidget {
 }
 
 class _MultiSelectChipDisplayState extends State<DMultiSelectChipDisplay> {
-  List<String> selectedChips = [];
-
   @override
   Widget build(BuildContext context) {
     return Wrap(
@@ -35,13 +35,13 @@ class _MultiSelectChipDisplayState extends State<DMultiSelectChipDisplay> {
               ),
               showCheckmark: false,
               selectedColor: Theme.of(context).colorScheme.primary,
-              selected: selectedChips.contains(option),
+              selected: widget.selectedChips.contains(option),
               onSelected: (bool selected) {
                 setState(() {
                   if (selected) {
-                    selectedChips.add(option);
+                    widget.selectedChips.add(option);
                   } else {
-                    selectedChips.remove(option);
+                    widget.selectedChips.remove(option);
                   }
                 });
               },

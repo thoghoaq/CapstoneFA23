@@ -1,7 +1,9 @@
+import 'package:capstone_fa23_driver/providers/orders_provider.dart';
 import 'package:design_kit/material.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class ShipCancelDialog extends StatefulWidget {
   const ShipCancelDialog({super.key});
@@ -18,6 +20,7 @@ class _ShipCancelDialogState extends State<ShipCancelDialog> {
     "Khách không nhận đơn",
     "Khách gửi nhầm địa chỉ"
   ];
+  final List<String> _selectedChips = [];
   final TextEditingController controller = TextEditingController();
 
   @override
@@ -59,6 +62,7 @@ class _ShipCancelDialogState extends State<ShipCancelDialog> {
       actions: [
         DMultiSelectChipDisplay(
           options: _commonReason,
+          selectedChips: _selectedChips,
         ),
         SizedBox(
           height: 80,
@@ -69,9 +73,18 @@ class _ShipCancelDialogState extends State<ShipCancelDialog> {
           ),
         ),
         DOutlinedButton.small(
-          onPressed: () {
-            context.pop();
-            context.go("/orders");
+          onPressed: () async {
+            var reasons = _selectedChips;
+            if (controller.text.isNotEmpty) {
+              reasons.add(controller.text);
+            }
+            await context.read<OrderProvider>().cancelOrder(reasons);
+            if (mounted) {
+              context.pop();
+            }
+            if (mounted) {
+              context.go("/orders");
+            }
           },
           text: "Hủy",
         ),
