@@ -143,6 +143,13 @@ class _OrdersPageState extends State<OrdersPage> {
   }
 
   @override
+  void initState() {
+    context.read<OrderProvider>().ordersInit();
+    context.read<OrderProvider>().historyInit();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,

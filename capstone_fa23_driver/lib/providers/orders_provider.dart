@@ -109,6 +109,16 @@ class OrderProvider extends ChangeNotifier {
     }
   }
 
+  void ordersInit() {
+    _ordersPage = 1;
+    _orders.clear();
+  }
+
+  void historyInit() {
+    _ordersPage = 1;
+    _history.clear();
+  }
+
   Future<void> calculateRoutes(LatLng currentLocation) async {
     final response = await ApiClient().getRaw(
         "/orders/routes?originLat=${currentLocation.latitude}&originLng=${currentLocation.longitude}");
