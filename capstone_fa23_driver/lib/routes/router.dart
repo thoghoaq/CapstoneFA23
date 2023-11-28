@@ -32,7 +32,7 @@ final router = GoRouter(
               GoRoute(
                 name: "orders",
                 path: "orders",
-                builder: (context, state) => OrdersPage(),
+                builder: (context, state) => const OrdersPage(),
                 routes: [
                   GoRoute(
                     name: "mapView",

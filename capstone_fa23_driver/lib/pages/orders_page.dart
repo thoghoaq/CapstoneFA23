@@ -7,11 +7,17 @@ import 'package:capstone_fa23_driver/providers/orders_provider.dart';
 import 'package:design_kit/material.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
 import 'package:provider/provider.dart';
 
-class OrdersPage extends StatelessWidget {
-  OrdersPage({super.key});
+class OrdersPage extends StatefulWidget {
+  const OrdersPage({super.key});
 
+  @override
+  State<OrdersPage> createState() => _OrdersPageState();
+}
+
+class _OrdersPageState extends State<OrdersPage> {
   final List transactions = [
     {
       "icon": "assets/images/contexts/brand_1.png",
@@ -109,11 +115,39 @@ class OrdersPage extends StatelessWidget {
     },
   ];
 
+  bool isLoadMore = false;
+  bool historyIsLoadMore = false;
+
+  Future loadMore() async {
+    if (!isLoadMore) {
+      setState(() {
+        isLoadMore = true;
+      });
+    }
+    await context.read<OrderProvider>().getListOrders();
+    setState(() {
+      isLoadMore = false;
+    });
+  }
+
+  Future historyLoadMore() async {
+    if (!historyIsLoadMore) {
+      setState(() {
+        historyIsLoadMore = true;
+      });
+    }
+    await context.read<OrderProvider>().getHistory();
+    setState(() {
+      historyIsLoadMore = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           title: Text(
             "Đơn hàng",
@@ -160,26 +194,42 @@ class OrdersPage extends StatelessWidget {
         body: TabBarView(children: [
           Consumer<OrderProvider>(
             builder: (context, provider, child) {
-              if (provider.isLoading) {
+              if (provider.orders.isEmpty) {
                 provider.getListOrders();
+                if (provider.isLoading) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              }
+              return LazyLoadScrollView(
+                onEndOfPage: () => loadMore(),
+                scrollOffset: 100,
+                child: _Ongoing(
+                    provider: provider,
+                    isLoadMore: isLoadMore,
+                    orders: provider.orders
+                        .map((order) => order.toJson())
+                        .toList()),
+              );
+            },
+          ),
+          Consumer<OrderProvider>(builder: (context, provider, child) {
+            if (provider.history.isEmpty) {
+              provider.getHistory();
+              if (provider.isLoading) {
                 return const Center(
                   child: CircularProgressIndicator(),
                 );
               }
-              return _Ongoing(
-                  provider: provider,
-                  orders:
-                      provider.orders.map((order) => order.toJson()).toList());
-            },
-          ),
-          Consumer<OrderProvider>(builder: (context, provider, child) {
-            if (provider.isLoading) {
-              provider.getListOrders();
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
             }
-            return _History(provider: provider);
+            return LazyLoadScrollView(
+                onEndOfPage: () => historyLoadMore(),
+                scrollOffset: 100,
+                child: _History(
+                  provider: provider,
+                  isLoadMore: historyIsLoadMore,
+                ));
           })
         ]),
       ),
@@ -192,10 +242,12 @@ class _Ongoing extends StatelessWidget {
     Key? key,
     required this.orders,
     required this.provider,
+    required this.isLoadMore,
   }) : super(key: key);
 
   final List orders;
   final OrderProvider provider;
+  final bool isLoadMore;
 
   @override
   Widget build(BuildContext context) {
@@ -207,9 +259,15 @@ class _Ongoing extends StatelessWidget {
           Column(
             children: [
               ListView.builder(
-                itemCount: orders.length,
+                itemCount: orders.length + 1,
                 padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
                 itemBuilder: (context, index) {
+                  if (index == orders.length) {
+                    return Visibility(
+                        visible: isLoadMore,
+                        child:
+                            const Center(child: CircularProgressIndicator()));
+                  }
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 16),
                     child: OrderListTile(
@@ -246,9 +304,11 @@ class _History extends StatelessWidget {
   const _History({
     Key? key,
     required this.provider,
+    required this.isLoadMore,
   }) : super(key: key);
 
   final OrderProvider provider;
+  final bool isLoadMore;
 
   @override
   Widget build(BuildContext context) {
@@ -256,6 +316,11 @@ class _History extends StatelessWidget {
       onRefresh: () => provider.getListOrders(),
       child: ListView.builder(
         itemBuilder: (context, index) {
+          if (index == provider.history.length) {
+            return Visibility(
+                visible: isLoadMore,
+                child: const Center(child: CircularProgressIndicator()));
+          }
           return TransactionListTile(
             title:
                 "${provider.history[index].ownerName} - ${provider.history[index].ownerPhoneContact}",
@@ -268,7 +333,7 @@ class _History extends StatelessWidget {
             onTap: () {},
           );
         },
-        itemCount: provider.history.length,
+        itemCount: provider.history.length + 1,
       ),
     );
   }

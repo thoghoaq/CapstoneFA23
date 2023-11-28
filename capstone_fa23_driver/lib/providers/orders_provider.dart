@@ -9,8 +9,12 @@ import 'package:flutter/material.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 
 class OrderProvider extends ChangeNotifier {
-  late List<Order> _orders;
-  late List<Order> _history;
+  final List<Order> _orders = [];
+  final List<Order> _history = [];
+  int _ordersPage = 1;
+  final int _ordersSize = 10;
+  int _historyPage = 1;
+  final int _historySize = 10;
   late Order _order;
   bool _isLoading = true;
 
@@ -24,28 +28,48 @@ class OrderProvider extends ChangeNotifier {
   }
 
   Future<void> getListOrders({TransactionStatus? status}) async {
-    var url = "/orders";
+    var url = "/orders?Limit=$_ordersSize&Page=$_ordersPage";
     if (status != null) {
-      url += "?Status=${status.index}";
+      url += "&Status=${status.index}";
     }
     final response = await ApiClient().get(url);
     if (response.statusCode == HttpStatus.ok) {
-      _orders = List<Order>.from(
+      var orders = List<Order>.from(
               response.result["data"].map((e) => Order.fromJson(e)))
           .where((element) =>
               TransactionStatus.isOngoing(element.currentOrderStatus) &&
               DateTimeHelper.isToday(element.expectedShippingDate))
           .toList();
-      _history = List<Order>.from(
+      for (var i = 0; i < orders.length; i++) {
+        var location = await _getLatLng(orders[i]);
+        orders[i].lat = location.latitude;
+        orders[i].lng = location.longitude;
+        _orders.add(orders[i]);
+      }
+      _ordersPage++;
+      _isLoading = false;
+      notifyListeners();
+    } else {
+      throw Exception("Failed to load orders");
+    }
+  }
+
+  Future<void> getHistory({TransactionStatus? status}) async {
+    var url = "/orders?Limit=$_historySize&Page=$_historyPage";
+    if (status != null) {
+      url += "&Status=${status.index}";
+    }
+    final response = await ApiClient().get(url);
+    if (response.statusCode == HttpStatus.ok) {
+      var history = List<Order>.from(
               response.result["data"].map((e) => Order.fromJson(e)))
           .where((element) =>
               TransactionStatus.isCompleted(element.currentOrderStatus))
           .toList();
-      for (var order in _orders) {
-        var location = await _getLatLng(order);
-        order.lat = location.latitude;
-        order.lng = location.longitude;
+      for (var i = 0; i < history.length; i++) {
+        _history.add(history[i]);
       }
+      _historyPage++;
       _isLoading = false;
       notifyListeners();
     } else {

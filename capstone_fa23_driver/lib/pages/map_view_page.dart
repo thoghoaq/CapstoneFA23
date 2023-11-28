@@ -3,7 +3,6 @@ import 'package:capstone_fa23_driver/modals/ship_cancel_dialog.dart';
 import 'package:capstone_fa23_driver/modals/ship_success_dialog.dart';
 import 'package:capstone_fa23_driver/partials/address_list_tile.dart';
 import 'package:capstone_fa23_driver/partials/contact_list_title.dart';
-import 'package:capstone_fa23_driver/partials/goong_map.dart';
 import 'package:capstone_fa23_driver/partials/transaction_list_tile.dart';
 import 'package:capstone_fa23_driver/providers/orders_provider.dart';
 import 'package:design_kit/material.dart';
@@ -31,7 +30,7 @@ class _MapViewPageState extends State<MapViewPage> {
           appBar: DAppBar(title: "Mã đơn ${widget.id}"),
           body: Stack(
             children: [
-              const GoongMap(),
+              // const GoongMap(),
               FutureBuilder(
                   future: provider.getOrder(widget.id),
                   builder: (context, snapshot) {
@@ -48,7 +47,6 @@ class _MapViewPageState extends State<MapViewPage> {
                         "phone": provider.order.senderPhoneNumber,
                         "avatar": "assets/images/contexts/brand_1.png",
                         "address": provider.order.senderPhoneNumber,
-                        "distance": 1.4
                       },
                       "receiver": {
                         "name": provider.order.ownerName,
@@ -195,20 +193,11 @@ class _RoutingWithContact extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Điểm lấy hàng",
+                    "Người gửi",
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
                   const SizedBox(
                     height: 8,
-                  ),
-                  AddressListTile(
-                    avatar:
-                        SvgPicture.asset("assets/images/icons/location.svg"),
-                    title: order["sender"]["name"],
-                    address: order["sender"]["address"],
-                    subtitle: "Cách bạn ${order["sender"]["distance"]} km",
-                    trailing:
-                        SvgPicture.asset("assets/images/icons/direction.svg"),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 16),
@@ -233,7 +222,7 @@ class _RoutingWithContact extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Điểm nhận hàng",
+                    "Điểm giao hàng",
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
                   const SizedBox(
@@ -258,31 +247,35 @@ class _RoutingWithContact extends StatelessWidget {
                   )
                 ],
               ),
-              const SizedBox(
-                height: 32,
-              ),
-              Text(
-                "Mã đơn hàng ${order["code"]}",
-                style: Theme.of(context).textTheme.labelLarge,
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              Column(
                 children: [
-                  DPrimaryButton.small(
-                    text: "Hoàn thành",
-                    onPressed: () {
-                      complete();
-                    },
+                  const SizedBox(
+                    height: 36,
                   ),
-                  DOutlinedButton.small(
-                    text: "Hủy",
-                    onPressed: () {
-                      cancel();
-                    },
-                  )
+                  Text(
+                    "Mã đơn hàng ${order["code"]}",
+                    style: Theme.of(context).textTheme.labelLarge,
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      DPrimaryButton.small(
+                        text: "Hoàn thành",
+                        onPressed: () {
+                          complete();
+                        },
+                      ),
+                      DOutlinedButton.small(
+                        text: "Hủy",
+                        onPressed: () {
+                          cancel();
+                        },
+                      )
+                    ],
+                  ),
                 ],
               ),
             ],
