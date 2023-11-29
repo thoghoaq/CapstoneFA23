@@ -50,10 +50,8 @@ class OrderProvider extends ChangeNotifier {
       var orders = List<Order>.from(
               response.result["data"].map((e) => Order.fromJson(e)))
           .where((element) =>
-                  TransactionStatus.isOngoing(element.currentOrderStatus)
-              // &&
-              // DateTimeHelper.isToday(element.expectedShippingDate)
-              )
+              TransactionStatus.isOngoing(element.currentOrderStatus) &&
+              DateTimeHelper.isToday(element.expectedShippingDate))
           .toList();
       if (page == 1) {
         _orders = orders;
