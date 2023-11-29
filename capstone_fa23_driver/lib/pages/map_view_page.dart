@@ -3,6 +3,7 @@ import 'package:capstone_fa23_driver/modals/ship_cancel_dialog.dart';
 import 'package:capstone_fa23_driver/modals/ship_success_dialog.dart';
 import 'package:capstone_fa23_driver/partials/address_list_tile.dart';
 import 'package:capstone_fa23_driver/partials/contact_list_title.dart';
+import 'package:capstone_fa23_driver/partials/goong_map.dart';
 import 'package:capstone_fa23_driver/partials/transaction_list_tile.dart';
 import 'package:capstone_fa23_driver/providers/orders_provider.dart';
 import 'package:design_kit/material.dart';
@@ -31,7 +32,7 @@ class _MapViewPageState extends State<MapViewPage> {
           appBar: DAppBar(title: "Mã đơn ${widget.id}"),
           body: Stack(
             children: [
-              // const GoongMap(),
+              const GoongMap(),
               NotificationListener<DraggableScrollableNotification>(
                 onNotification:
                     (DraggableScrollableNotification dsNotification) {
