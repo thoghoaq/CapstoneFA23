@@ -32,7 +32,16 @@ class OrderProvider extends ChangeNotifier {
 
   Future<void> getListOrders(
       {TransactionStatus? status, int size = 10, int page = 1}) async {
+    var listStatus = [
+      TransactionStatus.created,
+      TransactionStatus.processing,
+      TransactionStatus.pickOff,
+      TransactionStatus.shipping
+    ];
     var url = "/orders?Limit=$size&Page=$page";
+    for (var s in listStatus) {
+      url += "&Status=${s.index}";
+    }
     if (status != null) {
       url += "&Status=${status.index}";
     }
@@ -68,6 +77,14 @@ class OrderProvider extends ChangeNotifier {
   Future<void> getHistory(
       {TransactionStatus? status, int size = 10, int page = 1}) async {
     var url = "/orders?Limit=$size&Page=$page";
+    var listStatus = [
+      TransactionStatus.deliveryFailed,
+      TransactionStatus.delivered,
+      TransactionStatus.deleted
+    ];
+    for (var s in listStatus) {
+      url += "&Status=${s.index}";
+    }
     if (status != null) {
       url += "&Status=${status.index}";
     }
