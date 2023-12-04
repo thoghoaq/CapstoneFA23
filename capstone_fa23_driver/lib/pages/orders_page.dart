@@ -120,11 +120,14 @@ class _OrdersPageState extends State<OrdersPage> {
 
   bool isLoadMore = false;
   bool historyIsLoadMore = false;
+  bool isWaitingOrderLoadMore = false;
   bool isCalculatingRoutes = false;
   int ordersPage = 1;
   final int ordersSize = 10;
   int historyPage = 1;
   final int historySize = 10;
+  int waitingOrdersPage = 1;
+  final int waitingOrdersSize = 10;
 
   Future loadMore() async {
     if (!isLoadMore) {
@@ -138,6 +141,21 @@ class _OrdersPageState extends State<OrdersPage> {
     setState(() {
       ordersPage++;
       isLoadMore = false;
+    });
+  }
+
+  Future waitingOrdersLoadMore() async {
+    if (!isWaitingOrderLoadMore) {
+      setState(() {
+        isWaitingOrderLoadMore = true;
+      });
+    }
+    await context
+        .read<OrderProvider>()
+        .getListWatingOrders(page: ordersPage + 1, size: ordersSize);
+    setState(() {
+      waitingOrdersPage++;
+      isWaitingOrderLoadMore = false;
     });
   }
 
@@ -159,6 +177,12 @@ class _OrdersPageState extends State<OrdersPage> {
   void resetOrderPage() {
     setState(() {
       ordersPage = 1;
+    });
+  }
+
+  void resetWatingOrderPage() {
+    setState(() {
+      waitingOrdersPage = 1;
     });
   }
 
@@ -197,7 +221,7 @@ class _OrdersPageState extends State<OrdersPage> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
@@ -230,7 +254,11 @@ class _OrdersPageState extends State<OrdersPage> {
                   unselectedLabelColor: DColors.gray3,
                   tabs: const [
                     Tab(
-                      text: "Đang diễn ra",
+                      text: "Đang chờ",
+                      height: 40,
+                    ),
+                    Tab(
+                      text: "Đang giao",
                       height: 40,
                     ),
                     Tab(
@@ -244,6 +272,35 @@ class _OrdersPageState extends State<OrdersPage> {
           ),
         ),
         body: TabBarView(children: [
+          Consumer<OrderProvider>(
+            builder: (context, provider, child) {
+              if (provider.waitingOrder.isEmpty) {
+                provider.getListWatingOrders();
+                if (provider.isLoading) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              }
+              return Stack(
+                children: [
+                  LazyLoadScrollView(
+                    onEndOfPage: () => waitingOrdersLoadMore(),
+                    scrollOffset: 100,
+                    child: _Waiting(
+                        provider: provider,
+                        isLoadMore: isWaitingOrderLoadMore,
+                        calculateRoutes: calculateRoutes,
+                        reset: resetWatingOrderPage,
+                        orders: provider.waitingOrder
+                            .map((order) => order.toJson())
+                            .toList()),
+                  ),
+                  if (isCalculatingRoutes) const RoutesCalculateOverlay(),
+                ],
+              );
+            },
+          ),
           Consumer<OrderProvider>(
             builder: (context, provider, child) {
               if (provider.orders.isEmpty) {
@@ -398,6 +455,96 @@ class _OngoingState extends State<_Ongoing> {
                     );
                   },
                 ),
+              const SizedBox(
+                height: 16,
+              )
+            ],
+          ),
+        ]),
+      ),
+    );
+  }
+}
+
+class _Waiting extends StatefulWidget {
+  const _Waiting({
+    Key? key,
+    required this.orders,
+    required this.provider,
+    required this.isLoadMore,
+    required this.calculateRoutes,
+    required this.reset,
+  }) : super(key: key);
+
+  final List orders;
+  final OrderProvider provider;
+  final bool isLoadMore;
+  final Function(RouteCalculationType?) calculateRoutes;
+  final Function reset;
+
+  @override
+  State<_Waiting> createState() => _WaitingState();
+}
+
+class _WaitingState extends State<_Waiting> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Theme.of(context).colorScheme.surface,
+      child: RefreshIndicator(
+        onRefresh: () async {
+          await widget.provider.getListWatingOrders();
+          widget.reset();
+        },
+        child: ListView(children: [
+          Column(
+            children: [
+              ListView.builder(
+                itemCount: widget.orders.length + 1,
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                itemBuilder: (context, index) {
+                  if (index == widget.orders.length) {
+                    return Visibility(
+                        visible: widget.isLoadMore,
+                        child:
+                            const Center(child: CircularProgressIndicator()));
+                  }
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: InkWell(
+                      onTap: () => widget.provider
+                          .toggleSelectWaitingOrder(widget.orders[index]["id"]),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.background,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Icon(
+                                widget.orders[index]["isWatingOrderSelected"]
+                                    ? Icons.check_box
+                                    : Icons.check_box_outline_blank,
+                                color: Theme.of(context).colorScheme.primary,
+                                size: 24,
+                              ),
+                            ),
+                            Expanded(
+                              child: OrderListTile(
+                                order: widget.orders[index],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+              ),
               const SizedBox(
                 height: 16,
               )

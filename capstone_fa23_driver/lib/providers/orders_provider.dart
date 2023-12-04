@@ -16,11 +16,13 @@ import 'package:mapbox_gl/mapbox_gl.dart';
 class OrderProvider extends ChangeNotifier {
   List<Order> _orders = [];
   List<Order> _history = [];
+  List<Order> _waitingOrders = [];
   late Order _order;
   bool _isLoading = true;
 
   List<Order> get orders => _orders;
   List<Order> get history => _history;
+  List<Order> get waitingOrder => _waitingOrders;
   Order get order => _order;
   bool get isLoading => _isLoading;
 
@@ -28,16 +30,12 @@ class OrderProvider extends ChangeNotifier {
     _isLoading = true;
     _orders = [];
     _history = [];
+    _waitingOrders = [];
   }
 
   Future<void> getListOrders(
       {TransactionStatus? status, int size = 10, int page = 1}) async {
-    var listStatus = [
-      TransactionStatus.created,
-      TransactionStatus.processing,
-      TransactionStatus.pickOff,
-      TransactionStatus.shipping
-    ];
+    var listStatus = [TransactionStatus.pickOff, TransactionStatus.shipping];
     var url = "/orders?Limit=$size&Page=$page";
     for (var s in listStatus) {
       url += "&Status=${s.index}";
@@ -63,6 +61,43 @@ class OrderProvider extends ChangeNotifier {
       } else {
         for (var i = 0; i < orders.length; i++) {
           _orders.add(orders[i]);
+        }
+      }
+      _isLoading = false;
+      notifyListeners();
+    } else {
+      throw Exception("Failed to load orders");
+    }
+  }
+
+  Future<void> getListWatingOrders(
+      {TransactionStatus? status, int size = 10, int page = 1}) async {
+    var listStatus = [TransactionStatus.created, TransactionStatus.processing];
+    var url = "/orders?Limit=$size&Page=$page";
+    for (var s in listStatus) {
+      url += "&Status=${s.index}";
+    }
+    if (status != null) {
+      url += "&Status=${status.index}";
+    }
+    final response = await ApiClient().get(url);
+    if (response.statusCode == HttpStatus.ok) {
+      var orders = List<Order>.from(
+              response.result["data"].map((e) => Order.fromJson(e)))
+          .where((element) =>
+              TransactionStatus.isProcessing(element.currentOrderStatus) &&
+              DateTimeHelper.isToday(element.expectedShippingDate))
+          .toList();
+      if (page == 1) {
+        _waitingOrders = orders;
+        int p = 1;
+        while (_waitingOrders.isEmpty && p < response.result["totalPage"]) {
+          await getListWatingOrders(page: p + 1);
+          p++;
+        }
+      } else {
+        for (var i = 0; i < orders.length; i++) {
+          _waitingOrders.add(orders[i]);
         }
       }
       _isLoading = false;
@@ -219,5 +254,15 @@ class OrderProvider extends ChangeNotifier {
     } else {
       return null;
     }
+  }
+
+  void toggleSelectWaitingOrder(String orderId) {
+    var ord = _waitingOrders.firstWhere((element) => element.id == orderId);
+    if (ord.isWatingOrderSelected == null) {
+      ord.isWatingOrderSelected = true;
+    } else {
+      ord.isWatingOrderSelected = !ord.isWatingOrderSelected!;
+    }
+    notifyListeners();
   }
 }

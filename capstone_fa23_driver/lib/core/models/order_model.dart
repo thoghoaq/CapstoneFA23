@@ -24,6 +24,7 @@ class Order {
   final String? recipientName;
   int? distanceFromYou;
   int? durationFromYou;
+  bool? isWatingOrderSelected;
 
   Order({
     required this.id,
@@ -130,6 +131,7 @@ class Order {
       'currentOrderStatus': currentOrderStatus.index,
       'ownerName': ownerName,
       'ownerPhoneContact': ownerPhoneContact,
+      'isWatingOrderSelected': isWatingOrderSelected ?? false,
     };
   }
 }

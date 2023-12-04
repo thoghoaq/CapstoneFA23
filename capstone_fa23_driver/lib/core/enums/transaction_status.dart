@@ -16,10 +16,13 @@ enum TransactionStatus {
   final Color color;
   final Color backgroundColor;
 
-  static bool isOngoing(TransactionStatus status) {
+  static bool isProcessing(TransactionStatus status) {
     return status == TransactionStatus.created ||
-        status == TransactionStatus.processing ||
-        status == TransactionStatus.pickOff ||
+        status == TransactionStatus.processing;
+  }
+
+  static bool isOngoing(TransactionStatus status) {
+    return status == TransactionStatus.pickOff ||
         status == TransactionStatus.shipping;
   }
 
