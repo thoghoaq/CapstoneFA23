@@ -431,6 +431,7 @@ class _OngoingState extends State<_Ongoing> {
                     padding: const EdgeInsets.only(bottom: 16),
                     child: OrderListTile(
                       order: widget.orders[index],
+                      index: index + 1,
                       onTap: () {
                         context.push(
                             "/orders/map-view/${widget.orders[index]["id"]}");
@@ -544,6 +545,7 @@ class _WaitingState extends State<_Waiting> {
                                 Expanded(
                                   child: OrderListTile(
                                     order: widget.orders[index],
+                                    index: index + 1,
                                   ),
                                 ),
                               ],

@@ -1,12 +1,12 @@
 import 'package:capstone_fa23_driver/core/enums/transaction_status.dart';
 import 'package:capstone_fa23_driver/helpers/datetime_helper.dart';
-import 'package:design_kit/material.dart';
 import 'package:flutter/material.dart';
 
 class OrderListTile extends StatefulWidget {
   final dynamic order;
   final VoidCallback? onTap;
-  const OrderListTile({super.key, this.order, this.onTap});
+  final int index;
+  const OrderListTile({super.key, this.order, this.onTap, required this.index});
 
   @override
   State<OrderListTile> createState() => _OrderListTileState();
@@ -38,14 +38,47 @@ class _OrderListTileState extends State<OrderListTile> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      TransactionStatus
-                          .values[widget.order["currentOrderStatus"]].label,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: DColors.primary,
-                            fontWeight: FontWeight.w400,
+                    Row(
+                      children: [
+                        Container(
+                          width: 26,
+                          height: 26,
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.background,
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
                           ),
-                      overflow: TextOverflow.ellipsis,
+                          child: Center(
+                            child: Text(
+                              widget.index.toString(),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelLarge
+                                  ?.copyWith(
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                  ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 8,
+                        ),
+                        Text(
+                          TransactionStatus
+                              .values[widget.order["currentOrderStatus"]].label,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(
+                                color: Theme.of(context).colorScheme.primary,
+                                fontWeight: FontWeight.w400,
+                              ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
                     ),
                     Text(
                       DateTimeHelper.getDate(

@@ -79,6 +79,24 @@ class _RouteCalculationTypeDialogState
               ),
             ],
           ),
+          Row(
+            children: [
+              Radio(
+                value: RouteCalculationType.random,
+                groupValue: selectedType,
+                onChanged: (value) => handleClick(value),
+              ),
+              GestureDetector(
+                onTap: () => handleClick(RouteCalculationType.random),
+                child: Text(
+                  RouteCalculationType.random.label,
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w500,
+                      ),
+                ),
+              ),
+            ],
+          ),
           const SizedBox(height: 16),
         ],
       ),

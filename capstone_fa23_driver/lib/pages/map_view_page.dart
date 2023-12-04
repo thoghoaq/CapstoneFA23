@@ -280,7 +280,7 @@ class _RoutingWithContactState extends State<_RoutingWithContact> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       DPrimaryButton.small(
-                        text: "Hoàn thành",
+                        text: widget.order["status"].buttonLabel,
                         onPressed: () {
                           widget.complete();
                         },
@@ -374,7 +374,7 @@ class _Routing extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               DPrimaryButton.small(
-                text: "Hoàn thành",
+                text: order["status"].buttonLabel,
                 onPressed: () {
                   complete();
                 },

@@ -194,8 +194,13 @@ class OrderProvider extends ChangeNotifier {
   Future<void> calculateRoutes(
       LatLng currentLocation, RouteCalculationType? calculationType) async {
     bool useDuration = calculationType == RouteCalculationType.duration;
-    final response = await ApiClient().getRaw(
-        "/orders/routes?originLat=${currentLocation.latitude}&originLng=${currentLocation.longitude}&useDuration=$useDuration");
+    var url =
+        "/orders/routes?originLat=${currentLocation.latitude}&originLng=${currentLocation.longitude}&useDuration=$useDuration";
+    if (calculationType == RouteCalculationType.random) {
+      url =
+          "/orders/routes/random?originLat=${currentLocation.latitude}&originLng=${currentLocation.longitude}";
+    }
+    final response = await ApiClient().getRaw(url);
     if (response.statusCode == HttpStatus.ok) {
       var responseData = json.decode(response.body);
       var orders = responseData["result"]["listRoute"]
