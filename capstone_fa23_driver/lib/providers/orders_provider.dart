@@ -1,5 +1,6 @@
 // ignore_for_file: unused_import
 
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -11,6 +12,7 @@ import 'package:capstone_fa23_driver/helpers/api_helper.dart';
 import 'package:capstone_fa23_driver/helpers/datetime_helper.dart';
 import 'package:capstone_fa23_driver/helpers/location_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 
 class OrderProvider extends ChangeNotifier {
@@ -153,18 +155,20 @@ class OrderProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> completeOrder() async {
-    final response = await ApiClient().put("/orders/${_order.id}/status", {
-      "status": _order.currentOrderStatus.index + 1,
+  Future<void> completeOrder({Order? order}) async {
+    var ord = order ?? _order;
+    final response = await ApiClient().put("/orders/${ord.id}/status", {
+      "status": ord.currentOrderStatus.index + 1,
       "description": "Đã hoàn thành đơn hàng"
     });
     if (response.statusCode == HttpStatus.noContent ||
         response.statusCode == HttpStatus.ok) {
+      getListWatingOrders();
       getListOrders();
       getHistory();
       notifyListeners();
     } else {
-      throw Exception("Failed to complete order ${_order.id}");
+      throw Exception("Cập nhật trạng thái đơn hàng ${ord.id} thất bại");
     }
   }
 
@@ -178,11 +182,12 @@ class OrderProvider extends ChangeNotifier {
     });
     if (response.statusCode == HttpStatus.noContent ||
         response.statusCode == HttpStatus.ok) {
+      getListWatingOrders();
       getListOrders();
       getHistory();
       notifyListeners();
     } else {
-      throw Exception("Failed to cancel order ${_order.id}");
+      throw Exception("Hủy đơn hàng ${_order.id} thất bại");
     }
   }
 
@@ -264,5 +269,45 @@ class OrderProvider extends ChangeNotifier {
       ord.isWatingOrderSelected = !ord.isWatingOrderSelected!;
     }
     notifyListeners();
+  }
+
+  void selectAllWaitingOrders() {
+    for (var ord in _waitingOrders) {
+      ord.isWatingOrderSelected = true;
+    }
+    notifyListeners();
+  }
+
+  void unSelectAllWaitingOrders() {
+    for (var ord in _waitingOrders) {
+      ord.isWatingOrderSelected = false;
+    }
+    notifyListeners();
+  }
+
+  Future<void> pickUpWaitingOrders() async {
+    var selectedOrders =
+        _waitingOrders.where((o) => o.isWatingOrderSelected == true).toList();
+    for (var element in selectedOrders) {
+      await completeOrder(order: element);
+      element.currentOrderStatus =
+          TransactionStatus.values[element.currentOrderStatus.index + 1];
+    }
+    autoChangeStatusOrder(selectedOrders);
+  }
+
+  void autoChangeStatusOrder(List<Order> selectedOrder) {
+    const Duration delay = Duration(seconds: 30);
+
+    Timer(delay, () async {
+      for (var element in selectedOrder) {
+        await completeOrder(order: element);
+        Fluttertoast.showToast(
+          msg: "Cập nhật trạng thái đơn hàng ${element.id}",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.CENTER,
+        );
+      }
+    });
   }
 }

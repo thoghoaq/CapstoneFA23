@@ -16,7 +16,7 @@ void main() async {
   FlutterError.onError = (details) {
     FlutterError.presentError(details);
     Fluttertoast.showToast(
-      msg: "Error: $details",
+      msg: "Lỗi hệ thống: $details",
       toastLength: Toast.LENGTH_LONG,
       gravity: ToastGravity.CENTER,
     );
@@ -25,7 +25,7 @@ void main() async {
     FlutterError.presentError(
         FlutterErrorDetails(exception: error, stack: stack));
     Fluttertoast.showToast(
-      msg: "Error: $error",
+      msg: "Lỗi hệ thống: $error",
       toastLength: Toast.LENGTH_LONG,
       gravity: ToastGravity.CENTER,
     );

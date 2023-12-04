@@ -14,7 +14,7 @@ class Order {
   final String shippingWard;
   final String shippingAddress;
   final String expectedShippingDate;
-  final TransactionStatus currentOrderStatus;
+  TransactionStatus currentOrderStatus;
   final String? senderName;
   final String? senderPhoneNumber;
   final String? note;

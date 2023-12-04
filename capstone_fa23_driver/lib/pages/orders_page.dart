@@ -489,68 +489,115 @@ class _Waiting extends StatefulWidget {
 class _WaitingState extends State<_Waiting> {
   @override
   Widget build(BuildContext context) {
+    bool isSelected = widget.provider.waitingOrder.any((element) {
+      return element.isWatingOrderSelected == true;
+    });
+    bool isSelectedAll = widget.provider.waitingOrder.every((element) {
+      return element.isWatingOrderSelected == true;
+    });
     return Container(
       color: Theme.of(context).colorScheme.surface,
-      child: RefreshIndicator(
-        onRefresh: () async {
-          await widget.provider.getListWatingOrders();
-          widget.reset();
-        },
-        child: ListView(children: [
-          Column(
-            children: [
-              ListView.builder(
-                itemCount: widget.orders.length + 1,
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-                itemBuilder: (context, index) {
-                  if (index == widget.orders.length) {
-                    return Visibility(
-                        visible: widget.isLoadMore,
-                        child:
-                            const Center(child: CircularProgressIndicator()));
-                  }
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 16),
-                    child: InkWell(
-                      onTap: () => widget.provider
-                          .toggleSelectWaitingOrder(widget.orders[index]["id"]),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.background,
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Icon(
-                                widget.orders[index]["isWatingOrderSelected"]
-                                    ? Icons.check_box
-                                    : Icons.check_box_outline_blank,
-                                color: Theme.of(context).colorScheme.primary,
-                                size: 24,
-                              ),
+      child: Stack(
+        children: [
+          RefreshIndicator(
+            onRefresh: () async {
+              await widget.provider.getListWatingOrders();
+              widget.reset();
+            },
+            child: ListView(children: [
+              Column(
+                children: [
+                  ListView.builder(
+                    itemCount: widget.orders.length + 1,
+                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                    itemBuilder: (context, index) {
+                      if (index == widget.orders.length) {
+                        return Visibility(
+                            visible: widget.isLoadMore,
+                            child: const Center(
+                                child: CircularProgressIndicator()));
+                      }
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 16),
+                        child: InkWell(
+                          onTap: () => widget.provider.toggleSelectWaitingOrder(
+                              widget.orders[index]["id"]),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.background,
+                              borderRadius: BorderRadius.circular(4),
                             ),
-                            Expanded(
-                              child: OrderListTile(
-                                order: widget.orders[index],
-                              ),
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Icon(
+                                    widget.orders[index]
+                                            ["isWatingOrderSelected"]
+                                        ? Icons.check_box
+                                        : Icons.check_box_outline_blank,
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                    size: 24,
+                                  ),
+                                ),
+                                Expanded(
+                                  child: OrderListTile(
+                                    order: widget.orders[index],
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
-                      ),
-                    ),
-                  );
-                },
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
+                      );
+                    },
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                  ),
+                  const SizedBox(
+                    height: 48,
+                  )
+                ],
               ),
-              const SizedBox(
-                height: 16,
-              )
-            ],
+            ]),
           ),
-        ]),
+          if (widget.provider.waitingOrder.isNotEmpty)
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: SizedBox(
+                  height: 36,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      if (isSelected)
+                        Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: DPrimaryButton.xsmall(
+                            text: "Lấy hàng",
+                            onPressed: () =>
+                                widget.provider.pickUpWaitingOrders(),
+                          ),
+                        ),
+                      isSelectedAll
+                          ? DOutlinedButton.small(
+                              text: " Bỏ chọn tất cả",
+                              onPressed: () =>
+                                  widget.provider.unSelectAllWaitingOrders(),
+                            )
+                          : DOutlinedButton.xsmall(
+                              text: "Chọn tất cả",
+                              onPressed: () =>
+                                  widget.provider.selectAllWaitingOrders(),
+                            )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }
