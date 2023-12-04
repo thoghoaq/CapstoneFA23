@@ -24,4 +24,20 @@ class DateTimeHelper {
         dateTime.month == now.month &&
         dateTime.year == now.year;
   }
+
+  static String convertSecondsToHourMinute(int? totalSeconds) {
+    if (totalSeconds == null || totalSeconds < 0) {
+      throw ArgumentError("Invalid totalSeconds value");
+    }
+
+    int totalMinutes = (totalSeconds / 60).floor();
+    int hours = totalMinutes ~/ 60;
+    int minutes = totalMinutes % 60;
+
+    if (hours > 0) {
+      return '$hours tiếng ${minutes.toString().padLeft(2, '0')} phút';
+    } else {
+      return '$minutes phút';
+    }
+  }
 }

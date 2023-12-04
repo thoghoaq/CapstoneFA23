@@ -1,20 +1,20 @@
 class Profile {
-  final String name;
-  final String birthDay;
-  final String province;
-  final String district;
-  final String ward;
-  final String address;
-  final String phoneContact;
+  final String? name;
+  final String? birthDay;
+  final String? province;
+  final String? district;
+  final String? ward;
+  final String? address;
+  final String? phoneContact;
 
   Profile({
-    required this.name,
-    required this.birthDay,
-    required this.province,
-    required this.district,
-    required this.ward,
-    required this.address,
-    required this.phoneContact,
+    this.name,
+    this.birthDay,
+    this.province,
+    this.district,
+    this.ward,
+    this.address,
+    this.phoneContact,
   });
 
   factory Profile.fromJson(Map<String, dynamic> json) {

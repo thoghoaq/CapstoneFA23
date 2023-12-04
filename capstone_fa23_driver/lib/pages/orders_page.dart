@@ -8,7 +8,6 @@ import 'package:capstone_fa23_driver/partials/transaction_list_tile.dart';
 import 'package:capstone_fa23_driver/providers/orders_provider.dart';
 import 'package:design_kit/material.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
 import 'package:provider/provider.dart';
@@ -204,11 +203,6 @@ class _OrdersPageState extends State<OrdersPage> {
             .read<OrderProvider>()
             .calculateRoutes(currentLocation, calculationType);
       }
-      Fluttertoast.showToast(
-        msg: "Tính toán lộ trình hoàn tất",
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.CENTER,
-      );
     } catch (e) {
       rethrow;
     } finally {

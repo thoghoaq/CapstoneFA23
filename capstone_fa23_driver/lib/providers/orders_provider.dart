@@ -221,6 +221,13 @@ class OrderProvider extends ChangeNotifier {
       _orders = sortedOrder;
 
       notifyListeners();
+
+      Fluttertoast.showToast(
+        msg:
+            "Tính toán lộ trình hoàn tất \n Tổng thời gian: ${DateTimeHelper.convertSecondsToHourMinute(responseData["result"]["totalTimeTravel"])}",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.CENTER,
+      );
     } else {
       throw Exception("Tính toán lộ trình thất bại");
     }

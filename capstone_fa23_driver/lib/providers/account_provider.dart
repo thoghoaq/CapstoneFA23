@@ -9,14 +9,14 @@ import 'package:capstone_fa23_driver/helpers/jwt_helper.dart';
 import 'package:flutter/material.dart';
 
 class AccountProvider extends ChangeNotifier {
-  late Profile _profile;
+  Profile? _profile;
   int? _id;
   String? _phoneNumber;
   String? _username;
   Role? _role;
   bool _isLoading = true;
 
-  Profile get profile => _profile;
+  Profile? get profile => _profile;
   int? get id => _id;
   String? get phoneNumber => _phoneNumber;
   String? get username => _username;
@@ -33,11 +33,11 @@ class AccountProvider extends ChangeNotifier {
 
   Future<void> fetchAccountInformation() async {
     _id ??= await JWTHelper().getId();
-    final response = await ApiClient().get("/account-profile/$_id");
+    final response = await ApiClient().get("/account-profile/drivers/$_id");
     if (response.statusCode == HttpStatus.ok) {
       _phoneNumber = response.result["phoneNumber"];
       _username = response.result["username"];
-      _profile = Profile.fromJson(response.result["accountProfile"]);
+      _profile = Profile.fromJson(response.result["driverProfile"]);
       _isLoading = false;
       notifyListeners();
     }
@@ -95,8 +95,21 @@ class AccountProvider extends ChangeNotifier {
     return true;
   }
 
-  Future<bool> updateProfile(String name, DateTime birthDay, String province,
-      String district, String ward, String address, String phoneContact) async {
+  Future<bool> updateProfile(
+      String name,
+      DateTime birthDay,
+      String province,
+      String district,
+      String ward,
+      String address,
+      String phoneContact,
+      String avatarUrl,
+      String identificationCardFrontUrl,
+      String identificationCardBackUrl,
+      String drivingLicenseFrontUrl,
+      String drivingLicenseBackUrl,
+      String vehicleRegistrationCertificateFrontUrl,
+      String vehicleRegistrationCertificateBackUrl) async {
     var data = {
       "name": name,
       "birthDay": birthDay.toIso8601String(),
@@ -105,16 +118,26 @@ class AccountProvider extends ChangeNotifier {
       "ward": ward,
       "address": address,
       "phoneContact": phoneContact,
+      "avatarUrl": avatarUrl,
+      "identificationCardFrontUrl": identificationCardFrontUrl,
+      "identificationCardBackUrl": identificationCardBackUrl,
+      "drivingLicenseFrontUrl": drivingLicenseFrontUrl,
+      "drivingLicenseBackUrl": drivingLicenseBackUrl,
+      "vehicleRegistrationCertificateFrontUrl":
+          vehicleRegistrationCertificateFrontUrl,
+      "vehicleRegistrationCertificateBackUrl":
+          vehicleRegistrationCertificateBackUrl,
     };
     final response = await ApiClient().put(
-      "/account-profile/$_id",
+      "/account-profile/drivers/$_id",
       data,
     );
     if (response.statusCode == HttpStatus.noContent) {
       _profile = Profile.fromJson(data);
       notifyListeners();
       return true;
+    } else {
+      throw Exception("Failed to update profile: ${response.errorMessage}");
     }
-    return false;
   }
 }
