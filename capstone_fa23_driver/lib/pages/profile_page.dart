@@ -29,19 +29,23 @@ class _ProfilePageState extends State<ProfilePage> {
         appBar: const DAppBar(title: "Hồ sơ"),
         body: Column(
           children: [
-            Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.background,
-                shape: BoxShape.circle,
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(2),
-                child: DAvatarCircle(
-                  image: Image.asset('assets/images/contexts/avatar_2.png'),
-                  radius: 100,
+            Consumer<AccountProvider>(builder: (context, provider, child) {
+              return Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.background,
+                  shape: BoxShape.circle,
                 ),
-              ),
-            ),
+                child: Padding(
+                  padding: const EdgeInsets.all(2),
+                  child: DAvatarCircle(
+                    image: provider.profile?.avatarUrl != null
+                        ? Image.network(provider.profile!.avatarUrl!)
+                        : Image.asset('assets/images/contexts/avatar_2.png'),
+                    radius: 100,
+                  ),
+                ),
+              );
+            }),
             const SizedBox(height: 10),
             Consumer<AccountProvider>(
               builder: (context, provider, child) {

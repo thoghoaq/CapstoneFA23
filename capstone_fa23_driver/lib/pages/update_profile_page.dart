@@ -34,7 +34,8 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
 
   int? _districtCode;
 
-  final String _avtUrl = "assets/images/contexts/avatar_2.png";
+  String? _avtUrl;
+  bool? _avtUrlLoading;
 
   String? _identificationCardFrontUrl;
   String? _identificationCardBackUrl;
@@ -112,6 +113,9 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                 _vehicleRegistrationCertificateBackUrl =
                     provider.profile!.vehicleRegistrationCertificateBackUrl!;
               }
+              if (provider.profile?.avatarUrl != null) {
+                _avtUrl = provider.profile!.avatarUrl!;
+              }
 
               return Column(
                 children: [
@@ -131,8 +135,23 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                           child: Padding(
                             padding: const EdgeInsets.all(2),
                             child: DAvatarCircle(
-                              image: Image.asset(
-                                  'assets/images/contexts/avatar_2.png'),
+                              image: _avtUrl != null
+                                  ? Image.network(_avtUrl!)
+                                  : Image.asset(
+                                      'assets/images/contexts/avatar_2.png'),
+                              isLoading: _avtUrlLoading,
+                              onTap: () async {
+                                setState(() {
+                                  _avtUrlLoading = true;
+                                });
+                                var imageUrl = await ImageHelper.pickImage();
+                                setState(() {
+                                  if (imageUrl != null) {
+                                    _avtUrl = imageUrl;
+                                  }
+                                  _avtUrlLoading = false;
+                                });
+                              },
                               radius: 98,
                             ),
                           ),
@@ -396,7 +415,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                             _wardTextController.text,
                             _addressTextController.text,
                             _phoneNumberTextController.text,
-                            _avtUrl,
+                            _avtUrl!,
                             _identificationCardFrontUrl!,
                             _identificationCardBackUrl!,
                             _drivingLicenseFrontUrl!,

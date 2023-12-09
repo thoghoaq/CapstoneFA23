@@ -12,6 +12,7 @@ class Profile {
   final String? drivingLicenseBackUrl;
   final String? vehicleRegistrationCertificateFrontUrl;
   final String? vehicleRegistrationCertificateBackUrl;
+  final String? avatarUrl;
 
   Profile({
     this.name,
@@ -27,6 +28,7 @@ class Profile {
     this.drivingLicenseBackUrl,
     this.vehicleRegistrationCertificateFrontUrl,
     this.vehicleRegistrationCertificateBackUrl,
+    this.avatarUrl,
   });
 
   factory Profile.fromJson(Map<String, dynamic> json) {
@@ -46,6 +48,7 @@ class Profile {
           json["vehicleRegistrationCertificateFrontUrl"],
       vehicleRegistrationCertificateBackUrl:
           json["vehicleRegistrationCertificateBackUrl"],
+      avatarUrl: json["avatarUrl"],
     );
   }
 
