@@ -6,6 +6,12 @@ class Profile {
   final String? ward;
   final String? address;
   final String? phoneContact;
+  final String? identificationCardFrontUrl;
+  final String? identificationCardBackUrl;
+  final String? drivingLicenseFrontUrl;
+  final String? drivingLicenseBackUrl;
+  final String? vehicleRegistrationCertificateFrontUrl;
+  final String? vehicleRegistrationCertificateBackUrl;
 
   Profile({
     this.name,
@@ -15,6 +21,12 @@ class Profile {
     this.ward,
     this.address,
     this.phoneContact,
+    this.identificationCardFrontUrl,
+    this.identificationCardBackUrl,
+    this.drivingLicenseFrontUrl,
+    this.drivingLicenseBackUrl,
+    this.vehicleRegistrationCertificateFrontUrl,
+    this.vehicleRegistrationCertificateBackUrl,
   });
 
   factory Profile.fromJson(Map<String, dynamic> json) {
@@ -26,6 +38,14 @@ class Profile {
       ward: json['ward'],
       address: json['address'],
       phoneContact: json['phoneContact'],
+      identificationCardFrontUrl: json["identificationCardFrontUrl"],
+      identificationCardBackUrl: json["identificationCardBackUrl"],
+      drivingLicenseFrontUrl: json["drivingLicenseFrontUrl"],
+      drivingLicenseBackUrl: json["drivingLicenseBackUrl"],
+      vehicleRegistrationCertificateFrontUrl:
+          json["vehicleRegistrationCertificateFrontUrl"],
+      vehicleRegistrationCertificateBackUrl:
+          json["vehicleRegistrationCertificateBackUrl"],
     );
   }
 

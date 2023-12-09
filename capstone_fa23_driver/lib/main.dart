@@ -1,9 +1,11 @@
 import 'dart:ui';
 
+import 'package:capstone_fa23_driver/firebase_options.dart';
 import 'package:capstone_fa23_driver/providers/index.dart';
 import 'package:capstone_fa23_driver/routes/router.dart';
 import 'package:capstone_fa23_driver/themes/color_scheme.dart';
 import 'package:capstone_fa23_driver/themes/text_theme.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -31,6 +33,9 @@ void main() async {
     );
     return true;
   };
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 

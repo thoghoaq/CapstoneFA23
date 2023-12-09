@@ -31,8 +31,8 @@ class _GoongMapState extends State<GoongMap> {
         return MapboxMap(
           accessToken: dotenv.env['STYLE_ACCESS_TOKEN'],
           styleString: dotenv.env['STYLE_STRING'],
-          // myLocationEnabled: true,
-          // myLocationTrackingMode: MyLocationTrackingMode.Tracking,
+          myLocationEnabled: true,
+          myLocationTrackingMode: MyLocationTrackingMode.Tracking,
           onMapCreated: (MapboxMapController controller) {
             mapController = controller;
           },

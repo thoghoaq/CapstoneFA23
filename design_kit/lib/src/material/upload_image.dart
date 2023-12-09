@@ -3,8 +3,16 @@ import 'package:flutter/material.dart';
 class DUploadImage extends StatelessWidget {
   final String hint;
   final String? label;
+  final String? imageUrl;
+  final bool? isLoading;
   final VoidCallback? onTap;
-  const DUploadImage({super.key, required this.hint, this.label, this.onTap});
+  const DUploadImage(
+      {super.key,
+      required this.hint,
+      this.label,
+      this.imageUrl,
+      this.onTap,
+      this.isLoading});
 
   @override
   Widget build(BuildContext context) {
@@ -29,25 +37,39 @@ class DUploadImage extends StatelessWidget {
                 color: Theme.of(context).colorScheme.outlineVariant,
               ),
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.cloud_upload_outlined,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                const SizedBox(
-                  width: 8,
-                ),
-                Text(
-                  hint,
-                  style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                        color: Theme.of(context).colorScheme.primary,
-                        fontWeight: FontWeight.w600,
+            child: isLoading == true
+                ? Center(
+                    child: CircularProgressIndicator(
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  )
+                : imageUrl != null
+                    ? Image.network(
+                        imageUrl!,
+                        fit: BoxFit.cover,
+                      )
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.cloud_upload_outlined,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                          const SizedBox(
+                            width: 8,
+                          ),
+                          Text(
+                            hint,
+                            style: Theme.of(context)
+                                .textTheme
+                                .displayLarge
+                                ?.copyWith(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                          ),
+                        ],
                       ),
-                ),
-              ],
-            ),
           ),
         ),
       ],

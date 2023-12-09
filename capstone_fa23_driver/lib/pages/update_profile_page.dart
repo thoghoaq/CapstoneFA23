@@ -1,4 +1,5 @@
 import 'package:capstone_fa23_driver/helpers/datetime_helper.dart';
+import 'package:capstone_fa23_driver/helpers/image_helper.dart';
 import 'package:capstone_fa23_driver/helpers/province_api_helper.dart';
 import 'package:capstone_fa23_driver/providers/account_provider.dart';
 import 'package:design_kit/material.dart';
@@ -35,14 +36,19 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
 
   final String _avtUrl = "assets/images/contexts/avatar_2.png";
 
-  final String _identificationCardFrontUrl = "identificationCardFrontUrl";
-  final String _identificationCardBackUrl = "identificationCardBackUrl";
-  final String _drivingLicenseFrontUrl = "drivingLicenseFrontUrl";
-  final String _drivingLicenseBackUrl = "drivingLicenseBackUrl";
-  final String _vehicleRegistrationCertificateFrontUrl =
-      "vehicleRegistrationCertificateFrontUrl";
-  final String _vehicleRegistrationCertificateBackUrl =
-      "vehicleRegistrationCertificateBackUrl";
+  String? _identificationCardFrontUrl;
+  String? _identificationCardBackUrl;
+  String? _drivingLicenseFrontUrl;
+  String? _drivingLicenseBackUrl;
+  String? _vehicleRegistrationCertificateFrontUrl;
+  String? _vehicleRegistrationCertificateBackUrl;
+
+  bool? _identificationCardFrontUrlLoading;
+  bool? _identificationCardBackUrlLoading;
+  bool? _drivingLicenseFrontUrlLoading;
+  bool? _drivingLicenseBackUrlLoading;
+  bool? _vehicleRegistrationCertificateFrontUrlLoading;
+  bool? _vehicleRegistrationCertificateBackUrlLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -79,6 +85,32 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
               if (provider.profile?.birthDay != null) {
                 _birthDayTextController.text =
                     DateTimeHelper.getDate(provider.profile!.birthDay!);
+              }
+              if (provider.profile?.identificationCardFrontUrl != null) {
+                _identificationCardFrontUrl =
+                    provider.profile!.identificationCardFrontUrl!;
+              }
+              if (provider.profile?.identificationCardBackUrl != null) {
+                _identificationCardBackUrl =
+                    provider.profile!.identificationCardBackUrl!;
+              }
+              if (provider.profile?.drivingLicenseFrontUrl != null) {
+                _drivingLicenseFrontUrl =
+                    provider.profile!.drivingLicenseFrontUrl!;
+              }
+              if (provider.profile?.drivingLicenseBackUrl != null) {
+                _drivingLicenseBackUrl =
+                    provider.profile!.drivingLicenseBackUrl!;
+              }
+              if (provider.profile?.vehicleRegistrationCertificateFrontUrl !=
+                  null) {
+                _vehicleRegistrationCertificateFrontUrl =
+                    provider.profile!.vehicleRegistrationCertificateFrontUrl!;
+              }
+              if (provider.profile?.vehicleRegistrationCertificateBackUrl !=
+                  null) {
+                _vehicleRegistrationCertificateBackUrl =
+                    provider.profile!.vehicleRegistrationCertificateBackUrl!;
               }
 
               return Column(
@@ -245,32 +277,113 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                   DUploadImage(
                     label: "CCCD / CMT",
                     hint: "Mặt trước",
-                    onTap: () {},
+                    imageUrl: _identificationCardFrontUrl,
+                    isLoading: _identificationCardFrontUrlLoading,
+                    onTap: () async {
+                      setState(() {
+                        _identificationCardFrontUrlLoading = true;
+                      });
+                      var imageUrl = await ImageHelper.pickImage();
+                      setState(() {
+                        if (imageUrl != null) {
+                          _identificationCardFrontUrl = imageUrl;
+                        }
+                        _identificationCardFrontUrlLoading = false;
+                      });
+                    },
                   ),
                   const SizedBox(height: 10),
                   DUploadImage(
                     hint: "Mặt sau",
-                    onTap: () {},
+                    imageUrl: _identificationCardBackUrl,
+                    isLoading: _identificationCardBackUrlLoading,
+                    onTap: () async {
+                      setState(() {
+                        _identificationCardBackUrlLoading = true;
+                      });
+                      var imageUrl = await ImageHelper.pickImage();
+                      setState(() {
+                        if (imageUrl != null) {
+                          _identificationCardBackUrl = imageUrl;
+                        }
+                        _identificationCardBackUrlLoading = false;
+                      });
+                    },
                   ),
                   const SizedBox(height: 20),
                   DUploadImage(
                     label: "Giấy phép lái xe",
                     hint: "Mặt trước",
-                    onTap: () {},
+                    imageUrl: _drivingLicenseFrontUrl,
+                    isLoading: _drivingLicenseFrontUrlLoading,
+                    onTap: () async {
+                      setState(() {
+                        _drivingLicenseFrontUrlLoading = true;
+                      });
+                      var imageUrl = await ImageHelper.pickImage();
+                      setState(() {
+                        if (imageUrl != null) {
+                          _drivingLicenseFrontUrl = imageUrl;
+                        }
+                        _drivingLicenseFrontUrlLoading = false;
+                      });
+                    },
                   ),
                   const SizedBox(height: 10),
                   DUploadImage(
                     hint: "Mặt sau",
-                    onTap: () {},
+                    imageUrl: _drivingLicenseBackUrl,
+                    isLoading: _drivingLicenseBackUrlLoading,
+                    onTap: () async {
+                      setState(() {
+                        _drivingLicenseBackUrlLoading = true;
+                      });
+                      var imageUrl = await ImageHelper.pickImage();
+                      setState(() {
+                        if (imageUrl != null) {
+                          _drivingLicenseBackUrl = imageUrl;
+                        }
+                        _drivingLicenseBackUrlLoading = false;
+                      });
+                    },
                   ),
                   const SizedBox(height: 20),
                   DUploadImage(
                     label: "Phiếu đăng ký xe",
                     hint: "Mặt trước",
-                    onTap: () {},
+                    imageUrl: _vehicleRegistrationCertificateFrontUrl,
+                    isLoading: _vehicleRegistrationCertificateFrontUrlLoading,
+                    onTap: () async {
+                      setState(() {
+                        _vehicleRegistrationCertificateFrontUrlLoading = true;
+                      });
+                      var imageUrl = await ImageHelper.pickImage();
+                      setState(() {
+                        if (imageUrl != null) {
+                          _vehicleRegistrationCertificateFrontUrl = imageUrl;
+                        }
+                        _vehicleRegistrationCertificateFrontUrlLoading = false;
+                      });
+                    },
                   ),
                   const SizedBox(height: 10),
-                  DUploadImage(hint: "Mặt sau", onTap: () {}),
+                  DUploadImage(
+                    hint: "Mặt sau",
+                    imageUrl: _vehicleRegistrationCertificateBackUrl,
+                    isLoading: _vehicleRegistrationCertificateBackUrlLoading,
+                    onTap: () async {
+                      setState(() {
+                        _vehicleRegistrationCertificateBackUrlLoading = true;
+                      });
+                      var imageUrl = await ImageHelper.pickImage();
+                      setState(() {
+                        if (imageUrl != null) {
+                          _vehicleRegistrationCertificateBackUrl = imageUrl;
+                        }
+                        _vehicleRegistrationCertificateBackUrlLoading = false;
+                      });
+                    },
+                  ),
                   const SizedBox(height: 35),
                   DPrimaryButton.bigwide(
                       text: "Cập nhật",
@@ -284,12 +397,12 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                             _addressTextController.text,
                             _phoneNumberTextController.text,
                             _avtUrl,
-                            _identificationCardFrontUrl,
-                            _identificationCardBackUrl,
-                            _drivingLicenseFrontUrl,
-                            _drivingLicenseBackUrl,
-                            _vehicleRegistrationCertificateFrontUrl,
-                            _vehicleRegistrationCertificateBackUrl);
+                            _identificationCardFrontUrl!,
+                            _identificationCardBackUrl!,
+                            _drivingLicenseFrontUrl!,
+                            _drivingLicenseBackUrl!,
+                            _vehicleRegistrationCertificateFrontUrl!,
+                            _vehicleRegistrationCertificateBackUrl!);
                         if (result) {
                           Fluttertoast.showToast(msg: "Cập nhật thành công");
                         }
