@@ -37,8 +37,10 @@ final router = GoRouter(
                   GoRoute(
                     name: "trackingOrder",
                     path: "tracking-order/:id",
-                    builder: (context, state) =>
-                        TrackingOrderPage(id: state.pathParameters['id']!),
+                    builder: (context, state) => TrackingOrderPage(
+                      id: state.pathParameters['id']!,
+                      isFeedback: state.extra != "true",
+                    ),
                   ),
                 ],
               ),

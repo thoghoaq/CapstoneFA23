@@ -4,9 +4,9 @@ class Order {
   final String id;
   final int ownerId;
   final int? creatorId;
-  final int driverId;
-  final String driverName;
-  final String driverPhoneNumber;
+  final int? driverId;
+  final String? driverName;
+  final String? driverPhoneNumber;
   final String shippingProvince;
   final String shippingDistrict;
   final String shippingWard;
@@ -16,6 +16,7 @@ class Order {
   final String? senderName;
   final String? senderPhoneNumber;
   final String? note;
+  final bool? isFeedback;
 
   Order({
     required this.id,
@@ -30,6 +31,7 @@ class Order {
     required this.shippingAddress,
     required this.expectedShippingDate,
     required this.currentOrderStatus,
+    this.isFeedback,
     this.senderName,
     this.senderPhoneNumber,
     this.note,
@@ -40,15 +42,16 @@ class Order {
       id: json['id'],
       ownerId: json['owner']['id'],
       creatorId: json['creatorId'],
-      driverId: json['driver']['id'],
-      driverName: json['driver']['name'],
-      driverPhoneNumber: json['driver']['phoneContact'],
+      driverId: json['driver']?['id'],
+      driverName: json['driver']?['name'],
+      driverPhoneNumber: json['driver']?['phoneContact'],
       shippingProvince: json['shippingProvince'],
       shippingDistrict: json['shippingDistrict'],
       shippingWard: json['shippingWard'],
       shippingAddress: json['shippingAddress'],
       expectedShippingDate: json['expectedShippingDate'],
       currentOrderStatus: TransactionStatus.values[json['currentOrderStatus']],
+      isFeedback: json['isFeedback'],
     );
   }
 
@@ -57,9 +60,9 @@ class Order {
       id: json['id'],
       ownerId: json['owner']['id'],
       creatorId: json['creatorId'],
-      driverId: json['driver']['id'],
-      driverName: json['driver']['name'],
-      driverPhoneNumber: json['driver']['phoneContact'],
+      driverId: json['driver']?['id'],
+      driverName: json['driver']?['name'],
+      driverPhoneNumber: json['driver']?['phoneContact'],
       shippingProvince: json['shippingProvince'],
       shippingDistrict: json['shippingDistrict'],
       shippingWard: json['shippingWard'],

@@ -4,8 +4,7 @@ import 'package:capstone_fa23_customer/core/models/api_response_model.dart';
 import 'package:capstone_fa23_customer/helpers/jwt_helper.dart';
 import 'package:http/http.dart' as http;
 
-const apiUrl =
-    "http://optimizing-last-mile-env.eba-ix8wtpqt.ap-southeast-1.elasticbeanstalk.com";
+const apiUrl = "http://52.221.214.170";
 
 class ApiClient {
   final Map<String, String>? headers;

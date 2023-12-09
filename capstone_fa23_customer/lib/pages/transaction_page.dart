@@ -38,8 +38,12 @@ class TransactionPage extends StatelessWidget {
                   status: provider.orders[index].currentOrderStatus,
                   showBottomDivider: true,
                   onTap: () {
+                    var isFeedback = provider.orders[index].isFeedback == true
+                        ? 'true'
+                        : 'false';
                     context.push(
-                        '/home/tracking-order/${provider.orders[index].id}');
+                        '/home/tracking-order/${provider.orders[index].id}',
+                        extra: isFeedback);
                   },
                 );
               },

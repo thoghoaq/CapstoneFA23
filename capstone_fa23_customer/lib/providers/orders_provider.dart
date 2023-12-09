@@ -29,12 +29,25 @@ class OrderProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> getOrder(String id) async {
+  Future<Order> getOrder(String id) async {
     final response = await ApiClient().get("/orders/$id");
     if (response.statusCode == HttpStatus.ok) {
       _order = Order.fromJsonDetail(response.result);
+      return _order;
     } else {
       throw Exception("Failed to load order $id");
+    }
+  }
+
+  Future<void> feedBack(String rate, String comment) async {
+    final response = await ApiClient().post("/orders/${_order.id}/feedbacks", {
+      "rate": rate,
+      "comment": comment,
+    });
+    if (response.statusCode == HttpStatus.ok) {
+      getListOrders();
+    } else {
+      throw Exception("Lỗi gửi feedback đơn hàng ${_order.id}");
     }
   }
 }
