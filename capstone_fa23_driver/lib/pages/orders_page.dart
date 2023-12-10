@@ -128,6 +128,9 @@ class _OrdersPageState extends State<OrdersPage> {
   int waitingOrdersPage = 1;
   final int waitingOrdersSize = 10;
 
+  String? duration;
+  RouteCalculationType? type;
+
   Future loadMore() async {
     if (!isLoadMore) {
       setState(() {
@@ -177,12 +180,14 @@ class _OrdersPageState extends State<OrdersPage> {
     setState(() {
       ordersPage = 1;
     });
+    resetRoutes();
   }
 
   void resetWatingOrderPage() {
     setState(() {
       waitingOrdersPage = 1;
     });
+    resetRoutes();
   }
 
   void resetHistoryPage() {
@@ -199,9 +204,13 @@ class _OrdersPageState extends State<OrdersPage> {
       });
       var currentLocation = await LocationHelper().getCurrentLocation();
       if (mounted) {
-        await context
+        var dura = await context
             .read<OrderProvider>()
             .calculateRoutes(currentLocation, calculationType);
+        setState(() {
+          duration = dura;
+          type = calculationType;
+        });
       }
     } catch (e) {
       rethrow;
@@ -210,6 +219,13 @@ class _OrdersPageState extends State<OrdersPage> {
         isCalculatingRoutes = false;
       });
     }
+  }
+
+  void resetRoutes() {
+    setState(() {
+      duration = null;
+      type = null;
+    });
   }
 
   @override
@@ -305,6 +321,7 @@ class _OrdersPageState extends State<OrdersPage> {
                   );
                 }
               }
+
               return Stack(
                 children: [
                   LazyLoadScrollView(
@@ -315,6 +332,8 @@ class _OrdersPageState extends State<OrdersPage> {
                         isLoadMore: isLoadMore,
                         calculateRoutes: calculateRoutes,
                         reset: resetOrderPage,
+                        duration: duration,
+                        type: type,
                         orders: provider.orders
                             .map((order) => order.toJson())
                             .toList()),
@@ -386,6 +405,8 @@ class _Ongoing extends StatefulWidget {
     required this.isLoadMore,
     required this.calculateRoutes,
     required this.reset,
+    required this.duration,
+    required this.type,
   }) : super(key: key);
 
   final List orders;
@@ -393,6 +414,8 @@ class _Ongoing extends StatefulWidget {
   final bool isLoadMore;
   final Function(RouteCalculationType?) calculateRoutes;
   final Function reset;
+  final String? duration;
+  final RouteCalculationType? type;
 
   @override
   State<_Ongoing> createState() => _OngoingState();
@@ -409,6 +432,22 @@ class _OngoingState extends State<_Ongoing> {
           widget.reset();
         },
         child: ListView(children: [
+          if (widget.type != null && widget.duration != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 16, left: 16),
+              child: Column(
+                children: [
+                  Text(
+                    "Lộ trình gợi ý theo: ${widget.type?.label}",
+                    style: Theme.of(context).textTheme.labelLarge,
+                  ),
+                  Text(
+                    "Tổng thời gian: ${widget.duration}",
+                    style: Theme.of(context).textTheme.labelLarge,
+                  ),
+                ],
+              ),
+            ),
           Column(
             children: [
               ListView.builder(
@@ -436,20 +475,21 @@ class _OngoingState extends State<_Ongoing> {
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
               ),
-              if (widget.orders.isNotEmpty)
-                DOutlinedButton.small(
-                  text: "Tính toán lộ trình",
-                  onPressed: () async {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return RouteCalculationTypeDialog(
-                          calculateRoutes: widget.calculateRoutes,
-                        );
-                      },
-                    );
-                  },
-                ),
+              if (!(widget.type != null && widget.duration != null))
+                if (widget.orders.isNotEmpty)
+                  DOutlinedButton.small(
+                    text: "Tính toán lộ trình",
+                    onPressed: () async {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return RouteCalculationTypeDialog(
+                            calculateRoutes: widget.calculateRoutes,
+                          );
+                        },
+                      );
+                    },
+                  ),
               const SizedBox(
                 height: 16,
               )
@@ -572,10 +612,11 @@ class _WaitingState extends State<_Waiting> {
                         Padding(
                           padding: const EdgeInsets.only(right: 8.0),
                           child: DPrimaryButton.xsmall(
-                            text: "Lấy hàng",
-                            onPressed: () =>
-                                widget.provider.pickUpWaitingOrders(),
-                          ),
+                              text: "Lấy hàng",
+                              onPressed: () {
+                                widget.provider.pickUpWaitingOrders();
+                                widget.reset();
+                              }),
                         ),
                       isSelectedAll
                           ? DOutlinedButton.small(

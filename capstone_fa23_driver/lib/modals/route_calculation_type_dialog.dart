@@ -3,9 +3,11 @@ import 'package:design_kit/material.dart';
 import 'package:flutter/material.dart';
 
 class RouteCalculationTypeDialog extends StatefulWidget {
-  const RouteCalculationTypeDialog({super.key, required this.calculateRoutes});
+  const RouteCalculationTypeDialog(
+      {super.key, required this.calculateRoutes, this.callbackAction});
 
   final Function(RouteCalculationType?) calculateRoutes;
+  final CallbackAction? callbackAction;
 
   @override
   State<RouteCalculationTypeDialog> createState() =>

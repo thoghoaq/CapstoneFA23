@@ -21,12 +21,14 @@ class OrderProvider extends ChangeNotifier {
   List<Order> _waitingOrders = [];
   late Order _order;
   bool _isLoading = true;
+  bool _isResetRoutes = false;
 
   List<Order> get orders => _orders;
   List<Order> get history => _history;
   List<Order> get waitingOrder => _waitingOrders;
   Order get order => _order;
   bool get isLoading => _isLoading;
+  bool get isResetRoutes => _isResetRoutes;
 
   void clear() {
     _isLoading = true;
@@ -109,9 +111,13 @@ class OrderProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> getHistory(
-      {TransactionStatus? status, int size = 10, int page = 1}) async {
-    var url = "/orders?Limit=$size&Page=$page";
+  Future<void> getHistory({
+    TransactionStatus? status,
+    int size = 10,
+    int page = 1,
+    String sort = "-",
+  }) async {
+    var url = "/orders?Limit=$size&Page=$page&Sort=$sort";
     var listStatus = [
       TransactionStatus.deliveryFailed,
       TransactionStatus.delivered,
@@ -191,7 +197,7 @@ class OrderProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> calculateRoutes(
+  Future<String> calculateRoutes(
       LatLng currentLocation, RouteCalculationType? calculationType) async {
     bool useDuration = calculationType == RouteCalculationType.duration;
     var url =
@@ -228,6 +234,8 @@ class OrderProvider extends ChangeNotifier {
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.CENTER,
       );
+      return DateTimeHelper.convertSecondsToHourMinute(
+          responseData["result"]["totalTimeTravel"]);
     } else {
       throw Exception("Tính toán lộ trình thất bại");
     }
