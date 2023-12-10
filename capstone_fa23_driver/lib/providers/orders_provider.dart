@@ -38,9 +38,12 @@ class OrderProvider extends ChangeNotifier {
   }
 
   Future<void> getListOrders(
-      {TransactionStatus? status, int size = 10, int page = 1}) async {
+      {TransactionStatus? status,
+      int size = 10,
+      int page = 1,
+      String sort = "-"}) async {
     var listStatus = [TransactionStatus.pickOff, TransactionStatus.shipping];
-    var url = "/orders?Limit=$size&Page=$page";
+    var url = "/orders?Limit=$size&Page=$page&Sort=$sort";
     for (var s in listStatus) {
       url += "&Status=${s.index}";
     }
@@ -329,5 +332,9 @@ class OrderProvider extends ChangeNotifier {
         );
       }
     });
+  }
+
+  Future sortOrders(String sort) async {
+    await getListOrders(sort: sort);
   }
 }
