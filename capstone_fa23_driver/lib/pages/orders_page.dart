@@ -422,8 +422,8 @@ class _Ongoing extends StatefulWidget {
 }
 
 class _OngoingState extends State<_Ongoing> {
-  String sort = "-";
   sortOrders() async {
+    var sort = widget.provider.sort;
     if (sort == "-") {
       setState(() {
         sort = "+";
@@ -453,7 +453,7 @@ class _OngoingState extends State<_Ongoing> {
                 padding: const EdgeInsets.only(top: 16, right: 16),
                 child: GestureDetector(
                   onTap: () => sortOrders(),
-                  child: sort == "+"
+                  child: context.read<OrderProvider>().sort == "+"
                       ? Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [

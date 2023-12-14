@@ -1,7 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'package:geolocator/geolocator.dart';
-import 'package:mapbox_gl/mapbox_gl.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class LocationHelper {
   Future<LatLng> getCurrentLocation() async {
@@ -28,7 +28,7 @@ class LocationHelper {
     }
 
     Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+        desiredAccuracy: LocationAccuracy.best);
 
     return LatLng(position.latitude, position.longitude);
   }

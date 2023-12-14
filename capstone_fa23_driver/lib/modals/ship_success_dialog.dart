@@ -5,7 +5,7 @@ import 'package:design_kit/material.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mapbox_gl/mapbox_gl.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
 class ShipSuccessDialog extends StatefulWidget {
@@ -64,28 +64,29 @@ class _ShipSuccessDialogState extends State<ShipSuccessDialog> {
           SvgPicture.asset("assets/images/contexts/ship_success.svg"),
           const SizedBox(height: 16),
           Text(
-            'Giao thành công',
+            'Giao hàng',
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   color: Theme.of(context).colorScheme.primary,
                   fontWeight: FontWeight.w600,
                 ),
           ),
           const SizedBox(height: 16),
-          Text(
-            'Tiếp tục lộ trình của bạn ?',
-            style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                  color: DColors.gray3,
-                  fontWeight: FontWeight.w500,
-                ),
-          ),
-          const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SvgPicture.asset("assets/images/icons/location.svg"),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
+          if (nextOrder != null)
+            Text(
+              'Tiếp tục lộ trình của bạn ?',
+              style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                    color: DColors.gray3,
+                    fontWeight: FontWeight.w500,
+                  ),
+            ),
+          if (nextOrder != null) const SizedBox(height: 16),
+          if (nextOrder != null)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SvgPicture.asset("assets/images/icons/location.svg"),
+                const SizedBox(width: 16),
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(nextOrder?.shippingAddress ?? "",
@@ -103,9 +104,8 @@ class _ShipSuccessDialogState extends State<ShipSuccessDialog> {
                                   ))
                   ],
                 ),
-              ),
-            ],
-          )
+              ],
+            )
         ],
       ),
       actionsAlignment: MainAxisAlignment.center,

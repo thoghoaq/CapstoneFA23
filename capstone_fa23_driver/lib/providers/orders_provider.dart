@@ -13,7 +13,7 @@ import 'package:capstone_fa23_driver/helpers/datetime_helper.dart';
 import 'package:capstone_fa23_driver/helpers/location_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:mapbox_gl/mapbox_gl.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class OrderProvider extends ChangeNotifier {
   List<Order> _orders = [];
@@ -21,14 +21,14 @@ class OrderProvider extends ChangeNotifier {
   List<Order> _waitingOrders = [];
   late Order _order;
   bool _isLoading = true;
-  bool _isResetRoutes = false;
+  String _sort = "-";
 
   List<Order> get orders => _orders;
   List<Order> get history => _history;
   List<Order> get waitingOrder => _waitingOrders;
   Order get order => _order;
   bool get isLoading => _isLoading;
-  bool get isResetRoutes => _isResetRoutes;
+  String get sort => _sort;
 
   void clear() {
     _isLoading = true;
@@ -41,7 +41,7 @@ class OrderProvider extends ChangeNotifier {
       {TransactionStatus? status,
       int size = 10,
       int page = 1,
-      String sort = "-"}) async {
+      String sort = "-ExpectedShippingDate"}) async {
     var listStatus = [TransactionStatus.pickOff, TransactionStatus.shipping];
     var url = "/orders?Limit=$size&Page=$page&Sort=$sort";
     for (var s in listStatus) {
@@ -275,13 +275,25 @@ class OrderProvider extends ChangeNotifier {
   }
 
   Order? getNextOrder() {
-    var index = _orders.indexOf(_order);
+    var index = _orders.indexWhere((order) => order.id == _order.id);
     if (index < _orders.length - 1) {
-      _order = _orders[index + 1];
-      return _order;
+      return _orders[index + 1];
     } else {
       return null;
     }
+  }
+
+  Future<Order?> getDataOfNextOrder() async {
+    var index = _orders.indexWhere((order) => order.id == _order.id);
+    if (index < _orders.length - 1) {
+      final response =
+          await ApiClient().get("/orders/${_orders[index + 1].id}");
+      if (response.statusCode == HttpStatus.ok) {
+        var order = Order.fromJsonDetail(response.result);
+        return order;
+      }
+    }
+    return null;
   }
 
   void toggleSelectWaitingOrder(String orderId) {
@@ -335,6 +347,7 @@ class OrderProvider extends ChangeNotifier {
   }
 
   Future sortOrders(String sort) async {
-    await getListOrders(sort: sort);
+    _sort = sort;
+    await getListOrders(sort: "${sort}ExpectedShippingDate");
   }
 }
