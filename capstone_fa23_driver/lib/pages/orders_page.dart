@@ -431,55 +431,6 @@ class _OngoingState extends State<_Ongoing> {
           widget.reset();
         },
         child: ListView(children: [
-          Align(
-              alignment: Alignment.centerRight,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 16, right: 16),
-                child: Consumer<OrderProvider>(
-                  builder: (context, provider, child) {
-                    return GestureDetector(
-                      onTap: () => provider.sortOrders(),
-                      child: provider.sort == "+"
-                          ? Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text(
-                                  "Tăng dần",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .labelLarge
-                                      ?.apply(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .secondary,
-                                      ),
-                                ),
-                                const Icon(
-                                    Icons.keyboard_double_arrow_up_rounded),
-                              ],
-                            )
-                          : Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text(
-                                  "Giảm dần",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .labelLarge
-                                      ?.apply(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .secondary,
-                                      ),
-                                ),
-                                const Icon(
-                                    Icons.keyboard_double_arrow_down_rounded),
-                              ],
-                            ),
-                    );
-                  },
-                ),
-              )),
           if (widget.type != null && widget.duration != null)
             Padding(
               padding: const EdgeInsets.only(top: 16, left: 16),
@@ -712,27 +663,80 @@ class _HistoryState extends State<_History> {
         await widget.provider.getHistory();
         widget.reset();
       },
-      child: ListView.builder(
-        itemBuilder: (context, index) {
-          if (index == widget.provider.history.length) {
-            return Visibility(
-                visible: widget.isLoadMore,
-                child: const Center(child: CircularProgressIndicator()));
-          }
-          return TransactionListTile(
-            title:
-                "${widget.provider.history[index].ownerName} - ${widget.provider.history[index].ownerPhoneContact}",
-            subtitle:
-                "${widget.provider.history[index].shippingAddress}, ${widget.provider.history[index].shippingDistrict}, ${widget.provider.history[index].shippingWard}, ${widget.provider.history[index].shippingProvince}",
-            description: DateTimeHelper.getDate(
-                widget.provider.history[index].expectedShippingDate),
-            status: widget.provider.history[index].currentOrderStatus,
-            showBottomDivider: true,
-            onTap: () {},
-          );
-        },
-        itemCount: widget.provider.history.length + 1,
-      ),
+      child: ListView(children: [
+        Align(
+            alignment: Alignment.centerRight,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 16, right: 16),
+              child: Consumer<OrderProvider>(
+                builder: (context, provider, child) {
+                  return GestureDetector(
+                    onTap: () => provider.sortOrders(),
+                    child: provider.sort == "+"
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text(
+                                "Tăng dần",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelLarge
+                                    ?.apply(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary,
+                                    ),
+                              ),
+                              const Icon(
+                                  Icons.keyboard_double_arrow_up_rounded),
+                            ],
+                          )
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text(
+                                "Giảm dần",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelLarge
+                                    ?.apply(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary,
+                                    ),
+                              ),
+                              const Icon(
+                                  Icons.keyboard_double_arrow_down_rounded),
+                            ],
+                          ),
+                  );
+                },
+              ),
+            )),
+        ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemBuilder: (context, index) {
+            if (index == widget.provider.history.length) {
+              return Visibility(
+                  visible: widget.isLoadMore,
+                  child: const Center(child: CircularProgressIndicator()));
+            }
+            return TransactionListTile(
+              title:
+                  "${widget.provider.history[index].ownerName} - ${widget.provider.history[index].ownerPhoneContact}",
+              subtitle:
+                  "${widget.provider.history[index].shippingAddress}, ${widget.provider.history[index].shippingDistrict}, ${widget.provider.history[index].shippingWard}, ${widget.provider.history[index].shippingProvince}",
+              description: DateTimeHelper.getDate(
+                  widget.provider.history[index].expectedShippingDate),
+              status: widget.provider.history[index].currentOrderStatus,
+              showBottomDivider: true,
+              onTap: () {},
+            );
+          },
+          itemCount: widget.provider.history.length + 1,
+        ),
+      ]),
     );
   }
 }

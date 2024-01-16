@@ -39,11 +39,10 @@ class OrderProvider extends ChangeNotifier {
 
   Future<void> getListOrders(
       {TransactionStatus? status, int size = 10, int page = 1}) async {
-    var sortStr = "${_sort}ExpectedShippingDate";
     var listStatus = [TransactionStatus.pickOff, TransactionStatus.shipping];
     var expectShipingDate = DateTime.now().toIso8601String();
     var url =
-        "/orders?Limit=$size&Page=$page&Sort=$sortStr&ExpectedShippingDate=$expectShipingDate";
+        "/orders?Limit=$size&Page=$page&ExpectedShippingDate=$expectShipingDate";
     for (var s in listStatus) {
       url += "&Status=${s.index}";
     }
@@ -120,9 +119,9 @@ class OrderProvider extends ChangeNotifier {
     TransactionStatus? status,
     int size = 10,
     int page = 1,
-    String sort = "-",
   }) async {
-    var url = "/orders?Limit=$size&Page=$page&Sort=$sort";
+    var sortStr = "${_sort}ExpectedShippingDate";
+    var url = "/orders?Limit=$size&Page=$page&Sort=$sortStr";
     var listStatus = [
       TransactionStatus.deliveryFailed,
       TransactionStatus.delivered,
@@ -350,10 +349,10 @@ class OrderProvider extends ChangeNotifier {
 
   Future sortOrders() async {
     if (_sort == "+") {
-      await getListOrders();
+      await getHistory();
       _sort = "-";
     } else {
-      await getListOrders();
+      await getHistory();
       _sort = "+";
     }
   }
