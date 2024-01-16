@@ -13,7 +13,7 @@ Future<void> main() async {
   FlutterError.onError = (details) {
     FlutterError.presentError(details);
     Fluttertoast.showToast(
-      msg: "Error: $details",
+      msg: "Có lỗi xảy ra",
       toastLength: Toast.LENGTH_LONG,
       gravity: ToastGravity.CENTER,
     );
@@ -22,7 +22,7 @@ Future<void> main() async {
     FlutterError.presentError(
         FlutterErrorDetails(exception: error, stack: stack));
     Fluttertoast.showToast(
-      msg: "Error: $error",
+      msg: "Có lỗi xảy ra",
       toastLength: Toast.LENGTH_LONG,
       gravity: ToastGravity.CENTER,
     );

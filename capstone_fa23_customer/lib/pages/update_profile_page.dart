@@ -27,6 +27,14 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   int? _districtCode;
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.firstLogin == true) {
+      initParam(context.read<AccountProvider>());
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const DAppBar(title: "Hồ sơ"),
@@ -37,29 +45,6 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
               if (provider.isLoading) {
                 provider.fetchAccountInformation();
                 return const Center(child: CircularProgressIndicator());
-              }
-              if (provider.profile.name != null) {
-                _nameTextController.text = provider.profile.name!;
-              }
-              if (provider.profile.phoneContact != null) {
-                _phoneNumberTextController.text =
-                    provider.profile.phoneContact!;
-              }
-              if (provider.profile.address != null) {
-                _addressTextController.text = provider.profile.address!;
-              }
-              if (provider.profile.province != null) {
-                _provinceTextController.text = provider.profile.province!;
-              }
-              if (provider.profile.district != null) {
-                _districTextController.text = provider.profile.district!;
-              }
-              if (provider.profile.ward != null) {
-                _wardTextController.text = provider.profile.ward!;
-              }
-              if (provider.profile.birthDay != null) {
-                _birthDayTextController.text =
-                    DateTimeHelper.getDate(provider.profile.birthDay!);
               }
             }
             return Column(
@@ -278,5 +263,30 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
         ),
       ),
     );
+  }
+
+  void initParam(AccountProvider provider) {
+    if (provider.profile.name != null) {
+      _nameTextController.text = provider.profile.name!;
+    }
+    if (provider.profile.phoneContact != null) {
+      _phoneNumberTextController.text = provider.profile.phoneContact!;
+    }
+    if (provider.profile.address != null) {
+      _addressTextController.text = provider.profile.address!;
+    }
+    if (provider.profile.province != null) {
+      _provinceTextController.text = provider.profile.province!;
+    }
+    if (provider.profile.district != null) {
+      _districTextController.text = provider.profile.district!;
+    }
+    if (provider.profile.ward != null) {
+      _wardTextController.text = provider.profile.ward!;
+    }
+    if (provider.profile.birthDay != null) {
+      _birthDayTextController.text =
+          DateTimeHelper.getDate(provider.profile.birthDay!);
+    }
   }
 }

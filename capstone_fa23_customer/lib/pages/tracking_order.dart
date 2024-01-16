@@ -4,6 +4,7 @@ import 'package:capstone_fa23_customer/core/models/order_model.dart';
 import 'package:capstone_fa23_customer/helpers/datetime_helper.dart';
 import 'package:capstone_fa23_customer/partials/modals/order_details.dart';
 import 'package:capstone_fa23_customer/partials/contact_list_title.dart';
+import 'package:capstone_fa23_customer/partials/modals/qr_code.dart';
 import 'package:capstone_fa23_customer/partials/progress_line.dart';
 import 'package:capstone_fa23_customer/providers/orders_provider.dart';
 import 'package:design_kit/material.dart';
@@ -37,10 +38,16 @@ class _TrackingOrderPageState extends State<TrackingOrderPage> {
           title: _orderName,
           actions: [
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) => QrCodeDialog(
+                          code: widget.id,
+                        ));
+              },
               icon: const DIconCircle(
                   icon: Icon(
-                Icons.notifications,
+                Icons.qr_code,
                 size: 16,
               )),
               color: Theme.of(context).colorScheme.background,
