@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
@@ -39,7 +40,18 @@ class _QRCodeScannerScreenState extends State<QRCodeScannerScreen> {
   void _onQRViewCreated(QRViewController controller) {
     this.controller = controller;
     controller.scannedDataStream.listen((scanData) {
-      context.push("/orders/map-view/$scanData");
+      setState(() {
+        result = scanData;
+      });
+    }, onDone: () {
+      if (result == null) {
+        return;
+      }
+      context.push("/orders/map-view/${result!.code}");
+    }, onError: (error) {
+      if (kDebugMode) {
+        print(error.toString());
+      }
     });
   }
 
