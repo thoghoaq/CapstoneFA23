@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class QRCodeScannerScreen extends StatefulWidget {
@@ -17,7 +18,10 @@ class _QRCodeScannerScreenState extends State<QRCodeScannerScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Quét mã QR'),
+        title: Text(
+          'Quét mã QR',
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
       ),
       body: Column(
         children: <Widget>[
@@ -27,11 +31,6 @@ class _QRCodeScannerScreenState extends State<QRCodeScannerScreen> {
               onQRViewCreated: _onQRViewCreated,
             ),
           ),
-          if (result != null)
-            Text(
-              'QR Code Result: ${result?.code}',
-              style: const TextStyle(fontSize: 16),
-            ),
         ],
       ),
     );
@@ -40,9 +39,7 @@ class _QRCodeScannerScreenState extends State<QRCodeScannerScreen> {
   void _onQRViewCreated(QRViewController controller) {
     this.controller = controller;
     controller.scannedDataStream.listen((scanData) {
-      setState(() {
-        result = scanData;
-      });
+      context.push("/orders/map-view/$scanData");
     });
   }
 
