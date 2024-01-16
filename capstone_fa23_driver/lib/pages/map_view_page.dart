@@ -77,7 +77,7 @@ class _MapViewPageState extends State<MapViewPage> {
                   LatLng endPoints;
                   var startPoints =
                       LatLng(provider.order.lat!, provider.order.lng!);
-                  if (provider.orders.first.id == provider.order.id) {
+                  if (provider.orders.firstOrNull?.id == provider.order.id) {
                     startPoints = currentLocation!;
                     endPoints =
                         LatLng(provider.order.lat!, provider.order.lng!);
