@@ -95,8 +95,7 @@ class _MapViewPageState extends State<MapViewPage> {
                   return Stack(
                     children: [
                       GoongMap(
-                        startPoints:
-                            LatLng(provider.order.lat!, provider.order.lng!),
+                        startPoints: currentLocation!,
                         endPoints:
                             LatLng(provider.order.lat!, provider.order.lng!),
                       ),
