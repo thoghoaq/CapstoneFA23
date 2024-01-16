@@ -145,12 +145,12 @@ class _GoongMapState extends State<GoongMap> {
       Marker(
         markerId: const MarkerId("startPoints"),
         position: widget.startPoints,
-        infoWindow: const InfoWindow(title: "Điểm hiện tại"),
+        infoWindow: const InfoWindow(title: "Vị trí xuất phát"),
       ),
       Marker(
         markerId: const MarkerId("endPoints"),
         position: widget.endPoints,
-        infoWindow: const InfoWindow(title: "Điểm tiếp theo"),
+        infoWindow: const InfoWindow(title: "Vị trí đơn hàng"),
       ),
     ]);
     getUserCurrentLocation().then((_) => getPolylinePoints()

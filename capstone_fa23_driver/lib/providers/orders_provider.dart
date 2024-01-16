@@ -249,7 +249,7 @@ class OrderProvider extends ChangeNotifier {
     var currentLocation = await LocationHelper().getCurrentLocation();
     var data = json.encode([
       {
-        "address": "Vị trí hiện tại",
+        "address": "Vị trí xuất phát",
         "lat": currentLocation.latitude,
         "lng": currentLocation.longitude
       },

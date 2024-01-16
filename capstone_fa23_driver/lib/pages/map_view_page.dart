@@ -74,28 +74,31 @@ class _MapViewPageState extends State<MapViewPage> {
                     }
                   };
 
-                  LatLng endPoints;
-                  var startPoints =
-                      LatLng(provider.order.lat!, provider.order.lng!);
-                  if (provider.orders.firstOrNull?.id == provider.order.id) {
-                    startPoints = currentLocation!;
-                    endPoints =
-                        LatLng(provider.order.lat!, provider.order.lng!);
-                  } else {
-                    if (nextOrder == null) {
-                      startPoints = currentLocation!;
-                      endPoints =
-                          LatLng(provider.order.lat!, provider.order.lng!);
-                    } else {
-                      endPoints = LatLng(nextOrder!.lat!, nextOrder!.lng!);
-                    }
-                  }
+                  // LatLng endPoints;
+                  // var startPoints =
+                  //     LatLng(provider.order.lat!, provider.order.lng!);
+                  // if (provider.orders.firstOrNull?.id == provider.order.id) {
+                  //   startPoints = currentLocation!;
+                  //   endPoints =
+                  //       LatLng(provider.order.lat!, provider.order.lng!);
+                  // }
+                  // else {
+                  //   if (nextOrder == null) {
+                  //     startPoints = currentLocation!;
+                  //     endPoints =
+                  //         LatLng(provider.order.lat!, provider.order.lng!);
+                  //   } else {
+                  //     endPoints = LatLng(nextOrder!.lat!, nextOrder!.lng!);
+                  //   }
+                  // }
 
                   return Stack(
                     children: [
                       GoongMap(
-                        startPoints: startPoints,
-                        endPoints: endPoints,
+                        startPoints:
+                            LatLng(provider.order.lat!, provider.order.lng!),
+                        endPoints:
+                            LatLng(provider.order.lat!, provider.order.lng!),
                       ),
                       NotificationListener<DraggableScrollableNotification>(
                         onNotification:
