@@ -28,12 +28,12 @@ class _MainPageState extends State<MainPage> {
       activeIcon: DActiveNavigationBarIcon(
           icon: SvgPicture.asset('assets/images/icons/calendar.svg')),
     ),
-    // BottomNavigationBarItem(
-    //   icon: SvgPicture.asset('assets/images/icons/map.svg'),
-    //   label: 'Map',
-    //   activeIcon: DActiveNavigationBarIcon(
-    //       icon: SvgPicture.asset('assets/images/icons/map.svg')),
-    // ),
+    BottomNavigationBarItem(
+      icon: SvgPicture.asset('assets/images/icons/map.svg'),
+      label: 'Map',
+      activeIcon: DActiveNavigationBarIcon(
+          icon: SvgPicture.asset('assets/images/icons/map.svg')),
+    ),
     BottomNavigationBarItem(
       icon: SvgPicture.asset('assets/images/icons/profile.svg'),
       label: 'Profile',
@@ -59,6 +59,9 @@ class _MainPageState extends State<MainPage> {
                 context.go('/orders');
                 break;
               case 1:
+                context.go('/scanner');
+                break;
+              case 2:
                 context.go('/profile');
                 break;
               default:

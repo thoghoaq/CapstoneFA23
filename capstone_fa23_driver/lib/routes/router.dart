@@ -5,6 +5,7 @@ import 'package:capstone_fa23_driver/pages/main_page.dart';
 import 'package:capstone_fa23_driver/pages/map_view_page.dart';
 import 'package:capstone_fa23_driver/pages/profile_page.dart';
 import 'package:capstone_fa23_driver/pages/orders_page.dart';
+import 'package:capstone_fa23_driver/pages/qr_scanner_page.dart';
 import 'package:capstone_fa23_driver/pages/update_profile_page.dart';
 import 'package:go_router/go_router.dart';
 
@@ -24,11 +25,6 @@ final router = GoRouter(
           ShellRoute(
             builder: (context, state, child) => MainPage(child: child),
             routes: [
-              // GoRoute(
-              //   name: "home",
-              //   path: "home",
-              //   builder: (context, state) => const HomePage(),
-              // ),
               GoRoute(
                 name: "orders",
                 path: "orders",
@@ -43,14 +39,21 @@ final router = GoRouter(
                 ],
               ),
               GoRoute(
+                name: "scanner",
+                path: "scanner",
+                builder: (context, state) => const QRCodeScannerScreen(),
+              ),
+              GoRoute(
                 name: "profile",
                 path: "profile",
                 builder: (context, state) => const ProfilePage(),
                 routes: [
                   GoRoute(
                     name: "updateProfile",
-                    path: "update",
-                    builder: (context, state) => const UpdateProfilePage(),
+                    path: "update/:firstLogin",
+                    builder: (context, state) => UpdateProfilePage(
+                        firstLogin:
+                            state.pathParameters['firstLogin'] == 'true'),
                   ),
                   GoRoute(
                     name: "changePassword",
@@ -60,7 +63,13 @@ final router = GoRouter(
                 ],
               ),
             ],
-          )
+          ),
+          GoRoute(
+            name: "updateProfileFirstLogin",
+            path: "updateFirstLogin/:firstLogin",
+            builder: (context, state) => UpdateProfilePage(
+                firstLogin: state.pathParameters['firstLogin'] == 'true'),
+          ),
         ]),
   ],
 );

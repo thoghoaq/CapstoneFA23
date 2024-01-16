@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "514684972130",
-    "project_id": "capstonefa23",
-    "storage_bucket": "capstonefa23.appspot.com"
+    "project_number": "708378074666",
+    "project_id": "capstonefa23-6d242",
+    "storage_bucket": "capstonefa23-6d242.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:514684972130:android:d1a1f2985fa77fa4a9b53b",
+        "mobilesdk_app_id": "1:708378074666:android:7cfb70e70e86791a3e6d53",
         "android_client_info": {
-          "package_name": "com.example.capstone_fa23_driver"
+          "package_name": "com.capstone_fa23.capstone_fa23_driver"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCA4g3nd9nJQSPKDQYef5c_TE4AxEkIPR8"
+          "current_key": "AIzaSyBn2c8ralN5MXPFLvZvFWX9dgp25gO94wM"
         }
       ],
       "services": {

@@ -19,13 +19,8 @@ class ImageHelper {
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
     Reference storageReference =
         FirebaseStorage.instance.ref().child('images/$fileName');
-    UploadTask uploadTask = storageReference.putFile(file);
-    String? imageUrl;
-    await uploadTask.whenComplete(() async {
-      imageUrl = await storageReference.getDownloadURL();
-    }).catchError((onError) {
-      throw Exception('Lỗi upload hình: $onError');
-    });
+    await storageReference.putFile(file);
+    String? imageUrl = await storageReference.getDownloadURL();
     return imageUrl;
   }
 }

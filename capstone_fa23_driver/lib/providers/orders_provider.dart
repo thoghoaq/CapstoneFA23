@@ -38,12 +38,12 @@ class OrderProvider extends ChangeNotifier {
   }
 
   Future<void> getListOrders(
-      {TransactionStatus? status,
-      int size = 10,
-      int page = 1,
-      String sort = "-ExpectedShippingDate"}) async {
+      {TransactionStatus? status, int size = 10, int page = 1}) async {
+    var sortStr = "${_sort}ExpectedShippingDate";
     var listStatus = [TransactionStatus.pickOff, TransactionStatus.shipping];
-    var url = "/orders?Limit=$size&Page=$page&Sort=$sort";
+    var expectShipingDate = DateTime.now().toIso8601String();
+    var url =
+        "/orders?Limit=$size&Page=$page&Sort=$sortStr&ExpectedShippingDate=$expectShipingDate";
     for (var s in listStatus) {
       url += "&Status=${s.index}";
     }
@@ -104,7 +104,9 @@ class OrderProvider extends ChangeNotifier {
         }
       } else {
         for (var i = 0; i < orders.length; i++) {
-          _waitingOrders.add(orders[i]);
+          if (!_waitingOrders.any((order) => order.id == orders[i].id)) {
+            _waitingOrders.add(orders[i]);
+          }
         }
       }
       _isLoading = false;
@@ -346,8 +348,13 @@ class OrderProvider extends ChangeNotifier {
     });
   }
 
-  Future sortOrders(String sort) async {
-    _sort = sort;
-    await getListOrders(sort: "${sort}ExpectedShippingDate");
+  Future sortOrders() async {
+    if (_sort == "+") {
+      await getListOrders();
+      _sort = "-";
+    } else {
+      await getListOrders();
+      _sort = "+";
+    }
   }
 }

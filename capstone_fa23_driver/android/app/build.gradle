@@ -69,4 +69,8 @@ dependencies {
     implementation('com.mapbox.mapboxsdk:mapbox-android-core:5.0.0') {
          exclude group: 'com.mapbox.common', module: 'common'
     }
+    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
+    implementation("com.google.firebase:firebase-appcheck")
+    implementation("com.google.firebase:firebase-appcheck-debug")
+    implementation("com.google.firebase:firebase-appcheck-playintegrity")
 }

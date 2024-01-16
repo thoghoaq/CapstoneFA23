@@ -51,8 +51,10 @@ final router = GoRouter(
                 routes: [
                   GoRoute(
                     name: "updateProfile",
-                    path: "update",
-                    builder: (context, state) => const UpdateProfilePage(),
+                    path: "update/:firstLogin",
+                    builder: (context, state) => UpdateProfilePage(
+                        firstLogin:
+                            state.pathParameters['firstLogin'] == 'true'),
                   ),
                   GoRoute(
                     name: "changePassword",
@@ -62,7 +64,13 @@ final router = GoRouter(
                 ],
               ),
             ],
-          )
+          ),
+          GoRoute(
+            name: "updateProfileFirstLogin",
+            path: "updateFirstLogin/:firstLogin",
+            builder: (context, state) => UpdateProfilePage(
+                firstLogin: state.pathParameters['firstLogin'] == 'true'),
+          ),
         ]),
   ],
 );

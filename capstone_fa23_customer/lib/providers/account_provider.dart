@@ -8,7 +8,7 @@ import 'package:capstone_fa23_customer/helpers/jwt_helper.dart';
 import 'package:flutter/material.dart';
 
 class AccountProvider extends ChangeNotifier {
-  late Profile _profile;
+  Profile _profile = Profile();
   int? _id;
   String? _phoneNumber;
   String? _username;

@@ -152,9 +152,8 @@ class _OrdersPageState extends State<OrdersPage> {
         isWaitingOrderLoadMore = true;
       });
     }
-    await context
-        .read<OrderProvider>()
-        .getListWatingOrders(page: ordersPage + 1, size: ordersSize);
+    await context.read<OrderProvider>().getListWatingOrders(
+        page: waitingOrdersPage + 1, size: waitingOrdersSize);
     setState(() {
       waitingOrdersPage++;
       isWaitingOrderLoadMore = false;
@@ -422,21 +421,6 @@ class _Ongoing extends StatefulWidget {
 }
 
 class _OngoingState extends State<_Ongoing> {
-  sortOrders() async {
-    var sort = widget.provider.sort;
-    if (sort == "-") {
-      setState(() {
-        sort = "+";
-      });
-      await widget.provider.sortOrders(sort);
-    } else {
-      setState(() {
-        sort = "-";
-      });
-      await widget.provider.sortOrders(sort);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -451,42 +435,49 @@ class _OngoingState extends State<_Ongoing> {
               alignment: Alignment.centerRight,
               child: Padding(
                 padding: const EdgeInsets.only(top: 16, right: 16),
-                child: GestureDetector(
-                  onTap: () => sortOrders(),
-                  child: context.read<OrderProvider>().sort == "+"
-                      ? Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text(
-                              "Tăng dần",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelLarge
-                                  ?.apply(
-                                    color:
-                                        Theme.of(context).colorScheme.secondary,
-                                  ),
+                child: Consumer<OrderProvider>(
+                  builder: (context, provider, child) {
+                    return GestureDetector(
+                      onTap: () => provider.sortOrders(),
+                      child: provider.sort == "+"
+                          ? Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Text(
+                                  "Tăng dần",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelLarge
+                                      ?.apply(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .secondary,
+                                      ),
+                                ),
+                                const Icon(
+                                    Icons.keyboard_double_arrow_up_rounded),
+                              ],
+                            )
+                          : Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Text(
+                                  "Giảm dần",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelLarge
+                                      ?.apply(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .secondary,
+                                      ),
+                                ),
+                                const Icon(
+                                    Icons.keyboard_double_arrow_down_rounded),
+                              ],
                             ),
-                            const Icon(Icons.keyboard_double_arrow_up_rounded),
-                          ],
-                        )
-                      : Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text(
-                              "Giảm dần",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelLarge
-                                  ?.apply(
-                                    color:
-                                        Theme.of(context).colorScheme.secondary,
-                                  ),
-                            ),
-                            const Icon(
-                                Icons.keyboard_double_arrow_down_rounded),
-                          ],
-                        ),
+                    );
+                  },
                 ),
               )),
           if (widget.type != null && widget.duration != null)

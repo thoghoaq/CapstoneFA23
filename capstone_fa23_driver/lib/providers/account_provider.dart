@@ -128,6 +128,7 @@ class AccountProvider extends ChangeNotifier {
       "vehicleRegistrationCertificateBackUrl":
           vehicleRegistrationCertificateBackUrl,
     };
+    _id = await JWTHelper().getId();
     final response = await ApiClient().put(
       "/account-profile/drivers/$_id",
       data,

@@ -5,6 +5,7 @@ import 'package:capstone_fa23_driver/providers/index.dart';
 import 'package:capstone_fa23_driver/routes/router.dart';
 import 'package:capstone_fa23_driver/themes/color_scheme.dart';
 import 'package:capstone_fa23_driver/themes/text_theme.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -18,7 +19,7 @@ void main() async {
   FlutterError.onError = (details) {
     FlutterError.presentError(details);
     Fluttertoast.showToast(
-      msg: "Lỗi hệ thống: $details",
+      msg: "Có lỗi xảy ra",
       toastLength: Toast.LENGTH_LONG,
       gravity: ToastGravity.CENTER,
     );
@@ -27,15 +28,17 @@ void main() async {
     FlutterError.presentError(
         FlutterErrorDetails(exception: error, stack: stack));
     Fluttertoast.showToast(
-      msg: "Lỗi hệ thống: $error",
+      msg: "Có lỗi xảy ra",
       toastLength: Toast.LENGTH_LONG,
       gravity: ToastGravity.CENTER,
     );
     return true;
   };
-  await Firebase.initializeApp(
+  var app = await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await FirebaseAppCheck.instanceFor(app: app)
+      .activate(androidProvider: AndroidProvider.debug);
   runApp(const MyApp());
 }
 

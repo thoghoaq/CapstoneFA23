@@ -6,10 +6,12 @@ import 'package:design_kit/material.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class UpdateProfilePage extends StatefulWidget {
-  const UpdateProfilePage({super.key});
+  final bool? firstLogin;
+  const UpdateProfilePage({super.key, this.firstLogin});
 
   @override
   State<UpdateProfilePage> createState() => _UpdateProfilePageState();
@@ -52,69 +54,77 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   bool? _vehicleRegistrationCertificateBackUrlLoading;
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.firstLogin != true) {
+      initParam();
+    }
+  }
+
+  initParam() {
+    var provider = context.read<AccountProvider>();
+    if (provider.profile?.name != null) {
+      _nameTextController.text = provider.profile!.name!;
+    }
+    if (provider.profile?.phoneContact != null) {
+      _phoneNumberTextController.text = provider.profile!.phoneContact!;
+    }
+    if (provider.profile?.address != null) {
+      _addressTextController.text = provider.profile!.address!;
+    }
+    if (provider.profile?.province != null) {
+      _provinceTextController.text = provider.profile!.province!;
+    }
+    if (provider.profile?.district != null) {
+      _districTextController.text = provider.profile!.district!;
+    }
+    if (provider.profile?.ward != null) {
+      _wardTextController.text = provider.profile!.ward!;
+    }
+    if (provider.profile?.birthDay != null) {
+      _birthDayTextController.text =
+          DateTimeHelper.getDate(provider.profile!.birthDay!);
+    }
+    if (provider.profile?.identificationCardFrontUrl != null) {
+      _identificationCardFrontUrl =
+          provider.profile!.identificationCardFrontUrl!;
+    }
+    if (provider.profile?.identificationCardBackUrl != null) {
+      _identificationCardBackUrl = provider.profile!.identificationCardBackUrl!;
+    }
+    if (provider.profile?.drivingLicenseFrontUrl != null) {
+      _drivingLicenseFrontUrl = provider.profile!.drivingLicenseFrontUrl!;
+    }
+    if (provider.profile?.drivingLicenseBackUrl != null) {
+      _drivingLicenseBackUrl = provider.profile!.drivingLicenseBackUrl!;
+    }
+    if (provider.profile?.vehicleRegistrationCertificateFrontUrl != null) {
+      _vehicleRegistrationCertificateFrontUrl =
+          provider.profile!.vehicleRegistrationCertificateFrontUrl!;
+    }
+    if (provider.profile?.vehicleRegistrationCertificateBackUrl != null) {
+      _vehicleRegistrationCertificateBackUrl =
+          provider.profile!.vehicleRegistrationCertificateBackUrl!;
+    }
+    if (provider.profile?.avatarUrl != null) {
+      _avtUrl = provider.profile!.avatarUrl!;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: const DAppBar(title: "Chỉnh sửa hồ sơ"),
         body: SingleChildScrollView(
           child: Consumer<AccountProvider>(
             builder: (context, provider, child) {
-              if (provider.profile == null) {
-                provider.fetchAccountInformation();
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-              if (provider.profile?.name != null) {
-                _nameTextController.text = provider.profile!.name!;
-              }
-              if (provider.profile?.phoneContact != null) {
-                _phoneNumberTextController.text =
-                    provider.profile!.phoneContact!;
-              }
-              if (provider.profile?.address != null) {
-                _addressTextController.text = provider.profile!.address!;
-              }
-              if (provider.profile?.province != null) {
-                _provinceTextController.text = provider.profile!.province!;
-              }
-              if (provider.profile?.district != null) {
-                _districTextController.text = provider.profile!.district!;
-              }
-              if (provider.profile?.ward != null) {
-                _wardTextController.text = provider.profile!.ward!;
-              }
-              if (provider.profile?.birthDay != null) {
-                _birthDayTextController.text =
-                    DateTimeHelper.getDate(provider.profile!.birthDay!);
-              }
-              if (provider.profile?.identificationCardFrontUrl != null) {
-                _identificationCardFrontUrl =
-                    provider.profile!.identificationCardFrontUrl!;
-              }
-              if (provider.profile?.identificationCardBackUrl != null) {
-                _identificationCardBackUrl =
-                    provider.profile!.identificationCardBackUrl!;
-              }
-              if (provider.profile?.drivingLicenseFrontUrl != null) {
-                _drivingLicenseFrontUrl =
-                    provider.profile!.drivingLicenseFrontUrl!;
-              }
-              if (provider.profile?.drivingLicenseBackUrl != null) {
-                _drivingLicenseBackUrl =
-                    provider.profile!.drivingLicenseBackUrl!;
-              }
-              if (provider.profile?.vehicleRegistrationCertificateFrontUrl !=
-                  null) {
-                _vehicleRegistrationCertificateFrontUrl =
-                    provider.profile!.vehicleRegistrationCertificateFrontUrl!;
-              }
-              if (provider.profile?.vehicleRegistrationCertificateBackUrl !=
-                  null) {
-                _vehicleRegistrationCertificateBackUrl =
-                    provider.profile!.vehicleRegistrationCertificateBackUrl!;
-              }
-              if (provider.profile?.avatarUrl != null) {
-                _avtUrl = provider.profile!.avatarUrl!;
+              if (widget.firstLogin != true) {
+                if (provider.profile == null) {
+                  provider.fetchAccountInformation();
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
               }
 
               return Column(
@@ -424,6 +434,11 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                             _vehicleRegistrationCertificateBackUrl!);
                         if (result) {
                           Fluttertoast.showToast(msg: "Cập nhật thành công");
+                          if (widget.firstLogin == true) {
+                            if (mounted) {
+                              context.go('/orders');
+                            }
+                          }
                         }
                       }),
                   const SizedBox(height: 35),

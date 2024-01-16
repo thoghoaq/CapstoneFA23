@@ -84,7 +84,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       color: DColors.defaultText,
                     ),
                     onTap: () {
-                      context.push('/profile/update');
+                      context.push('/profile/update/false');
                     },
                     showBottomDivider: false,
                   ),

@@ -46,9 +46,20 @@ class _LoginPhoneNumberModalState extends State<RegisterUsernamePasswordModal> {
   }
 
   void register(BuildContext context, String username, String password) async {
-    await context.read<AccountProvider>().register(username, password);
-    if (mounted) {
-      context.go('/home');
+    try {
+      await context.read<AccountProvider>().register(username, password);
+      if (mounted) {
+        context.go('/updateFirstLogin/true');
+      }
+    } catch (e) {
+      setState(() {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(e.toString()),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+        );
+      });
     }
   }
 
@@ -121,8 +132,8 @@ class _LoginPhoneNumberModalState extends State<RegisterUsernamePasswordModal> {
                         if (value == null || value.isEmpty) {
                           return 'Vui lòng nhập mật khẩu';
                         }
-                        if (value.length < 6) {
-                          return 'Mật khẩu phải có ít nhất 6 ký tự';
+                        if (value.length < 8) {
+                          return 'Mật khẩu phải có ít nhất 8 ký tự';
                         }
                         return null;
                       },

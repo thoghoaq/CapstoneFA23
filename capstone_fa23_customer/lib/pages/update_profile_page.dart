@@ -8,7 +8,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
 class UpdateProfilePage extends StatefulWidget {
-  const UpdateProfilePage({super.key});
+  final bool? firstLogin;
+  const UpdateProfilePage({super.key, this.firstLogin});
 
   @override
   State<UpdateProfilePage> createState() => _UpdateProfilePageState();
@@ -32,31 +33,34 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
       body: SingleChildScrollView(
         child: Consumer<AccountProvider>(
           builder: (context, provider, child) {
-            if (provider.isLoading) {
-              provider.fetchAccountInformation();
-              return const Center(child: CircularProgressIndicator());
-            }
-            if (provider.profile.name != null) {
-              _nameTextController.text = provider.profile.name!;
-            }
-            if (provider.profile.phoneContact != null) {
-              _phoneNumberTextController.text = provider.profile.phoneContact!;
-            }
-            if (provider.profile.address != null) {
-              _addressTextController.text = provider.profile.address!;
-            }
-            if (provider.profile.province != null) {
-              _provinceTextController.text = provider.profile.province!;
-            }
-            if (provider.profile.district != null) {
-              _districTextController.text = provider.profile.district!;
-            }
-            if (provider.profile.ward != null) {
-              _wardTextController.text = provider.profile.ward!;
-            }
-            if (provider.profile.birthDay != null) {
-              _birthDayTextController.text =
-                  DateTimeHelper.getDate(provider.profile.birthDay!);
+            if (widget.firstLogin != true) {
+              if (provider.isLoading) {
+                provider.fetchAccountInformation();
+                return const Center(child: CircularProgressIndicator());
+              }
+              if (provider.profile.name != null) {
+                _nameTextController.text = provider.profile.name!;
+              }
+              if (provider.profile.phoneContact != null) {
+                _phoneNumberTextController.text =
+                    provider.profile.phoneContact!;
+              }
+              if (provider.profile.address != null) {
+                _addressTextController.text = provider.profile.address!;
+              }
+              if (provider.profile.province != null) {
+                _provinceTextController.text = provider.profile.province!;
+              }
+              if (provider.profile.district != null) {
+                _districTextController.text = provider.profile.district!;
+              }
+              if (provider.profile.ward != null) {
+                _wardTextController.text = provider.profile.ward!;
+              }
+              if (provider.profile.birthDay != null) {
+                _birthDayTextController.text =
+                    DateTimeHelper.getDate(provider.profile.birthDay!);
+              }
             }
             return Column(
               children: [
