@@ -39,11 +39,12 @@ class _QRCodeScannerScreenState extends State<QRCodeScannerScreen> {
   void _onQRViewCreated(QRViewController controller) {
     this.controller = controller;
     controller.scannedDataStream.listen((scanData) {
-      setState(() {
-        result = scanData;
-      });
-      context.push("/orders/map-view/${result!.code}");
-      return;
+      if (scanData.code != null) {
+        controller.stopCamera();
+        Future.delayed(const Duration(seconds: 1), () {
+          context.push("/orders/map-view/${scanData.code}");
+        });
+      }
     }, onDone: () {
       // if (result == null) {
       //   return;
