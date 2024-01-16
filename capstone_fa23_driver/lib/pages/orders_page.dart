@@ -672,12 +672,12 @@ class _HistoryState extends State<_History> {
                 builder: (context, provider, child) {
                   return GestureDetector(
                     onTap: () => provider.sortOrders(),
-                    child: provider.sort == "+"
+                    child: provider.sort == "-"
                         ? Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Text(
-                                "Tăng dần",
+                                "Cũ nhất",
                                 style: Theme.of(context)
                                     .textTheme
                                     .labelLarge
@@ -695,7 +695,7 @@ class _HistoryState extends State<_History> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Text(
-                                "Giảm dần",
+                                "Mới nhất",
                                 style: Theme.of(context)
                                     .textTheme
                                     .labelLarge
