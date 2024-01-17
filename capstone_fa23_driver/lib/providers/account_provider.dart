@@ -95,6 +95,23 @@ class AccountProvider extends ChangeNotifier {
     return true;
   }
 
+  Future<ApiResponse> changePassword(
+      String oldPassword, String newPassword, String confirmPassword) async {
+    try {
+      final response = await ApiClient().put(
+        "/auth/username/changePassword",
+        {
+          "oldPassword": oldPassword,
+          "newPassword": newPassword,
+          "confirmPassword": confirmPassword,
+        },
+      );
+      return response;
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
   Future<bool> updateProfile(
       String name,
       DateTime birthDay,

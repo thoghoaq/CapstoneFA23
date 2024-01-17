@@ -1,5 +1,13 @@
+import 'dart:io';
+
+import 'package:capstone_fa23_customer/providers/account_provider.dart';
+import 'package:capstone_fa23_customer/providers/orders_provider.dart';
 import 'package:design_kit/material.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ChangePasswordPage extends StatefulWidget {
   const ChangePasswordPage({super.key});
@@ -90,7 +98,39 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
               padding: const EdgeInsets.symmetric(vertical: 20),
               child: DPrimaryButton(
                 text: "Tiếp tục",
-                onPressed: () {},
+                onPressed: () async {
+                  try {
+                    var provider = context.read<AccountProvider>();
+                    var response = await provider.changePassword(
+                        _inputOldPasswordController.text,
+                        _inputPasswordController.text,
+                        _inputConfirmPasswordController.text);
+                    if (response.statusCode == HttpStatus.noContent) {
+                      SharedPreferences prefs =
+                          await SharedPreferences.getInstance();
+                      prefs.clear();
+                      if (context.mounted) {
+                        context.read<AccountProvider>().clear();
+                        context.read<OrderProvider>().clear();
+                        context.go('/login');
+                        Fluttertoast.showToast(
+                            msg: "Đổi mật khẩu thành công",
+                            toastLength: Toast.LENGTH_LONG,
+                            gravity: ToastGravity.CENTER);
+                      }
+                    } else {
+                      Fluttertoast.showToast(
+                          msg: response.errorMessage.toString(),
+                          toastLength: Toast.LENGTH_LONG,
+                          gravity: ToastGravity.CENTER);
+                    }
+                  } on Exception catch (e) {
+                    Fluttertoast.showToast(
+                        msg: e.toString(),
+                        toastLength: Toast.LENGTH_LONG,
+                        gravity: ToastGravity.CENTER);
+                  }
+                },
               ),
             ),
           ),
