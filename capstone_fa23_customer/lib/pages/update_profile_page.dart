@@ -5,6 +5,7 @@ import 'package:design_kit/material.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class UpdateProfilePage extends StatefulWidget {
@@ -29,7 +30,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   @override
   void initState() {
     super.initState();
-    if (widget.firstLogin == true) {
+    if (widget.firstLogin != true) {
       initParam(context.read<AccountProvider>());
     }
   }
@@ -253,6 +254,11 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                         _phoneNumberTextController.text,
                       );
                       if (result) {
+                        if (widget.firstLogin == true) {
+                          if (mounted) {
+                            context.go('/home');
+                          }
+                        }
                         Fluttertoast.showToast(msg: "Cập nhật thành công");
                       }
                     }),

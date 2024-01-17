@@ -1,6 +1,10 @@
+import 'dart:io';
+
+import 'package:capstone_fa23_customer/core/enums/error_code.dart';
 import 'package:capstone_fa23_customer/providers/account_provider.dart';
 import 'package:design_kit/material.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -47,9 +51,25 @@ class _LoginPhoneNumberModalState extends State<RegisterUsernamePasswordModal> {
 
   void register(BuildContext context, String username, String password) async {
     try {
-      await context.read<AccountProvider>().register(username, password);
-      if (mounted) {
-        context.go('/updateFirstLogin/true');
+      var response =
+          await context.read<AccountProvider>().register(username, password);
+
+      if (response.statusCode != HttpStatus.ok) {
+        if (response.errorCode == ErrorCode.accountAlreadyExist.code) {
+          Fluttertoast.showToast(
+              msg: ErrorCode.accountAlreadyExist.message,
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.CENTER);
+        } else {
+          Fluttertoast.showToast(
+              msg: "Đã có lỗi xảy ra",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.CENTER);
+        }
+      } else {
+        if (mounted) {
+          context.go('/updateFirstLogin/true');
+        }
       }
     } catch (e) {
       setState(() {

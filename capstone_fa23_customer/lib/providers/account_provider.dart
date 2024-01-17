@@ -105,6 +105,7 @@ class AccountProvider extends ChangeNotifier {
       "address": address,
       "phoneContact": phoneContact,
     };
+    _id = await JWTHelper().getId();
     final response = await ApiClient().put(
       "/account-profile/$_id",
       data,

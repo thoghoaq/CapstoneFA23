@@ -25,30 +25,39 @@ class TransactionPage extends StatelessWidget {
           }
           return RefreshIndicator(
             onRefresh: () => provider.getListOrders(),
-            child: ListView.builder(
-              itemBuilder: (context, index) {
-                return TransactionListTile(
-                  // icon: Image.asset(transactions[index]["icon"]),
-                  title:
-                      "Đơn hàng giao bởi ${provider.orders[index].driverName}",
-                  subtitle:
-                      "${provider.orders[index].shippingAddress}, ${provider.orders[index].shippingDistrict}, ${provider.orders[index].shippingWard}, ${provider.orders[index].shippingProvince}",
-                  description:
-                      "Ngày nhận dự kiến: ${DateTimeHelper.getDateTime(provider.orders[index].expectedShippingDate)}",
-                  status: provider.orders[index].currentOrderStatus,
-                  showBottomDivider: true,
-                  onTap: () {
-                    var isFeedback = provider.orders[index].isFeedback == true
-                        ? 'true'
-                        : 'false';
-                    context.push(
-                        '/home/tracking-order/${provider.orders[index].id}',
-                        extra: isFeedback);
-                  },
-                );
-              },
-              itemCount: provider.orders.length,
-            ),
+            child: provider.orders.isNotEmpty
+                ? ListView.builder(
+                    itemBuilder: (context, index) {
+                      return TransactionListTile(
+                        // icon: Image.asset(transactions[index]["icon"]),
+                        title:
+                            "Đơn hàng giao bởi ${provider.orders[index].driverName}",
+                        subtitle:
+                            "${provider.orders[index].shippingAddress}, ${provider.orders[index].shippingDistrict}, ${provider.orders[index].shippingWard}, ${provider.orders[index].shippingProvince}",
+                        description:
+                            "Ngày nhận dự kiến: ${DateTimeHelper.getDateTime(provider.orders[index].expectedShippingDate)}",
+                        status: provider.orders[index].currentOrderStatus,
+                        showBottomDivider: true,
+                        onTap: () {
+                          var isFeedback =
+                              provider.orders[index].isFeedback == true
+                                  ? 'true'
+                                  : 'false';
+                          context.push(
+                              '/home/tracking-order/${provider.orders[index].id}',
+                              extra: isFeedback);
+                        },
+                      );
+                    },
+                    itemCount: provider.orders.length,
+                  )
+                : ListView(
+                    children: const [
+                      Center(
+                        child: Text("Bạn chưa có đơn hàng nào"),
+                      ),
+                    ],
+                  ),
           );
         },
       ),
