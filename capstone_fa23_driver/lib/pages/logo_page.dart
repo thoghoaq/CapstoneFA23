@@ -1,12 +1,29 @@
+import 'package:capstone_fa23_driver/providers/account_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class LogoScreenPage extends StatelessWidget {
   const LogoScreenPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    Future.delayed(const Duration(seconds: 2), () {
+      isLogged() async {
+        if (await context.read<AccountProvider>().checkLoggedIn()) {
+          if (context.mounted) {
+            context.go('/orders');
+          }
+        } else {
+          if (context.mounted) {
+            context.go('/login');
+          }
+        }
+      }
+
+      isLogged();
+    });
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.primary,
       body: GestureDetector(
