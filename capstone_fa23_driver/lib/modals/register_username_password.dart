@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:capstone_fa23_driver/providers/account_provider.dart';
 import 'package:design_kit/material.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -47,9 +50,20 @@ class _LoginPhoneNumberModalState extends State<RegisterUsernamePasswordModal> {
 
   void register(BuildContext context, String username, String password) async {
     try {
-      await context.read<AccountProvider>().register(username, password);
-      if (mounted) {
-        context.go('/updateFirstLogin/true');
+      var response =
+          await context.read<AccountProvider>().register(username, password);
+      if (response.statusCode != HttpStatus.ok) {
+        setState(() {
+          Fluttertoast.showToast(
+            msg: response.errorMessage.toString(),
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.CENTER,
+          );
+        });
+      } else {
+        if (mounted) {
+          context.go('/updateFirstLogin/true');
+        }
       }
     } catch (e) {
       setState(() {

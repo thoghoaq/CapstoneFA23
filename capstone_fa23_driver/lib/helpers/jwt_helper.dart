@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:capstone_fa23_driver/core/enums/shared_preference_key.dart';
 import 'package:capstone_fa23_driver/core/models/jwt_token_model.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
@@ -6,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class JWTHelper {
   Future store(String token) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    log(token);
     prefs.setString(SharedPreferenceKey.jwt.name, token);
   }
 
