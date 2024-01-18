@@ -66,7 +66,9 @@ class OrderProvider extends ChangeNotifier {
         }
       } else {
         for (var i = 0; i < orders.length; i++) {
-          _orders.add(orders[i]);
+          if (!_orders.any((order) => order.id == orders[i].id)) {
+            _orders.add(orders[i]);
+          }
         }
       }
       _isLoading = false;

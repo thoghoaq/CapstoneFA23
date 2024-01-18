@@ -86,23 +86,29 @@ class _ShipSuccessDialogState extends State<ShipSuccessDialog> {
               children: [
                 SvgPicture.asset("assets/images/icons/location.svg"),
                 const SizedBox(width: 16),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(nextOrder?.shippingAddress ?? "",
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis),
-                    if (traffic != null)
-                      Text("Cách bạn ${traffic?.distance} km",
-                          style:
-                              Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    color: DColors.gray2,
-                                    fontWeight: FontWeight.w500,
-                                  ))
-                  ],
+                SizedBox(
+                  width: 160,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(nextOrder?.shippingAddress ?? "",
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyLarge
+                              ?.copyWith(
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis),
+                      if (traffic != null)
+                        Text("Cách bạn ${traffic?.distance} km",
+                            style:
+                                Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      color: DColors.gray2,
+                                      fontWeight: FontWeight.w500,
+                                    ))
+                    ],
+                  ),
                 ),
               ],
             )
