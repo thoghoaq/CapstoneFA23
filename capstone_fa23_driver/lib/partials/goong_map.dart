@@ -146,11 +146,11 @@ class _GoongMapState extends State<GoongMap> {
   void initState() {
     super.initState();
     _markers.addAll([
-      Marker(
-        markerId: const MarkerId("startPoints"),
-        position: widget.startPoints,
-        infoWindow: const InfoWindow(title: "Vị trí xuất phát"),
-      ),
+      // Marker(
+      //   markerId: const MarkerId("startPoints"),
+      //   position: widget.startPoints,
+      //   infoWindow: const InfoWindow(title: "Vị trí xuất phát"),
+      // ),
       Marker(
         markerId: const MarkerId("endPoints"),
         position: widget.endPoints,
