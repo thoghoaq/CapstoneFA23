@@ -9,7 +9,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
 class ShipSuccessDialog extends StatefulWidget {
-  const ShipSuccessDialog({super.key});
+  final String orderId;
+  const ShipSuccessDialog({super.key, required this.orderId});
 
   @override
   State<ShipSuccessDialog> createState() => _ShipSuccessDialogState();
@@ -22,7 +23,7 @@ class _ShipSuccessDialogState extends State<ShipSuccessDialog> {
   TrafficModel? traffic;
 
   void getNextLocation() async {
-    var next = context.read<OrderProvider>().getNextOrder();
+    var next = context.read<OrderProvider>().getNextOrder(widget.orderId);
     setState(() {
       if (next != null) {
         nextUrl = "/orders/map-view/${next.id}";

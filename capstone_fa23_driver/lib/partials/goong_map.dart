@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:capstone_fa23_driver/helpers/location_helper.dart';
+import 'package:capstone_fa23_driver/helpers/map_helper.dart';
 import 'package:design_kit/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -74,12 +74,16 @@ class _GoongMapState extends State<GoongMap> {
   Future<List<LatLng>> getPolylinePoints() async {
     try {
       List<LatLng> polylineCoordinates = [];
-      PolylinePoints polylinePoints = PolylinePoints();
-      PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-        dotenv.get('GOOGLE_MAP_API_KEY'),
+      // PolylinePoints polylinePoints = PolylinePoints();
+      // PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+      //   dotenv.get('GOOGLE_MAP_API_KEY'),
+      //   PointLatLng(widget.startPoints.latitude, widget.startPoints.longitude),
+      //   PointLatLng(widget.endPoints.latitude, widget.endPoints.longitude),
+      //   travelMode: TravelMode.driving,
+      // );
+      PolylineResult result = await MapHelper.getDirections(
         PointLatLng(widget.startPoints.latitude, widget.startPoints.longitude),
         PointLatLng(widget.endPoints.latitude, widget.endPoints.longitude),
-        travelMode: TravelMode.driving,
       );
       if (result.points.isNotEmpty) {
         for (var point in result.points) {

@@ -11,11 +11,15 @@ import 'package:capstone_fa23_driver/core/models/traffic_model.dart';
 import 'package:capstone_fa23_driver/helpers/api_helper.dart';
 import 'package:capstone_fa23_driver/helpers/datetime_helper.dart';
 import 'package:capstone_fa23_driver/helpers/location_helper.dart';
+import 'package:capstone_fa23_driver/helpers/polyline_decoder.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class OrderProvider extends ChangeNotifier {
+  // ignore: constant_identifier_names
+  static const String STATUS_OK = "ok";
   List<Order> _orders = [];
   List<Order> _history = [];
   List<Order> _waitingOrders = [];
@@ -277,8 +281,8 @@ class OrderProvider extends ChangeNotifier {
     }
   }
 
-  Order? getNextOrder() {
-    var index = _orders.indexWhere((order) => order.id == _order.id);
+  Order? getNextOrder(orderId) {
+    var index = _orders.indexWhere((order) => order.id == orderId);
     if (index < _orders.length - 1) {
       return _orders[index + 1];
     } else {
@@ -356,6 +360,51 @@ class OrderProvider extends ChangeNotifier {
     } else {
       await getHistory();
       _sort = "+";
+    }
+  }
+
+  Future<List<PolylineResult>> getRouteBetweenCoordinates(
+      PointLatLng origin, PointLatLng destination) async {
+    List<PolylineResult> results = [];
+    var url =
+        "/orders/routes?originLat=${origin.latitude}&originLng=${origin.longitude}&destinationLat=${destination.latitude}&destinationLng=${destination.longitude}";
+    var response = await ApiClient().get(url);
+    if (response.statusCode == HttpStatus.ok) {
+      var parsedJson = json.decode(response.result);
+      if (parsedJson["status"]?.toLowerCase() == STATUS_OK &&
+          parsedJson["routes"] != null &&
+          parsedJson["routes"].isNotEmpty) {
+        List<dynamic> routeList = parsedJson["routes"];
+        for (var route in routeList) {
+          results.add(PolylineResult(
+              points: PolylineDecoder.run(route["overview_polyline"]["points"]),
+              errorMessage: "",
+              status: parsedJson["status"],
+              distance: route["legs"][0]["distance"]["text"],
+              distanceValue: route["legs"][0]["distance"]["value"],
+              overviewPolyline: route["overview_polyline"]["points"],
+              durationValue: route["legs"][0]["duration"]["value"],
+              endAddress: route["legs"][0]['end_address'],
+              startAddress: route["legs"][0]['start_address'],
+              duration: route["legs"][0]["duration"]["text"]));
+        }
+      } else {
+        throw Exception(
+            "Unable to get route: Response ---> ${parsedJson["status"]} ");
+      }
+    }
+    return results;
+  }
+
+  Future<PolylineResult> getDirections(
+      PointLatLng origin, PointLatLng destination) async {
+    try {
+      var result = await getRouteBetweenCoordinates(origin, destination);
+      return result.isNotEmpty
+          ? result[0]
+          : PolylineResult(errorMessage: "No result found");
+    } catch (e) {
+      rethrow;
     }
   }
 }

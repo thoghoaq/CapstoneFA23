@@ -147,9 +147,11 @@ class _MapViewPageState extends State<MapViewPage> {
                                             complete: () {
                                               showDialog(
                                                   context: context,
-                                                  builder: (BuildContext
-                                                          context) =>
-                                                      const ShipSuccessDialog());
+                                                  builder:
+                                                      (BuildContext context) =>
+                                                          ShipSuccessDialog(
+                                                            orderId: widget.id,
+                                                          ));
                                             },
                                             cancel: () {
                                               showDialog(
@@ -165,9 +167,11 @@ class _MapViewPageState extends State<MapViewPage> {
                                             complete: () {
                                               showDialog(
                                                   context: context,
-                                                  builder: (BuildContext
-                                                          context) =>
-                                                      const ShipSuccessDialog());
+                                                  builder:
+                                                      (BuildContext context) =>
+                                                          ShipSuccessDialog(
+                                                            orderId: widget.id,
+                                                          ));
                                             },
                                             cancel: () {
                                               showDialog(
