@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:capstone_fa23_driver/core/models/api_response_model.dart';
 import 'package:capstone_fa23_driver/helpers/jwt_helper.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 
@@ -73,6 +74,14 @@ class ApiClient {
   ApiResponse _handleResponse(http.Response response) {
     if (response.statusCode == 500) {
       throw Exception(response.reasonPhrase);
+    }
+    if (response.statusCode == HttpStatus.forbidden) {
+      Fluttertoast.showToast(
+        msg: "Tài khoản chưa được phê duyệt",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.CENTER,
+      );
+      return ApiResponse.forbidden("Tài khoản chưa được phê duyệt");
     }
     if (response.statusCode == HttpStatus.noContent) {
       return ApiResponse.noContent();

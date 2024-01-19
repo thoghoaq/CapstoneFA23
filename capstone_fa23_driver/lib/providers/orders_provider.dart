@@ -75,11 +75,9 @@ class OrderProvider extends ChangeNotifier {
           }
         }
       }
-      _isLoading = false;
-      notifyListeners();
-    } else {
-      throw Exception("Failed to load orders");
     }
+    _isLoading = false;
+    notifyListeners();
   }
 
   Future<void> getListWatingOrders(
@@ -114,11 +112,9 @@ class OrderProvider extends ChangeNotifier {
           }
         }
       }
-      _isLoading = false;
-      notifyListeners();
-    } else {
-      throw Exception("Failed to load orders");
     }
+    _isLoading = false;
+    notifyListeners();
   }
 
   Future<void> getHistory({
@@ -153,11 +149,9 @@ class OrderProvider extends ChangeNotifier {
           _history.add(history[i]);
         }
       }
-      _isLoading = false;
-      notifyListeners();
-    } else {
-      throw Exception("Failed to load orders");
     }
+    _isLoading = false;
+    notifyListeners();
   }
 
   Future<Order> getOrder(String id) async {

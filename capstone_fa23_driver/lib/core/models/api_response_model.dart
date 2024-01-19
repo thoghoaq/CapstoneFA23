@@ -30,4 +30,11 @@ class ApiResponse {
       statusCode: HttpStatus.noContent,
     );
   }
+
+  factory ApiResponse.forbidden(String errorMessage) {
+    return ApiResponse(
+      statusCode: HttpStatus.forbidden,
+      errorMessage: errorMessage,
+    );
+  }
 }
