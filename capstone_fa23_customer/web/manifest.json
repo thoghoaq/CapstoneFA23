@@ -1,6 +1,6 @@
 {
-     "name": "Customer App",
-     "short_name": "Customer App",
+     "name": "Last Mile - Customer",
+     "short_name": "Last Mile - Customer",
      "start_url": ".",
      "display": "standalone",
      "background_color": "#0175C2",
