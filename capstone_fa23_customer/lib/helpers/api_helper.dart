@@ -61,7 +61,7 @@ class ApiClient {
     }
     return ApiResponse.fromJson(
       response.statusCode,
-      json.decode(response.body),
+      response.body != "" ? json.decode(response.body) : <String, dynamic>{},
     );
   }
 }

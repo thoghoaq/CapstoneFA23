@@ -8,7 +8,8 @@ enum TransactionStatus {
   shipping("Đang giao", DColors.greenPrimary, DColors.softGreen),
   delivered("Đã nhận", DColors.defaultText, DColors.whiteText),
   deliveryFailed("Giao lỗi", DColors.purple, DColors.softPurple),
-  deleted("Đã xóa", DColors.defaultText, DColors.whiteText);
+  deleted("Đã xóa", DColors.defaultText, DColors.whiteText),
+  feeback("Đánh giá", DColors.defaultText, DColors.whiteText);
 
   const TransactionStatus(this.label, this.color, this.backgroundColor);
 

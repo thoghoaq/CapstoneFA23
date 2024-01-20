@@ -9,6 +9,7 @@ class TransactionListTile extends StatelessWidget {
   final Widget? icon;
   final TransactionStatus? status;
   final VoidCallback? onTap;
+  final bool? isFeedback;
   final bool showTopDivider;
   final bool showBottomDivider;
 
@@ -22,10 +23,16 @@ class TransactionListTile extends StatelessWidget {
     this.showTopDivider = false,
     this.subtitle,
     this.description,
+    this.isFeedback,
   });
 
   @override
   Widget build(BuildContext context) {
+    TransactionStatus? orderStatus;
+    orderStatus = status;
+    if (isFeedback == false) {
+      orderStatus = TransactionStatus.feeback;
+    }
     return Container(
         decoration: BoxDecoration(
           border: Border(
@@ -84,17 +91,17 @@ class TransactionListTile extends StatelessWidget {
                 ),
                 // Trailing
                 SizedBox(width: status != null ? 16 : 0),
-                status != null
+                orderStatus != null
                     ? Container(
                         width: 65,
                         height: 27,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(4),
-                          color: status!.backgroundColor,
+                          color: orderStatus.backgroundColor,
                         ),
                         child: Center(
                           child: Text(
-                            status!.label,
+                            orderStatus.label,
                             style: Theme.of(context)
                                 .textTheme
                                 .labelSmall

@@ -47,6 +47,7 @@ class TransactionPage extends StatelessWidget {
                               '/home/tracking-order/${provider.orders[index].id}',
                               extra: isFeedback);
                         },
+                        isFeedback: provider.orders[index].isFeedback,
                       );
                     },
                     itemCount: provider.orders.length,

@@ -10,6 +10,7 @@ import 'package:capstone_fa23_customer/providers/orders_provider.dart';
 import 'package:design_kit/material.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class TrackingOrderPage extends StatefulWidget {
@@ -259,9 +260,11 @@ class _TrackingOrderPageState extends State<TrackingOrderPage> {
                             text: "Gửi đánh giá",
                             onPressed: () async {
                               if (_formKey.currentState!.validate()) {
-                                var r = int.parse(rate.toString()).toString();
+                                var r = rate.toString();
                                 await provider.feedBack(
                                     r, _feedbackTextController.text);
+                                // ignore: use_build_context_synchronously
+                                context.go('/home');
                               }
                             },
                           )

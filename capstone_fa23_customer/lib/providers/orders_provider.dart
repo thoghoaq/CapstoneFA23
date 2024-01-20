@@ -18,7 +18,7 @@ class OrderProvider extends ChangeNotifier {
   }
 
   Future<void> getListOrders() async {
-    final response = await ApiClient().get("/orders");
+    final response = await ApiClient().get("/orders?Page=1&Limit=100000");
     if (response.statusCode == HttpStatus.ok) {
       _orders = List<Order>.from(
           response.result["data"].map((e) => Order.fromJson(e)));
